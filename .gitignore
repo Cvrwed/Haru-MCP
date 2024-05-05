@@ -1,0 +1,8 @@
+conf/
+docs/
+eclipse/
+jars/
+logs/
+runtime/
+temp
+startclient.bat
