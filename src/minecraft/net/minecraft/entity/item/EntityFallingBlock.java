@@ -16,10 +16,10 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.combat.DamageSource;
+import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.world.World;
 
 public class EntityFallingBlock extends Entity

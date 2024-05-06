@@ -14,7 +14,7 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 

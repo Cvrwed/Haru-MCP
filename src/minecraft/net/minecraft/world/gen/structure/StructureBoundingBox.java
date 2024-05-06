@@ -3,8 +3,8 @@ package net.minecraft.world.gen.structure;
 import com.google.common.base.Objects;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Vec3i;
+import net.minecraft.util.enums.EnumFacing;
+import net.minecraft.util.vec.Vec3i;
 
 public class StructureBoundingBox
 {

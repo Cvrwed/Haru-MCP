@@ -11,8 +11,6 @@ import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
-import cc.unknown.utils.helpers.MathHelper;
-import cc.unknown.utils.network.PacketUtil;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.network.Packet;
@@ -21,7 +19,8 @@ import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.network.play.server.S27PacketExplosion;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.world.World;
 
 @Register(name = "Velocity", category = Category.Combat)

@@ -25,12 +25,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.chat.ChatComponentText;
+import net.minecraft.util.enums.EnumChatFormatting;
+import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.world.World;
 
 public final class ItemStack

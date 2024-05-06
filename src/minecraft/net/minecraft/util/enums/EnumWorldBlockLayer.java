@@ -1,4 +1,4 @@
-package net.minecraft.util;
+package net.minecraft.util.enums;
 
 public enum EnumWorldBlockLayer
 {

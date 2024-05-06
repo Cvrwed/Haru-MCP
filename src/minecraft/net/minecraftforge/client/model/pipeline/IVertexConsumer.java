@@ -1,7 +1,7 @@
 package net.minecraftforge.client.model.pipeline;
 
 import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.enums.EnumFacing;
 
 public interface IVertexConsumer
 {

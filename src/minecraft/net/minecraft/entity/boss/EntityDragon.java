@@ -16,14 +16,14 @@ import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.combat.DamageSource;
+import net.minecraft.util.combat.EntityDamageSource;
+import net.minecraft.util.enums.EnumFacing;
+import net.minecraft.util.enums.EnumParticleTypes;
+import net.minecraft.util.vec.AxisAlignedBB;
+import net.minecraft.util.vec.Vec3;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
@@ -117,7 +117,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
         int j = this.ringBufferIndex - p_70974_1_ * 1 - 1 & 63;
         double[] adouble = new double[3];
         double d0 = this.ringBuffer[i][0];
-        double d1 = MathHelper.wrapAngleTo180_double(this.ringBuffer[j][0] - d0);
+        double d1 = MathHelper.wrapAngle180(this.ringBuffer[j][0] - d0).doubleValue();
         adouble[0] = d0 + d1 * (double)p_70974_2_;
         d0 = this.ringBuffer[i][1];
         d1 = this.ringBuffer[j][1] - d0;
@@ -167,7 +167,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
                 this.animTime += f10;
             }
 
-            this.rotationYaw = MathHelper.wrapAngleTo180_float(this.rotationYaw);
+            this.rotationYaw = MathHelper.wrapAngle180(this.rotationYaw).floatValue();
 
             if (this.isAIDisabled())
             {
@@ -199,7 +199,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
                         double d10 = this.posX + (this.newPosX - this.posX) / (double)this.newPosRotationIncrements;
                         double d0 = this.posY + (this.newPosY - this.posY) / (double)this.newPosRotationIncrements;
                         double d1 = this.posZ + (this.newPosZ - this.posZ) / (double)this.newPosRotationIncrements;
-                        double d2 = MathHelper.wrapAngleTo180_double(this.newRotationYaw - (double)this.rotationYaw);
+                        double d2 = MathHelper.wrapAngle180(this.newRotationYaw - (double)this.rotationYaw).doubleValue();
                         this.rotationYaw = (float)((double)this.rotationYaw + d2 / (double)this.newPosRotationIncrements);
                         this.rotationPitch = (float)((double)this.rotationPitch + (this.newRotationPitch - (double)this.rotationPitch) / (double)this.newPosRotationIncrements);
                         --this.newPosRotationIncrements;
@@ -245,9 +245,9 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
                     float f17 = 0.6F;
                     d12 = MathHelper.clamp_double(d12, (double)(-f17), (double)f17);
                     this.motionY += d12 * 0.10000000149011612D;
-                    this.rotationYaw = MathHelper.wrapAngleTo180_float(this.rotationYaw);
+                    this.rotationYaw = MathHelper.wrapAngle180(this.rotationYaw).floatValue();
                     double d4 = 180.0D - MathHelper.func_181159_b(d11, d13) * 180.0D / Math.PI;
-                    double d6 = MathHelper.wrapAngleTo180_double(d4 - (double)this.rotationYaw);
+                    double d6 = MathHelper.wrapAngle180(d4 - (double)this.rotationYaw).doubleValue();
 
                     if (d6 > 50.0D)
                     {
@@ -507,7 +507,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
      */
     private float simplifyAngle(double p_70973_1_)
     {
-        return (float)MathHelper.wrapAngleTo180_double(p_70973_1_);
+        return (float)MathHelper.wrapAngle180(p_70973_1_).doubleValue();
     }
 
     /**

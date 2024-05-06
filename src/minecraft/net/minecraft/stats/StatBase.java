@@ -5,10 +5,10 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.scoreboard.IScoreObjectiveCriteria;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.IJsonSerializable;
+import net.minecraft.util.chat.ChatComponentText;
+import net.minecraft.util.enums.EnumChatFormatting;
 
 public class StatBase
 {

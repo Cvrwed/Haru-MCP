@@ -20,8 +20,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.enums.EnumChatFormatting;
 import net.minecraft.world.World;
 
 public class ItemPotion extends Item

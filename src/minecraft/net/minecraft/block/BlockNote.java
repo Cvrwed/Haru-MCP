@@ -10,8 +10,8 @@ import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.enums.EnumFacing;
+import net.minecraft.util.enums.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class BlockNote extends BlockContainer

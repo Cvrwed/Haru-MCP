@@ -4,8 +4,8 @@ import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.enums.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class EntityDropParticleFX extends EntityFX

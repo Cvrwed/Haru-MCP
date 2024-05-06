@@ -1,7 +1,5 @@
 package cc.unknown.module.impl.player;
 
-import static cc.unknown.utils.helpers.MathHelper.wrapAngleTo90_float;
-
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.move.MoveEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
@@ -71,8 +69,8 @@ public class BridgeAssist extends Module {
 			}
 
 			if (gliding) {
-				float yaw = MathHelper.wrapAngleTo180_float(mc.player.rotationYaw);
-				float pitch = wrapAngleTo90_float(mc.player.rotationPitch);
+				float yaw = MathHelper.wrapAngle180(mc.player.rotationYaw).floatValue();
+				float pitch = MathHelper.wrapAngle90(mc.player.rotationPitch).floatValue();
 				double d0 = Math.abs(yaw - speedYaw);
 				double d1 = Math.abs(yaw + speedYaw);
 				double d2 = Math.abs(pitch - speedPitch);
@@ -104,8 +102,8 @@ public class BridgeAssist extends Module {
 				return;
 			}
 
-			float yaw = MathHelper.wrapAngleTo180_float(mc.player.rotationYaw);
-			float pitch = wrapAngleTo90_float(mc.player.rotationPitch);
+			float yaw = MathHelper.wrapAngle180(mc.player.rotationYaw).floatValue();
+			float pitch = MathHelper.wrapAngle90(mc.player.rotationPitch).floatValue();
 			float range = (float) assistChance.getInput();
 
 			float[] positions = null;

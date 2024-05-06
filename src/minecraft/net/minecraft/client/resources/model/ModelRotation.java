@@ -3,8 +3,9 @@ package net.minecraft.client.resources.model;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import java.util.Map;
-import net.minecraft.util.EnumFacing;
+
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.enums.EnumFacing;
 import net.minecraftforge.client.model.IModelPart;
 import net.minecraftforge.client.model.IModelState;
 import net.minecraftforge.client.model.ITransformation;

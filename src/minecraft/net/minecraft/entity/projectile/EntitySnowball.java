@@ -2,9 +2,9 @@ package net.minecraft.entity.projectile;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.combat.DamageSource;
+import net.minecraft.util.enums.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class EntitySnowball extends EntityThrowable

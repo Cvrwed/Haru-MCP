@@ -6,14 +6,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.combat.DamageSource;
+import net.minecraft.util.enums.EnumParticleTypes;
+import net.minecraft.util.vec.AxisAlignedBB;
+import net.minecraft.util.vec.Vec3;
 import net.minecraft.world.World;
 
 public abstract class EntityFireball extends Entity

@@ -6,9 +6,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.enums.EnumWorldBlockLayer;
+import net.minecraft.util.vec.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class BlockBush extends Block

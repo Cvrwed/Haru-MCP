@@ -117,20 +117,20 @@ public class CommandTeleport extends CommandBase
 
                         if (!commandbase$coordinatearg3.func_179630_c())
                         {
-                            f = MathHelper.wrapAngleTo180_float(f);
+                            f = MathHelper.wrapAngle180(f).floatValue();
                         }
 
                         float f1 = (float)commandbase$coordinatearg4.func_179629_b();
 
                         if (!commandbase$coordinatearg4.func_179630_c())
                         {
-                            f1 = MathHelper.wrapAngleTo180_float(f1);
+                            f1 = MathHelper.wrapAngle180(f1).floatValue();
                         }
 
                         if (f1 > 90.0F || f1 < -90.0F)
                         {
-                            f1 = MathHelper.wrapAngleTo180_float(180.0F - f1);
-                            f = MathHelper.wrapAngleTo180_float(f + 180.0F);
+                            f1 = MathHelper.wrapAngle180(180.0F - f1).floatValue();
+                            f = MathHelper.wrapAngle180(f + 180.0F).floatValue();
                         }
 
                         entity.mountEntity((Entity)null);
@@ -139,13 +139,13 @@ public class CommandTeleport extends CommandBase
                     }
                     else
                     {
-                        float f2 = (float)MathHelper.wrapAngleTo180_double(commandbase$coordinatearg3.func_179628_a());
-                        float f3 = (float)MathHelper.wrapAngleTo180_double(commandbase$coordinatearg4.func_179628_a());
+                        float f2 = (float)MathHelper.wrapAngle180(commandbase$coordinatearg3.func_179628_a());
+                        float f3 = (float)MathHelper.wrapAngle180(commandbase$coordinatearg4.func_179628_a());
 
                         if (f3 > 90.0F || f3 < -90.0F)
                         {
-                            f3 = MathHelper.wrapAngleTo180_float(180.0F - f3);
-                            f2 = MathHelper.wrapAngleTo180_float(f2 + 180.0F);
+                            f3 = MathHelper.wrapAngle180(180.0F - f3).floatValue();
+                            f2 = MathHelper.wrapAngle180(f2 + 180.0F).floatValue();
                         }
 
                         entity.setLocationAndAngles(commandbase$coordinatearg.func_179628_a(), commandbase$coordinatearg1.func_179628_a(), commandbase$coordinatearg2.func_179628_a(), f2, f3);

@@ -9,11 +9,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import cc.unknown.Haru;
 import cc.unknown.utils.client.FuckUtil;
 import cc.unknown.utils.client.FuckUtil.PositionMode;
-import cc.unknown.utils.helpers.MathHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.MathHelper;
 
 public class EditHudPositionScreen extends GuiScreen {
     final String hudTextExample = "This is an-Example-HUD";

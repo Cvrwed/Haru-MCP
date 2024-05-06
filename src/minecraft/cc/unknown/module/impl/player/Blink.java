@@ -17,10 +17,12 @@ import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.ui.clickgui.raven.impl.api.Theme;
 import cc.unknown.utils.network.PacketUtil;
+import io.netty.util.concurrent.GenericFutureListener;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.vec.Vec3;
 
 @Register(name = "Blink", category = Category.Player)
 public class Blink extends Module {
@@ -155,7 +157,7 @@ public class Blink extends Module {
 			queuedPackets.addAll(packetsReceived);
 		}
 		synchronized (packets) {
-			PacketUtil.send(packets.toArray(new Packet<?>[0]));
+			mc.getNetHandler().getNetworkManager().outboundPacketsQueue.add(new NetworkManager.InboundHandlerTuplePacketListener((Packet) packets, (GenericFutureListener[]) null));
 		}
 
 		reset();

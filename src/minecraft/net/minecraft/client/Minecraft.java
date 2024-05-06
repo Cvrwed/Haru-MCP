@@ -157,7 +157,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.network.EnumConnectionState;
+import net.minecraft.network.ConnectionState;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.handshake.client.C00Handshake;
 import net.minecraft.network.login.client.C00PacketLoginStart;
@@ -2040,7 +2040,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		SocketAddress socketaddress = this.theIntegratedServer.getNetworkSystem().addLocalEndpoint();
 		NetworkManager networkmanager = NetworkManager.provideLocalClient(socketaddress);
 		networkmanager.setNetHandler(new NetHandlerLoginClient(networkmanager, this, (GuiScreen) null));
-		networkmanager.sendPacket(new C00Handshake(47, socketaddress.toString(), 0, EnumConnectionState.LOGIN));
+		networkmanager.sendPacket(new C00Handshake(47, socketaddress.toString(), 0, ConnectionState.LOGIN));
 		networkmanager.sendPacket(new C00PacketLoginStart(this.getSession().getProfile()));
 		this.networkManager = networkmanager;
 	}

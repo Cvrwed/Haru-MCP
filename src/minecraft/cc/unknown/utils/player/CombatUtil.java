@@ -8,10 +8,10 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.vec.AxisAlignedBB;
+import net.minecraft.util.vec.Vec3;
 
 public enum CombatUtil implements Loona {
 	instance;
@@ -103,8 +103,8 @@ public enum CombatUtil implements Loona {
 		final float yaw = (float) (Math.atan2(diffZ, diffX) * 180.0 / Math.PI) - 90.0f;
 		final float pitch = (float) (-(Math.atan2(diffY, MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ)) * 180.0
 				/ Math.PI));
-		return new float[] { mc.player.rotationYaw + MathHelper.wrapAngleTo180_float(yaw - mc.player.rotationYaw),
-				mc.player.rotationPitch + MathHelper.wrapAngleTo180_float(pitch - mc.player.rotationPitch) };
+		return new float[] { mc.player.rotationYaw + MathHelper.wrapAngle180(yaw - mc.player.rotationYaw).floatValue(),
+				mc.player.rotationPitch + MathHelper.wrapAngle180(pitch - mc.player.rotationPitch).floatValue() };
 	}
 
 	public void aimAt(float pitch, float yaw, float fuckedYaw, float fuckedPitch, double speed) {
@@ -127,7 +127,7 @@ public enum CombatUtil implements Loona {
 	}
 
 	public float maxAngleChange(final float prev, final float now, final float maxTurn) {
-		float dif = MathHelper.wrapAngleTo180_float(now - prev);
+		float dif = MathHelper.wrapAngle180(now - prev).floatValue();
 		if (dif > maxTurn)
 			dif = maxTurn;
 		if (dif < -maxTurn)

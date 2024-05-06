@@ -1,6 +1,7 @@
-package net.minecraft.util;
+package net.minecraft.util.combat;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.IChatComponent;
 
 public class CombatEntry
 {
@@ -35,7 +36,7 @@ public class CombatEntry
     }
 
     /**
-     * Returns true if {@link net.minecraft.util.DamageSource#getEntity() damage source} is a living entity
+     * Returns true if {@link net.minecraft.util.combat.DamageSource#getEntity() damage source} is a living entity
      */
     public boolean isLivingDamageSrc()
     {

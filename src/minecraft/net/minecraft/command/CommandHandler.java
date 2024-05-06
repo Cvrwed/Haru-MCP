@@ -9,8 +9,9 @@ import java.util.Set;
 import java.util.Map.Entry;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.chat.ChatComponentTranslation;
+import net.minecraft.util.enums.EnumChatFormatting;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

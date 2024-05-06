@@ -56,12 +56,12 @@ import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatFileWriter;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.combat.DamageSource;
+import net.minecraft.util.enums.EnumFacing;
+import net.minecraft.util.enums.EnumParticleTypes;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 

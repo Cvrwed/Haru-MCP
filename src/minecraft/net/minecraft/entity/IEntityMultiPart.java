@@ -1,7 +1,7 @@
 package net.minecraft.entity;
 
 import net.minecraft.entity.boss.EntityDragonPart;
-import net.minecraft.util.DamageSource;
+import net.minecraft.util.combat.DamageSource;
 import net.minecraft.world.World;
 
 public interface IEntityMultiPart

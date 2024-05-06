@@ -4,7 +4,7 @@ import java.util.Random;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.vec.Vec3;
 
 public class RandomPositionGenerator
 {

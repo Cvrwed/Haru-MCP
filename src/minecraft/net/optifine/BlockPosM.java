@@ -3,9 +3,9 @@ package net.optifine;
 import com.google.common.collect.AbstractIterator;
 import java.util.Iterator;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3i;
+import net.minecraft.util.enums.EnumFacing;
+import net.minecraft.util.vec.Vec3i;
 
 public class BlockPosM extends BlockPos
 {

@@ -13,7 +13,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S34PacketMaps;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec4b;
+import net.minecraft.util.vec.Vec4b;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 

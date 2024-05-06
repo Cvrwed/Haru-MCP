@@ -1,7 +1,7 @@
 package net.minecraft.entity.ai;
 
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.vec.Vec3;
 
 public class EntityAIPanic extends EntityAIBase
 {

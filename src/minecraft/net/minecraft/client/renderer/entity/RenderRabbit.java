@@ -2,8 +2,8 @@ package net.minecraft.client.renderer.entity;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.entity.passive.EntityRabbit;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.enums.EnumChatFormatting;
 
 public class RenderRabbit extends RenderLiving<EntityRabbit>
 {

@@ -1,10 +1,13 @@
-package net.minecraft.util;
+package net.minecraft.util.combat;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityFireball;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.StatCollector;
+import net.minecraft.util.chat.ChatComponentTranslation;
 import net.minecraft.world.Explosion;
 
 public class DamageSource

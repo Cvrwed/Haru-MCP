@@ -1,6 +1,6 @@
 package net.minecraft.client.renderer;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.enums.EnumFacing;
 
 public enum EnumFaceDirection
 {

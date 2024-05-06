@@ -18,7 +18,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
+import net.minecraft.util.combat.DamageSource;
 import net.minecraft.world.World;
 
 public class EntityCreeper extends EntityMob

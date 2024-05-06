@@ -8,8 +8,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.item.Item;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.combat.DamageSource;
+import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.world.World;
 
 public class EntityMinecartChest extends EntityMinecartContainer

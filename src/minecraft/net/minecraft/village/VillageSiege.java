@@ -8,7 +8,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.vec.Vec3;
 import net.minecraft.world.SpawnerAnimals;
 import net.minecraft.world.World;
 

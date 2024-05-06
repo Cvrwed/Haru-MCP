@@ -1,7 +1,8 @@
 package net.minecraft.client.renderer.chunk;
 
 import java.util.Set;
-import net.minecraft.util.EnumFacing;
+
+import net.minecraft.util.enums.EnumFacing;
 
 public class SetVisibility
 {

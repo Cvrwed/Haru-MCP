@@ -1,8 +1,12 @@
-package net.minecraft.util;
+package net.minecraft.util.chat;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.enums.EnumChatFormatting;
+
 import java.util.Iterator;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package net.minecraft.util;
+package net.minecraft.util.combat;
 
 import com.google.common.collect.Lists;
 import java.util.List;
@@ -8,6 +8,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.chat.ChatComponentTranslation;
 
 public class CombatTracker
 {

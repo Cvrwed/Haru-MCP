@@ -9,8 +9,8 @@ import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.combat.DamageSource;
+import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
 

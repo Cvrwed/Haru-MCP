@@ -8,8 +8,10 @@ import org.lwjgl.opengl.GL11;
 import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.ui.clickgui.raven.impl.api.Component;
 import cc.unknown.ui.clickgui.raven.impl.api.Theme;
-import cc.unknown.utils.helpers.MathHelper;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MathHelper;
 
 public class DoubleSliderComp extends Component {
 	private final DoubleSliderValue doubleSlider;

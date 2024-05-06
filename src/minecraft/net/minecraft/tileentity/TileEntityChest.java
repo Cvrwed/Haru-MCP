@@ -11,10 +11,10 @@ import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.enums.EnumFacing;
+import net.minecraft.util.vec.AxisAlignedBB;
 
 public class TileEntityChest extends TileEntityLockable implements ITickable, IInventory
 {

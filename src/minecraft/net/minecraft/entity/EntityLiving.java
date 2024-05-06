@@ -32,8 +32,8 @@ import net.minecraft.scoreboard.Team;
 import net.minecraft.src.Config;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.enums.EnumParticleTypes;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -717,7 +717,7 @@ public abstract class EntityLiving extends EntityLivingBase
      */
     private float updateRotation(float p_70663_1_, float p_70663_2_, float p_70663_3_)
     {
-        float f = MathHelper.wrapAngleTo180_float(p_70663_2_ - p_70663_1_);
+        float f = MathHelper.wrapAngle180(p_70663_2_ - p_70663_1_).floatValue();
 
         if (f > p_70663_3_)
         {

@@ -3,7 +3,7 @@ package net.minecraft.block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.enums.EnumFacing;
 
 public abstract class BlockDirectional extends Block
 {

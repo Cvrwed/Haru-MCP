@@ -1,4 +1,6 @@
-package net.minecraft.util;
+package net.minecraft.util.vec;
+
+import net.minecraft.util.MathHelper;
 
 public class Vec3
 {

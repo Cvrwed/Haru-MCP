@@ -4,7 +4,7 @@ import java.io.IOException;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.INetHandlerPlayClient;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.enums.EnumParticleTypes;
 
 public class S2APacketParticles implements Packet<INetHandlerPlayClient>
 {

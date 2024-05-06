@@ -1,6 +1,6 @@
 package net.minecraft.client.renderer;
 
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.enums.EnumWorldBlockLayer;
 
 public class RegionRenderCacheBuilder
 {

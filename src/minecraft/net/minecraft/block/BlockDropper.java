@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityDropper;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.world.World;
 
 public class BlockDropper extends BlockDispenser

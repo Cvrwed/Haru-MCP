@@ -30,10 +30,10 @@ import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.combat.DamageSource;
+import net.minecraft.util.enums.EnumParticleTypes;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
@@ -445,7 +445,7 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
 
     private float func_82204_b(float p_82204_1_, float p_82204_2_, float p_82204_3_)
     {
-        float f = MathHelper.wrapAngleTo180_float(p_82204_2_ - p_82204_1_);
+        float f = MathHelper.wrapAngle180(p_82204_2_ - p_82204_1_).floatValue();
 
         if (f > p_82204_3_)
         {

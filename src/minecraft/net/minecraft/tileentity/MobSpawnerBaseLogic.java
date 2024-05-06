@@ -11,11 +11,11 @@ import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.enums.EnumParticleTypes;
+import net.minecraft.util.vec.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public abstract class MobSpawnerBaseLogic

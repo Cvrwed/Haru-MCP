@@ -3,6 +3,9 @@ package net.minecraft.util;
 import com.google.common.collect.AbstractIterator;
 import java.util.Iterator;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.enums.EnumFacing;
+import net.minecraft.util.vec.Vec3;
+import net.minecraft.util.vec.Vec3i;
 
 public class BlockPos extends Vec3i
 {

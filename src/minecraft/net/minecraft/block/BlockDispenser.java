@@ -24,8 +24,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityDropper;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.RegistryDefaulted;
+import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.world.World;
 
 public class BlockDispenser extends BlockContainer

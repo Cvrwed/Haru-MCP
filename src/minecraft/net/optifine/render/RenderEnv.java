@@ -13,8 +13,8 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BreakingFour;
 import net.minecraft.src.Config;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.enums.EnumFacing;
+import net.minecraft.util.enums.EnumWorldBlockLayer;
 import net.optifine.BlockPosM;
 import net.optifine.model.ListQuadsOverlay;
 

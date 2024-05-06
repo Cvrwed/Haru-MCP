@@ -3,9 +3,9 @@ package net.minecraft.client.gui;
 import com.google.common.collect.Lists;
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.chat.ChatComponentText;
+import net.minecraft.util.enums.EnumChatFormatting;
 
 public class GuiUtilRenderComponents
 {

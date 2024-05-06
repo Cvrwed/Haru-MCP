@@ -1,4 +1,4 @@
-package net.minecraft.util;
+package net.minecraft.util.chat;
 
 public class ChatAllowedCharacters
 {

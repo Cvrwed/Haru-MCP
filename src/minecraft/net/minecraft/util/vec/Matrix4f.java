@@ -1,4 +1,4 @@
-package net.minecraft.util;
+package net.minecraft.util.vec;
 
 public class Matrix4f extends org.lwjgl.util.vector.Matrix4f
 {

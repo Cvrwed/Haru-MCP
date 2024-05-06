@@ -9,7 +9,6 @@ import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import cc.unknown.utils.client.RenderUtil;
 import cc.unknown.utils.network.credential.CookieUtil;
 import cc.unknown.utils.network.credential.LoginData;
 import fr.litarvan.openauth.microsoft.MicrosoftAuthResult;
@@ -21,9 +20,9 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
+import net.minecraft.util.enums.EnumChatFormatting;
 
 public class AltLoginScreen extends GuiScreen {
 
@@ -56,7 +55,7 @@ public class AltLoginScreen extends GuiScreen {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		RenderUtil.drawRect(0.0D, 0.0D, this.width, this.height, (new Color(0)).getRGB());
+		mc.currentScreen.drawRect(0.0D, 0.0D, this.width, this.height, (new Color(0)).getRGB());
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		ScaledResolution sr = new ScaledResolution(mc);
@@ -84,14 +83,14 @@ public class AltLoginScreen extends GuiScreen {
 		int endX = sr.getScaledWidth() / 2 + buttonWidth / 2;
 
 		for (Button button : buttons) {
-			RenderUtil.drawRect(startX, y, endX, y + buttonHeight, 0x50000000);
+			mc.currentScreen.drawRect(startX, y, endX, y + buttonHeight, 0x50000000);
 
 			button.updateState(mouseX > startX && mouseX < endX && mouseY > y && mouseY < y + buttonHeight);
 
 			if (button.isHovered()) {
 				double scale = 1;
 
-				RenderUtil.drawRect(startX, y, startX + buttonWidth * scale, y + buttonHeight,
+				mc.currentScreen.drawRect(startX, y, startX + buttonWidth * scale, y + buttonHeight,
 						new Color(0, 0, 0).getRGB());
 			}
 

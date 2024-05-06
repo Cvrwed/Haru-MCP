@@ -26,9 +26,10 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.enums.EnumChatFormatting;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 

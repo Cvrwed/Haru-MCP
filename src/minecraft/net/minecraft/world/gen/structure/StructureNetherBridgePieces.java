@@ -10,8 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.world.World;
 
 @SuppressWarnings("incomplete-switch")

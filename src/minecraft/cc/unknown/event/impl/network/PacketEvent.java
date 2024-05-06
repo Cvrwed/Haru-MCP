@@ -43,7 +43,7 @@ public class PacketEvent extends Event {
      * @return true if the direction of the packet is "CLIENTBOUND", false otherwise.
      */
     public boolean isSend() {
-        return direction == PacketDirection.CLIENTBOUND;
+        return direction == PacketDirection.Outbound;
     }
 
     /**
@@ -52,6 +52,6 @@ public class PacketEvent extends Event {
      * @return true if the direction of the packet is "SERVERBOUND", false otherwise.
      */
     public boolean isReceive() {
-        return direction == PacketDirection.SERVERBOUND;
+        return direction == PacketDirection.Inbound;
     }
 }

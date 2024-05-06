@@ -1,7 +1,7 @@
 package net.minecraft.entity.player;
 
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.chat.ChatComponentTranslation;
 
 public enum EnumPlayerModelParts
 {

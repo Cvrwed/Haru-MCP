@@ -4,7 +4,7 @@ import java.io.IOException;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.enums.EnumChatFormatting;
 
 public class GuiGameOver extends GuiScreen implements GuiYesNoCallback
 {

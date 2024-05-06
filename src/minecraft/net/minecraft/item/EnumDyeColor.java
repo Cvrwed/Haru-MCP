@@ -1,8 +1,8 @@
 package net.minecraft.item;
 
 import net.minecraft.block.material.MapColor;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.enums.EnumChatFormatting;
 
 public enum EnumDyeColor implements IStringSerializable
 {

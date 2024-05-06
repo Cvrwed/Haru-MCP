@@ -1,6 +1,8 @@
 package net.minecraft.util;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.util.enums.EnumFacing;
+import net.minecraft.util.vec.Vec3;
 
 public class MovingObjectPosition
 {

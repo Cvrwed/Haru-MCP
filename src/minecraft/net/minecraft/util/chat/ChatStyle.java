@@ -1,4 +1,4 @@
-package net.minecraft.util;
+package net.minecraft.util.chat;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -11,6 +11,8 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.enums.EnumChatFormatting;
 
 public class ChatStyle
 {

@@ -15,7 +15,6 @@ import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.client.ColorUtil;
-import cc.unknown.utils.client.RenderUtil;
 import cc.unknown.utils.player.CombatUtil;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -116,11 +115,11 @@ public class Nametags extends Module {
 		float x = -e - 2.2F;
 		float z = (float) (getWidth(getPlayerName(player)) + 4);
 		if (mode.is("Percentage")) {
-			RenderUtil.drawBorderedRect(x, -3.0F, e, 10.0F, 1.0F,
+			mc.currentScreen.drawBorderedRect(x, -3.0F, e, 10.0F, 1.0F,
 					(new Color(20, 20, 20, opacity.getInputToInt())).getRGB(),
 					(new Color(10, 10, 10, opacity.getInputToInt())).getRGB());
 		} else {
-			RenderUtil.drawBorderedRect(x + 5.0F, -3.0F, e, 10.0F, 1.0F,
+			mc.currentScreen.drawBorderedRect(x + 5.0F, -3.0F, e, 10.0F, 1.0F,
 					(new Color(20, 20, 20, opacity.getInputToInt())).getRGB(),
 					(new Color(10, 10, 10, opacity.getInputToInt())).getRGB());
 		}
@@ -163,7 +162,7 @@ public class Nametags extends Module {
 		float rotateX = mc.gameSettings.thirdPersonView == 2 ? -1.0F : 1.0F;
 		double scaleRatio = (double) (getSize(player) / 10.0F * scale.getInput()) * 1.5D;
 		GL11.glPushMatrix();
-		RenderUtil.startDrawing();
+		mc.currentScreen.startDrawing();
 		GL11.glTranslatef(x, y, z);
 		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(-mc.getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);

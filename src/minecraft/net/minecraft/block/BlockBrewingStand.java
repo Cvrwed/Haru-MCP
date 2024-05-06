@@ -18,12 +18,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.enums.EnumFacing;
+import net.minecraft.util.enums.EnumParticleTypes;
+import net.minecraft.util.enums.EnumWorldBlockLayer;
+import net.minecraft.util.vec.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class BlockBrewingStand extends BlockContainer

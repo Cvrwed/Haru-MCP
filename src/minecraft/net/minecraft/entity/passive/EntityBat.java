@@ -7,8 +7,8 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.combat.DamageSource;
 import net.minecraft.world.World;
 
 public class EntityBat extends EntityAmbientCreature
@@ -174,7 +174,7 @@ public class EntityBat extends EntityAmbientCreature
             this.motionY += (Math.signum(d1) * 0.699999988079071D - this.motionY) * 0.10000000149011612D;
             this.motionZ += (Math.signum(d2) * 0.5D - this.motionZ) * 0.10000000149011612D;
             float f = (float)(MathHelper.func_181159_b(this.motionZ, this.motionX) * 180.0D / Math.PI) - 90.0F;
-            float f1 = MathHelper.wrapAngleTo180_float(f - this.rotationYaw);
+            float f1 = MathHelper.wrapAngle180(f - this.rotationYaw).floatValue();
             this.moveForward = 0.5F;
             this.rotationYaw += f1;
 

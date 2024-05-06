@@ -12,7 +12,6 @@ import cc.unknown.module.impl.visuals.ClickGuiModule;
 import cc.unknown.ui.clickgui.raven.impl.CategoryComp;
 import cc.unknown.ui.clickgui.raven.impl.api.Theme;
 import cc.unknown.utils.client.FuckUtil;
-import cc.unknown.utils.client.RenderUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
@@ -64,7 +63,7 @@ public class HaruGui extends GuiScreen {
 		});
 
 		if (waifuImage != null) {
-			RenderUtil.drawImage(waifuImage, FuckUtil.instance.getWaifuX(), FuckUtil.instance.getWaifuY(),
+			mc.currentScreen.drawImage(waifuImage, FuckUtil.instance.getWaifuX(), FuckUtil.instance.getWaifuY(),
 					sr.getScaledWidth() / 5.2f, sr.getScaledHeight() / 2f);
 		}
 

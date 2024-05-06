@@ -21,9 +21,9 @@ import net.minecraft.item.ItemTool;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.enums.EnumFacing;
 
 public class TileEntityFurnace extends TileEntityLockable implements ITickable, ISidedInventory
 {

@@ -12,9 +12,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.vec.AxisAlignedBB;
+import net.minecraft.util.vec.Vec3;
 
 public class RotationUtils implements Loona {
 
@@ -58,9 +58,9 @@ public class RotationUtils implements Loona {
 		final double diffY = vec.yCoord - eyesPos.yCoord;
 		final double diffZ = vec.zCoord - eyesPos.zCoord;
 
-		return new Rotation(MathHelper.wrapAngleTo180_float((float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90F),
-				MathHelper.wrapAngleTo180_float(
-						(float) (-Math.toDegrees(Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ))))));
+		return new Rotation(MathHelper.wrapAngle180((float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90F).floatValue(),
+				MathHelper.wrapAngle180(
+						(float) (-Math.toDegrees(Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ))))).floatValue());
 	}
 
 	public static Vec3 getCenter(final AxisAlignedBB bb) {

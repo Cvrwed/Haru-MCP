@@ -1,4 +1,6 @@
-package net.minecraft.util;
+package net.minecraft.util.chat;
+
+import net.minecraft.util.IChatComponent;
 
 public class ChatComponentSelector extends ChatComponentStyle
 {

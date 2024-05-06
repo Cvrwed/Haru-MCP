@@ -1,4 +1,4 @@
-package net.minecraft.util;
+package net.minecraft.util.enums;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

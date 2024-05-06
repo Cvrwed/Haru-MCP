@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.enums.EnumChatFormatting;
 
 public class Scoreboard
 {

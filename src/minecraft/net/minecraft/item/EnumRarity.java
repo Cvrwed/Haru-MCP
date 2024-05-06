@@ -1,6 +1,6 @@
 package net.minecraft.item;
 
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.enums.EnumChatFormatting;
 
 public enum EnumRarity
 {

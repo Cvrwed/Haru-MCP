@@ -18,9 +18,10 @@ import net.minecraft.network.play.client.C16PacketClientStatus;
 import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.stats.StatFileWriter;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.chat.ChatComponentTranslation;
+
 import org.lwjgl.input.Mouse;
 
 public class GuiAchievements extends GuiScreen implements IProgressMeter

@@ -1,7 +1,7 @@
 package net.minecraft.inventory;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.enums.EnumFacing;
 
 public interface ISidedInventory extends IInventory
 {

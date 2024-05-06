@@ -11,8 +11,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.ChatAllowedCharacters;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.chat.ChatAllowedCharacters;
+import net.minecraft.util.chat.ChatComponentText;
+
 import org.lwjgl.input.Keyboard;
 
 public class GuiEditSign extends GuiScreen

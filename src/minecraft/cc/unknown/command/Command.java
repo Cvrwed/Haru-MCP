@@ -5,7 +5,7 @@ import java.util.Map;
 
 import cc.unknown.utils.Loona;
 import cc.unknown.utils.player.PlayerUtil;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.enums.EnumChatFormatting;
 
 public abstract class Command implements Loona {
 	

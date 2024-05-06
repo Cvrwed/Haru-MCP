@@ -1,8 +1,13 @@
-package net.minecraft.util;
+package net.minecraft.util.enums;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
+
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.vec.Vec3i;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;

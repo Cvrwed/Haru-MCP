@@ -10,8 +10,9 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentProcessor;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.chat.ChatComponentProcessor;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class CommandMessageRaw extends CommandBase

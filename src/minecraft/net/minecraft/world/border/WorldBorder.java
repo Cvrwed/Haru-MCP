@@ -3,8 +3,8 @@ package net.minecraft.world.border;
 import com.google.common.collect.Lists;
 import java.util.List;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.vec.AxisAlignedBB;
 import net.minecraft.world.ChunkCoordIntPair;
 
 public class WorldBorder

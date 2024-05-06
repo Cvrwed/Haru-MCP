@@ -4,7 +4,7 @@ import cc.unknown.Haru;
 import cc.unknown.command.Command;
 import cc.unknown.command.Flips;
 import cc.unknown.module.impl.Module;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.enums.EnumChatFormatting;
 
 @Flips(name = "Toggle", alias = "t", desc = "Toggles modules.", syntax = ".toggle")
 public class ToggleCommand extends Command {

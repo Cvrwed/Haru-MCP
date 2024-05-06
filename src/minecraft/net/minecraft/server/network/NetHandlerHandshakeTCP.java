@@ -1,13 +1,13 @@
 package net.minecraft.server.network;
 
-import net.minecraft.network.EnumConnectionState;
+import net.minecraft.network.ConnectionState;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.handshake.INetHandlerHandshakeServer;
 import net.minecraft.network.handshake.client.C00Handshake;
 import net.minecraft.network.login.server.S00PacketDisconnect;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.chat.ChatComponentText;
 
 public class NetHandlerHandshakeTCP implements INetHandlerHandshakeServer
 {
@@ -30,7 +30,7 @@ public class NetHandlerHandshakeTCP implements INetHandlerHandshakeServer
         switch (packetIn.getRequestedState())
         {
             case LOGIN:
-                this.networkManager.setConnectionState(EnumConnectionState.LOGIN);
+                this.networkManager.setConnectionState(ConnectionState.LOGIN);
 
                 if (packetIn.getProtocolVersion() > 47)
                 {
@@ -52,7 +52,7 @@ public class NetHandlerHandshakeTCP implements INetHandlerHandshakeServer
                 break;
 
             case STATUS:
-                this.networkManager.setConnectionState(EnumConnectionState.STATUS);
+                this.networkManager.setConnectionState(ConnectionState.STATUS);
                 this.networkManager.setNetHandler(new NetHandlerStatusServer(this.server, this.networkManager));
                 break;
 

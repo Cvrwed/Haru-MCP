@@ -27,8 +27,8 @@ import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.src.Config;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.enums.EnumChatFormatting;
 import net.optifine.EmissiveTextures;
 import net.optifine.entity.model.CustomEntityModels;
 import net.optifine.reflect.Reflector;
@@ -140,7 +140,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 					f = this.interpolateRotation(entitylivingbase.prevRenderYawOffset, entitylivingbase.renderYawOffset,
 							partialTicks);
 					f2 = f1 - f;
-					float f3 = MathHelper.wrapAngleTo180_float(f2);
+					float f3 = MathHelper.wrapAngle180(f2).floatValue();
 
 					if (f3 < -85.0F) {
 						f3 = -85.0F;

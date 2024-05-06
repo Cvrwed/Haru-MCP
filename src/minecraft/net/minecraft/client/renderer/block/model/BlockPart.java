@@ -10,9 +10,11 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Map.Entry;
-import net.minecraft.util.EnumFacing;
+
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.enums.EnumFacing;
+
 import org.lwjgl.util.vector.Vector3f;
 
 public class BlockPart

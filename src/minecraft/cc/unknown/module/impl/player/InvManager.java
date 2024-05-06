@@ -35,7 +35,7 @@ import net.minecraft.item.ItemTool;
 import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraft.network.play.client.C16PacketClientStatus;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
+import net.minecraft.util.combat.DamageSource;
 
 @Register(name = "InvManager", category = Category.Player)
 public class InvManager extends Module {

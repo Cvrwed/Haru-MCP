@@ -23,11 +23,11 @@ import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemEnderPearl;
 import net.minecraft.item.ItemSnowball;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.enums.EnumFacing;
+import net.minecraft.util.vec.AxisAlignedBB;
+import net.minecraft.util.vec.Vec3;
 
 @Register(name = "Trajectories", category = Category.Visuals)
 public class Trajectories extends Module {

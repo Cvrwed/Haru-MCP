@@ -31,12 +31,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.combat.DamageSource;
+import net.minecraft.util.combat.EntityDamageSource;
+import net.minecraft.util.combat.EntityDamageSourceIndirect;
+import net.minecraft.util.enums.EnumParticleTypes;
+import net.minecraft.util.vec.Vec3;
 import net.minecraft.world.World;
 
 public class EntityEnderman extends EntityMob

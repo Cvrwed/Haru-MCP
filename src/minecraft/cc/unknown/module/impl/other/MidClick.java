@@ -20,7 +20,7 @@ import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemEnderPearl;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.enums.EnumChatFormatting;
 
 @Register(name = "Midclick", category = Category.Other)
 public class MidClick extends Module {

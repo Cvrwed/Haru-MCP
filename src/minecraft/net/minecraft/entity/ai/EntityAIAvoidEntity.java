@@ -8,7 +8,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.vec.Vec3;
 
 public class EntityAIAvoidEntity<T extends Entity> extends EntityAIBase
 {

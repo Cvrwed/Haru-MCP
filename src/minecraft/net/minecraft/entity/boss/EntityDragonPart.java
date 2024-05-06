@@ -3,7 +3,7 @@ package net.minecraft.entity.boss;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
+import net.minecraft.util.combat.DamageSource;
 
 public class EntityDragonPart extends Entity
 {

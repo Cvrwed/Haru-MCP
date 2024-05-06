@@ -9,12 +9,12 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.play.server.S2FPacketSetSlot;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.ChatComponentProcessor;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.chat.ChatComponentProcessor;
+import net.minecraft.util.chat.ChatComponentText;
+import net.minecraft.util.enums.EnumChatFormatting;
 import net.minecraft.world.World;
 
 public class ItemEditableBook extends Item

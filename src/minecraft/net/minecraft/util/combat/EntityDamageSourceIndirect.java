@@ -1,8 +1,11 @@
-package net.minecraft.util;
+package net.minecraft.util.combat;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.StatCollector;
+import net.minecraft.util.chat.ChatComponentTranslation;
 
 public class EntityDamageSourceIndirect extends EntityDamageSource
 {

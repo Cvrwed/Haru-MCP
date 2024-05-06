@@ -5,7 +5,7 @@ import java.util.BitSet;
 import java.util.List;
 import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.enums.EnumWorldBlockLayer;
 import net.optifine.SmartAnimations;
 
 public abstract class ChunkRenderContainer

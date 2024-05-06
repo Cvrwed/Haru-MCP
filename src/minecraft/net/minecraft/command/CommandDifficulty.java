@@ -3,7 +3,7 @@ package net.minecraft.command;
 import java.util.List;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.chat.ChatComponentTranslation;
 import net.minecraft.world.EnumDifficulty;
 
 public class CommandDifficulty extends CommandBase

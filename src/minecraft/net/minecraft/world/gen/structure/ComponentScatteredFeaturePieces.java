@@ -18,8 +18,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.world.World;
 
 public class ComponentScatteredFeaturePieces

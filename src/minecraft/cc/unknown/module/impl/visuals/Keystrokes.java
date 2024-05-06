@@ -8,7 +8,6 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.ui.clickgui.raven.impl.api.Theme;
-import cc.unknown.utils.client.RenderUtil;
 
 @Register(name = "Keystrokes", category = Category.Visuals)
 public class Keystrokes extends Module {
@@ -52,8 +51,8 @@ public class Keystrokes extends Module {
 	    float x2 = x1 + size;
 	    float y2 = y1 + size;
 
-	    RenderUtil.drawRect(x1, y1, x2, y2, new Color(0, 0, 0, 150).getRGB());
-	    RenderUtil.drawRect(x1, y1, x2, y2, new Color(alpha, alpha, alpha, 150).getRGB());
+	    mc.currentScreen.drawRect(x1, y1, x2, y2, new Color(0, 0, 0, 150).getRGB());
+	    mc.currentScreen.drawRect(x1, y1, x2, y2, new Color(alpha, alpha, alpha, 150).getRGB());
 
 	    mc.fontRendererObj.drawStringWithShadow(keyLabel, x1 + 8.0F, y1 + 5.0F, Theme.instance.getMainColor().getRGB());
 	}

@@ -16,7 +16,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.vec.Vec3;
 
 @Register(name = "AntiVoid", category = Category.Player)
 public class AntiVoid extends Module {

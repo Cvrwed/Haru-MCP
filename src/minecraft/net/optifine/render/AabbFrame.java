@@ -2,7 +2,7 @@ package net.optifine.render;
 
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.culling.ICamera;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.vec.AxisAlignedBB;
 
 public class AabbFrame extends AxisAlignedBB
 {

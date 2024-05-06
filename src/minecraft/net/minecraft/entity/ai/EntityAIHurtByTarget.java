@@ -2,7 +2,7 @@ package net.minecraft.entity.ai;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.vec.AxisAlignedBB;
 
 public class EntityAIHurtByTarget extends EntityAITarget
 {

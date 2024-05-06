@@ -16,9 +16,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.combat.DamageSource;
+import net.minecraft.util.combat.EntityDamageSource;
+import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.world.World;
 
 public class EntitySilverfish extends EntityMob

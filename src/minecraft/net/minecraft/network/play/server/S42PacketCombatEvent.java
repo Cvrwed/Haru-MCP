@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.INetHandlerPlayClient;
-import net.minecraft.util.CombatTracker;
+import net.minecraft.util.combat.CombatTracker;
 
 public class S42PacketCombatEvent implements Packet<INetHandlerPlayClient>
 {

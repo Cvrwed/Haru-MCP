@@ -69,7 +69,7 @@ public class Rotation {
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayerSP player = mc.player;
 
-        float yawDifference = MathHelper.wrapAngleTo180_float(player.rotationYaw - yaw - 23.5f - 135) + 180;
+        float yawDifference = MathHelper.wrapAngle180(player.rotationYaw - yaw - 23.5f - 135).floatValue() + 180;
         int diff = (int) (yawDifference / 45);
 
         float strafe = event.getStrafe();

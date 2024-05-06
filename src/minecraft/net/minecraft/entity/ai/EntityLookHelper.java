@@ -89,7 +89,7 @@ public class EntityLookHelper
             this.entity.rotationYawHead = this.updateRotation(this.entity.rotationYawHead, this.entity.renderYawOffset, 10.0F);
         }
 
-        float f2 = MathHelper.wrapAngleTo180_float(this.entity.rotationYawHead - this.entity.renderYawOffset);
+        float f2 = MathHelper.wrapAngle180(this.entity.rotationYawHead - this.entity.renderYawOffset).floatValue();
 
         if (!this.entity.getNavigator().noPath())
         {
@@ -107,7 +107,7 @@ public class EntityLookHelper
 
     private float updateRotation(float p_75652_1_, float p_75652_2_, float p_75652_3_)
     {
-        float f = MathHelper.wrapAngleTo180_float(p_75652_2_ - p_75652_1_);
+        float f = MathHelper.wrapAngle180(p_75652_2_ - p_75652_1_).floatValue();
 
         if (f > p_75652_3_)
         {

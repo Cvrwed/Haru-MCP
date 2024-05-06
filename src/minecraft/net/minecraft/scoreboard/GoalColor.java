@@ -2,7 +2,7 @@ package net.minecraft.scoreboard;
 
 import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.enums.EnumChatFormatting;
 
 public class GoalColor implements IScoreObjectiveCriteria
 {

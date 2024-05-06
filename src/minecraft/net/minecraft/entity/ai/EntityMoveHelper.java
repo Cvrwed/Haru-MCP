@@ -78,7 +78,7 @@ public class EntityMoveHelper
      */
     protected float limitAngle(float p_75639_1_, float p_75639_2_, float p_75639_3_)
     {
-        float f = MathHelper.wrapAngleTo180_float(p_75639_2_ - p_75639_1_);
+        float f = MathHelper.wrapAngle180(p_75639_2_ - p_75639_1_).floatValue();
 
         if (f > p_75639_3_)
         {

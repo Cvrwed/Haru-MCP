@@ -2,7 +2,7 @@ package net.minecraft.command;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.chat.ChatComponentTranslation;
 import net.minecraft.world.WorldSettings;
 
 public class CommandDefaultGameMode extends CommandGameMode

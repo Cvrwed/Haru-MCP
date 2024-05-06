@@ -10,12 +10,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.combat.DamageSource;
+import net.minecraft.util.combat.EntityDamageSourceIndirect;
+import net.minecraft.util.enums.EnumParticleTypes;
+import net.minecraft.util.vec.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class EntityBoat extends Entity
@@ -294,7 +294,7 @@ public class EntityBoat extends Entity
                 double d12 = this.posX + (this.boatX - this.posX) / (double)this.boatPosRotationIncrements;
                 double d16 = this.posY + (this.boatY - this.posY) / (double)this.boatPosRotationIncrements;
                 double d19 = this.posZ + (this.boatZ - this.posZ) / (double)this.boatPosRotationIncrements;
-                double d22 = MathHelper.wrapAngleTo180_double(this.boatYaw - (double)this.rotationYaw);
+                double d22 = MathHelper.wrapAngle180(this.boatYaw - (double)this.rotationYaw).doubleValue();
                 this.rotationYaw = (float)((double)this.rotationYaw + d22 / (double)this.boatPosRotationIncrements);
                 this.rotationPitch = (float)((double)this.rotationPitch + (this.boatPitch - (double)this.rotationPitch) / (double)this.boatPosRotationIncrements);
                 --this.boatPosRotationIncrements;
@@ -444,7 +444,7 @@ public class EntityBoat extends Entity
                 d15 = (double)((float)(MathHelper.func_181159_b(d21, d18) * 180.0D / Math.PI));
             }
 
-            double d23 = MathHelper.wrapAngleTo180_double(d15 - (double)this.rotationYaw);
+            double d23 = MathHelper.wrapAngle180(d15 - (double)this.rotationYaw).doubleValue();
 
             if (d23 > 20.0D)
             {

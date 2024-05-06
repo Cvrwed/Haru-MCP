@@ -2,8 +2,8 @@ package net.minecraft.command;
 
 import java.util.List;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.enums.EnumParticleTypes;
+import net.minecraft.util.vec.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 

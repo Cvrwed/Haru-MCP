@@ -1,6 +1,8 @@
-package net.minecraft.util;
+package net.minecraft.util.vec;
 
 import com.google.common.base.Objects;
+
+import net.minecraft.util.MathHelper;
 
 public class Vec3i implements Comparable<Vec3i>
 {

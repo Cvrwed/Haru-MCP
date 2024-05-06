@@ -7,10 +7,10 @@ import cc.unknown.Haru;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.ui.clickgui.raven.impl.api.Component;
 import cc.unknown.ui.clickgui.raven.impl.api.Theme;
-import cc.unknown.utils.client.RenderUtil;
+import cc.unknown.utils.Loona;
 import net.minecraft.client.gui.FontRenderer;
 
-public class CategoryComp {
+public class CategoryComp implements Loona {
 	private ArrayList<ModuleComp> modulesInCategory = new ArrayList<>();
 	private Category category;
 	private boolean open = false;
@@ -79,9 +79,9 @@ public class CategoryComp {
 				categoryHeight += module.getHeight();
 			}
 
-			RenderUtil.drawBorderedRoundedRect(this.x - 1, this.y, this.x + this.width + 1, this.y + this.bh + categoryHeight + 4f, 20f, 2f, Theme.instance.getMainColor().getRGB(), Theme.instance.getBackColor().getRGB());
+			mc.currentScreen.drawBorderedRoundedRect(this.x - 1, this.y, this.x + this.width + 1, this.y + this.bh + categoryHeight + 4f, 20f, 2f, Theme.instance.getMainColor().getRGB(), Theme.instance.getBackColor().getRGB());
 		} else if (!this.open) {
-			RenderUtil.drawBorderedRoundedRect(this.x - 1, this.y, this.x + this.width + 1, this.y + this.bh + 4f, 20f, 2f, Theme.instance.getMainColor().getRGB(), Theme.instance.getBackColor().getRGB());
+			mc.currentScreen.drawBorderedRoundedRect(this.x - 1, this.y, this.x + this.width + 1, this.y + this.bh + 4f, 20f, 2f, Theme.instance.getMainColor().getRGB(), Theme.instance.getBackColor().getRGB());
 		}
 
 		String center = this.n4m ? this.pvp : this.category.getName();

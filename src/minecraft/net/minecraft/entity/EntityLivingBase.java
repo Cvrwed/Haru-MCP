@@ -46,14 +46,14 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.scoreboard.Team;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.CombatTracker;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.combat.CombatTracker;
+import net.minecraft.util.combat.DamageSource;
+import net.minecraft.util.enums.EnumParticleTypes;
+import net.minecraft.util.vec.AxisAlignedBB;
+import net.minecraft.util.vec.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
@@ -1683,9 +1683,9 @@ public abstract class EntityLivingBase extends Entity {
 	}
 
 	protected float func_110146_f(float p_110146_1_, float p_110146_2_) {
-		float f = MathHelper.wrapAngleTo180_float(p_110146_1_ - this.renderYawOffset);
+		float f = MathHelper.wrapAngle180(p_110146_1_ - this.renderYawOffset).floatValue();
 		this.renderYawOffset += f * 0.3F;
-		float f1 = MathHelper.wrapAngleTo180_float(this.rotationYaw - this.renderYawOffset);
+		float f1 = MathHelper.wrapAngle180(this.rotationYaw - this.renderYawOffset).floatValue();
 		boolean flag = f1 < -90.0F || f1 >= 90.0F;
 
 		if (f1 < -75.0F) {
@@ -1723,7 +1723,7 @@ public abstract class EntityLivingBase extends Entity {
 			double d0 = this.posX + (this.newPosX - this.posX) / (double) this.newPosRotationIncrements;
 			double d1 = this.posY + (this.newPosY - this.posY) / (double) this.newPosRotationIncrements;
 			double d2 = this.posZ + (this.newPosZ - this.posZ) / (double) this.newPosRotationIncrements;
-			double d3 = MathHelper.wrapAngleTo180_double(this.newRotationYaw - (double) this.rotationYaw);
+			double d3 = MathHelper.wrapAngle180(this.newRotationYaw - (double) this.rotationYaw).doubleValue();
 			this.rotationYaw = (float) ((double) this.rotationYaw + d3 / (double) this.newPosRotationIncrements);
 			this.rotationPitch = (float) ((double) this.rotationPitch
 					+ (this.newRotationPitch - (double) this.rotationPitch) / (double) this.newPosRotationIncrements);

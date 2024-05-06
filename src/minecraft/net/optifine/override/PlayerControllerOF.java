@@ -9,9 +9,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.enums.EnumFacing;
+import net.minecraft.util.vec.Vec3;
 import net.minecraft.world.World;
 
 public class PlayerControllerOF extends PlayerControllerMP

@@ -1,7 +1,5 @@
 package cc.unknown.module.impl.combat;
 
-import static cc.unknown.utils.helpers.MathHelper.randomInt;
-
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -17,10 +15,10 @@ import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
-import cc.unknown.utils.helpers.MathHelper;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.MathHelper;
 
 @Register(name = "JumpReset", category = Category.Combat)
 public class JumpReset extends Module {
@@ -110,10 +108,10 @@ public class JumpReset extends Module {
 	private boolean shouldJump() {
 		switch (mode.getMode()) {
 		case "Ticks": {
-			return limit >= randomInt(tickTicks.getInputMinToInt(), tickTicks.getInputMaxToInt() + 0.1);
+			return limit >= MathHelper.randomInt(tickTicks.getInputMinToInt(), tickTicks.getInputMaxToInt() + 0.1);
 		}
 		case "Hits": {
-			return limit >= randomInt(hitHits.getInputMinToInt(), hitHits.getInputMaxToInt() + 0.1);
+			return limit >= MathHelper.randomInt(hitHits.getInputMinToInt(), hitHits.getInputMaxToInt() + 0.1);
 		}
 		default:
 			return false;

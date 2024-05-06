@@ -1,6 +1,6 @@
 package net.optifine.model;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.enums.EnumFacing;
 
 public class QuadBounds
 {

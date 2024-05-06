@@ -1,6 +1,6 @@
 package net.minecraft.client.renderer.culling;
 
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.vec.AxisAlignedBB;
 
 public class Frustum implements ICamera
 {

@@ -6,8 +6,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
-import net.minecraft.util.EnumFacing;
+
 import net.minecraft.util.JsonUtils;
+import net.minecraft.util.enums.EnumFacing;
 
 public class BlockPartFace
 {

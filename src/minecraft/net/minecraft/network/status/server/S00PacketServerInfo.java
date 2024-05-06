@@ -7,9 +7,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.ServerStatusResponse;
 import net.minecraft.network.status.INetHandlerStatusClient;
-import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumTypeAdapterFactory;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.chat.ChatStyle;
 
 public class S00PacketServerInfo implements Packet<INetHandlerStatusClient>
 {
