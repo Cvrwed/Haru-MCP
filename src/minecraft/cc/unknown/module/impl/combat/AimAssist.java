@@ -120,22 +120,16 @@ public class AimAssist extends Module {
 	}
 	
 	@EventLink
-	public void onFireball(Event e) {
-		if (!(e instanceof StrafeEvent || e instanceof JumpEvent)) {
-			return;
+	public void onStrafe(StrafeEvent e) {
+		if (moveFix.isToggled()) {
+			e.setYaw(mc.player.rotationYaw);
 		}
+	}
 
-		for (Entity entity : mc.world.loadedEntityList) {
-			if (entity instanceof EntityFireball) {
-				EntityFireball fireball = (EntityFireball) entity;
-				if (fireball != null && moveFix.isToggled()) {
-					if (e instanceof StrafeEvent) {
-						((StrafeEvent) e).setYaw(mc.player.rotationYaw);
-					} else if (e instanceof JumpEvent) {
-						((JumpEvent) e).setYaw(mc.player.rotationYaw);
-					}
-				}
-			}
+	@EventLink
+	public void onJump(JumpEvent e) {
+		if (moveFix.isToggled()) {
+			e.setYaw(mc.player.rotationPlayer);
 		}
 	}
 
