@@ -174,12 +174,8 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 */
 	public void onUpdate() {
 		if (worldObj.isBlockLoaded(new BlockPos(posX, 0.0D, posZ))) {
+			(new PreUpdateEvent(this)).call();
 			super.onUpdate();
-			final PreUpdateEvent e = new PreUpdateEvent();
-			Haru.instance.getEventBus().post(e);
-			if (e.isCancelled()) {
-				return;
-			}
 
 			if (isRiding()) {
 				sendQueue.addToSendQueue(
@@ -300,11 +296,8 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 * @param message used on EntityPlayerSP.sendChatMessage - as inbound message
 	 */
 	public void sendChatMessage(String message) {
-		ChatSendEvent e = new ChatSendEvent(message);
-		Haru.instance.getEventBus().post(e);
-		if (e.isCancelled()) {
-			return;
-		}
+	    if ((new ChatSendEvent(message)).call().isCancelled())
+	        return;
 		sendQueue.addToSendQueue(new C01PacketChatMessage(message));
 	}
 

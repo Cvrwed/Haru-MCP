@@ -547,8 +547,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		GlStateManager.viewport(0, 0, this.displayWidth, this.displayHeight);
 		this.effectRenderer = new EffectRenderer(this.world, this.renderEngine);
 		this.checkGLError("Post startup");
-		Haru.instance.startClient();
 		this.ingameGUI = new GuiIngame(this);
+		Haru.instance.startClient();
 
 		if (this.serverName != null) {
 			this.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), this, this.serverName, this.serverPort));
@@ -1052,12 +1052,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		this.framebufferMc.framebufferRender(this.displayWidth, this.displayHeight);
 		GlStateManager.popMatrix();
 		GlStateManager.pushMatrix();
-		//this.entityRenderer.renderStreamIndicator(this.timer.renderPartialTicks);
 		GlStateManager.popMatrix();
 		this.mcProfiler.startSection("root");
 		this.updateDisplay();
 		Thread.yield();
-		this.mcProfiler.startSection("stream");
 		this.mcProfiler.startSection("update");
 		this.mcProfiler.endStartSection("submit");
 		this.mcProfiler.endSection();

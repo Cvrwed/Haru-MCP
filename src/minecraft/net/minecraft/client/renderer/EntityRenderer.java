@@ -1661,8 +1661,6 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 
 		GlStateManager.depthMask(true);
 		renderglobal.renderWorldBorder(entity, partialTicks);
-
-		Haru.instance.getEventBus().post(new RenderEvent(RenderType.Render3D, partialTicks));
 		
 		if (flag) {
 			ShadersRender.renderHand0(this, partialTicks, pass);
@@ -1717,7 +1715,8 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 			Reflector.callVoid(Reflector.ForgeHooksClient_dispatchRenderLast,
 					new Object[] { renderglobal, Float.valueOf(partialTicks) });
 		}
-
+		
+		(new RenderEvent(RenderType.Render3D, partialTicks)).call();
 		this.mc.mcProfiler.endStartSection("hand");
 
 		if (this.renderHand && !Shaders.isShadowPass) {

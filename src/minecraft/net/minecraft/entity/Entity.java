@@ -558,8 +558,8 @@ public abstract class Entity implements ICommandSender {
 	 */
 	public void moveEntity(double x, double y, double z) {
 		MoveEvent e = new MoveEvent(x, y, z);
-		if ((Object) this instanceof EntityPlayerSP) {
-			Haru.instance.getEventBus().post(e);
+		if (this instanceof EntityPlayerSP) {
+			e.call();
 			x = e.getMotionX();
 			y = e.getMotionY();
 			z = e.getMotionZ();
@@ -1352,14 +1352,14 @@ public abstract class Entity implements ICommandSender {
 			return this.getVectorForRotation(f, f1);
 		}
 	}
-
+	
 	/**
 	 * Creates a Vec3 using the pitch and yaw of the entities rotation.
 	 * 
 	 * @param pitch The rotational pitch of the entity.
 	 * @param yaw   The rotational yaw of the entity.
 	 */
-	protected final Vec3 getVectorForRotation(float pitch, float yaw) {
+	public final Vec3 getVectorForRotation(float pitch, float yaw) {
 		float f = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
 		float f1 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
 		float f2 = -MathHelper.cos(-pitch * 0.017453292F);

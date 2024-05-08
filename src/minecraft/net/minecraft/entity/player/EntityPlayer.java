@@ -1,15 +1,16 @@
 package net.minecraft.entity.player;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 
 import cc.unknown.Haru;
 import cc.unknown.event.impl.move.HitSlowDownEvent;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import cc.unknown.event.impl.player.PreJumpEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockDirectional;
@@ -1550,6 +1551,8 @@ public abstract class EntityPlayer extends EntityLivingBase {
 	 * Causes this entity to do an upwards motion (jumping).
 	 */
 	public void jump() {
+	    if ((new PreJumpEvent()).call().isCancelled())
+	        return; 
 		super.jump();
 		this.triggerAchievement(StatList.jumpStat);
 
