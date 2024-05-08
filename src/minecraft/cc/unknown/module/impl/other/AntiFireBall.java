@@ -17,48 +17,31 @@ import cc.unknown.utils.player.RotationUtils;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.EntityFireball;
+import net.minecraft.network.play.client.C0APacketAnimation;
 
 @Register(name = "AntiFireBall", category = Category.Other)
 public class AntiFireBall extends Module {
 
 	private DoubleSliderValue speed = new DoubleSliderValue("Rotation Speed", 98, 98, 1, 180, 1);
 	private SliderValue range = new SliderValue("Range", 6.0, 1.0, 6.0, 0.01);
-	private final BooleanValue moveFix = new BooleanValue("Move Fix", false);
+	private final BooleanValue rotations = new BooleanValue("Rotations", true);
 
 	public AntiFireBall() {
-		this.registerSetting(speed, range, moveFix);
+		this.registerSetting(speed, range, rotations);
 	}
 
-	@EventLink
-	public void onFireball(Event event) {
-	    if (!(event instanceof StrafeEvent || event instanceof JumpEvent)) {
-	        return;
-	    }
-
-	    for (Entity entity : mc.world.loadedEntityList) {
-	        if (entity instanceof EntityFireball) {
-	            EntityFireball fireball = (EntityFireball) entity;
-	            if (fireball != null && moveFix.isToggled()) {
-	                if (event instanceof StrafeEvent) {
-	                    ((StrafeEvent) event).setYaw(mc.player.rotationYaw);
-	                } else if (event instanceof JumpEvent) {
-	                	((JumpEvent) event).setYaw(mc.player.rotationYaw);
-	                }
-	            }
-	        }
-	    }
-	}
-	       
 	@EventLink
 	public void onUpdate(LivingEvent e) {
 		for (Entity entity : mc.world.loadedEntityList) {
 			if (entity instanceof EntityFireball) {
 				EntityFireball fire = (EntityFireball) entity;
 				if (mc.player.getDistanceToEntity(fire) < range.getInput()) {
-					RotationUtils.setTargetRotation(RotationUtils.limitAngleChange(RotationUtils.getServerRotation(),
-							RotationUtils.getRotations(fire),
-							RandomUtils.nextFloat(speed.getInputMinToFloat(), speed.getInputMaxToFloat())));
-
+					if (rotations.isToggled()) {
+						RotationUtils.setTargetRotation(RotationUtils.limitAngleChange(
+								RotationUtils.getServerRotation(), RotationUtils.getRotations(fire),
+								RandomUtils.nextFloat(speed.getInputMinToFloat(), speed.getInputMaxToFloat())));
+					}
+mc.getNetHandler().addToSendQueue(null);
 					KeyBinding.onTick(mc.gameSettings.keyBindAttack.getKeyCode());
 				}
 			}

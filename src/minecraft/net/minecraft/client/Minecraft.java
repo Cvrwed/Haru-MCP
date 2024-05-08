@@ -422,7 +422,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 						} catch (OutOfMemoryError var10) {
 							this.freeMemory();
 							this.displayGuiScreen(new GuiMemoryErrorScreen());
-							
+
 						}
 					} else {
 						this.displayCrashReport(this.crashReporter);
@@ -968,7 +968,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 			}
 		}
 
-		
 	}
 
 	/**
@@ -1144,7 +1143,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		}
 
 		try {
-			
+
 			this.loadWorld((WorldClient) null);
 		} catch (Throwable var2) {
 			;
@@ -1376,11 +1375,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		}
 	}
 
-	private void clickMouse() {
-		Haru.instance.getEventBus().post(new MouseEvent(0));
-		CPSHelper.registerClick(CPSHelper.MouseButton.LEFT);
-		
+	public void clickMouse() {
 		if (this.leftClickCounter <= 0) {
+			Haru.instance.getEventBus().post(new MouseEvent(0));
+			CPSHelper.registerClick(CPSHelper.MouseButton.LEFT);
 			this.player.swingItem();
 
 			if (this.objectMouseOver == null) {
@@ -1418,10 +1416,12 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	/**
 	 * Called when user clicked he's mouse right button (place)
 	 */
-	private void rightClickMouse() {
-		Haru.instance.getEventBus().post(new MouseEvent(1));
-		CPSHelper.registerClick(CPSHelper.MouseButton.RIGHT);
+	public void rightClickMouse() {
 		if (!this.playerController.func_181040_m()) {
+
+			Haru.instance.getEventBus().post(new MouseEvent(1));
+			CPSHelper.registerClick(CPSHelper.MouseButton.RIGHT);
+
 			this.rightClickDelayTimer = 4;
 			boolean flag = true;
 			ItemStack itemstack = this.player.inventory.getCurrentItem();
@@ -1469,8 +1469,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 			if (flag) {
 				ItemStack itemstack1 = this.player.inventory.getCurrentItem();
 
-				if (itemstack1 != null
-						&& this.playerController.sendUseItem(this.player, this.world, itemstack1)) {
+				if (itemstack1 != null && this.playerController.sendUseItem(this.player, this.world, itemstack1)) {
 					this.entityRenderer.itemRenderer.resetEquippedProgress2();
 				}
 			}
@@ -1677,7 +1676,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 			if (this.leftClickCounter > 0) {
 				--this.leftClickCounter;
 			}
-			
+
 			this.mcProfiler.endStartSection("keyboard");
 
 			while (Keyboard.next()) {
@@ -1969,7 +1968,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
 		this.mcProfiler.endSection();
 		this.systemTime = getSystemTime();
-		
+
 		try {
 			if (PlayerUtil.inGame()) {
 				for (Module module : Haru.instance.getModuleManager().getModule()) {
@@ -1991,7 +1990,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	 */
 	public void launchIntegratedServer(String folderName, String worldName, WorldSettings worldSettingsIn) {
 		this.loadWorld((WorldClient) null);
-		
+
 		ISaveHandler isavehandler = this.saveLoader.getSaveLoader(folderName, false);
 		WorldInfo worldinfo = isavehandler.loadWorldInfo();
 
@@ -2118,7 +2117,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 			this.player = null;
 		}
 
-		
 		this.systemTime = 0L;
 	}
 
@@ -2177,9 +2175,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	/**
 	 * Called when user clicked he's mouse middle button (pick block)
 	 */
-	private void middleClickMouse() {
+	public void middleClickMouse() {
 		Haru.instance.getEventBus().post(new MouseEvent(2));
-		CPSHelper.registerClick(CPSHelper.MouseButton.MIDDLE);
 		if (this.objectMouseOver != null) {
 			boolean flag = this.player.capabilities.isCreativeMode;
 			int i = 0;
@@ -2740,7 +2737,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	public Session getSession() {
 		return this.session;
 	}
-	
+
 	public void setSession(final Session session) {
 		this.session = session;
 	}
@@ -2833,16 +2830,12 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	}
 
 	public Entity getRenderViewEntity() {
-        if (RotationUtils.targetRotation != null && Loona.mc.player != null) {
-            final Tweaks rotations = (Tweaks) Haru.instance.getModuleManager().getModule(Tweaks.class);
-            final float yaw = RotationUtils.targetRotation.getYaw();
-            if (rotations.rots.isToggled()) {
-            	Loona.mc.player.rotationYawHead = yaw;
-            }
-            if (rotations.rots.isToggled()) {
-            	Loona.mc.player.renderYawOffset = yaw;
-            }
-        }
+		if (RotationUtils.targetRotation != null && Loona.mc.player != null) {
+			final float yaw = RotationUtils.targetRotation.getYaw();
+			Loona.mc.player.rotationYawHead = yaw;
+			Loona.mc.player.renderYawOffset = yaw;
+
+		}
 		return this.renderViewEntity;
 	}
 

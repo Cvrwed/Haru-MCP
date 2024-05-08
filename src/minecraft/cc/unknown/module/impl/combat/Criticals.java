@@ -116,9 +116,9 @@ public class Criticals extends Module {
 	private void releasePackets() {
 		if (PlayerUtil.inGame()) {
 			if (!attackPackets.isEmpty())
-				attackPackets.forEach(mc.getNetHandler().getNetworkManager()::sendPacketNoEvent);
+				attackPackets.forEach(mc.getNetHandler()::sendSilent);
 			if (!packets.isEmpty())
-				packets.forEach(mc.getNetHandler().getNetworkManager()::sendPacketNoEvent);
+				packets.forEach(mc.getNetHandler()::sendSilent);
 		}
 
 		packets.clear();

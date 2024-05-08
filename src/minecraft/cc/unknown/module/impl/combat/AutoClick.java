@@ -78,7 +78,15 @@ public class AutoClick extends Module {
 	@EventLink
 	public void onMotion(MotionEvent e) {
 		if (invClicker.isToggled()) {
-			if ((e.isPre() && invMode.is("Pre")) || (e.isPost() && invMode.is("Post"))) {
+			if ((e.isPre() && invMode.is("Pre"))) {
+				if (Mouse.isButtonDown(0) && (Keyboard.isKeyDown(54) || Keyboard.isKeyDown(42))) {
+					invClick++;
+					inInvClick(mc.currentScreen);
+					return;
+				}
+			}
+			
+			if (e.isPost() && invMode.is("Post")) {
 				if (Mouse.isButtonDown(0) && (Keyboard.isKeyDown(54) || Keyboard.isKeyDown(42))) {
 					invClick++;
 					inInvClick(mc.currentScreen);
@@ -90,7 +98,11 @@ public class AutoClick extends Module {
 
 	@EventLink
 	public void onRender(RenderEvent e) {
-		if ((clickEvent.is("Render 2") && e.is2D()) || (clickEvent.is("Render") && e.is3D())) {
+		if (clickEvent.is("Render 2") && e.is2D()) {
+			onClick();
+		}
+		
+		if (clickEvent.is("Render") && e.is3D()) {
 			onClick();
 		}
 	}
@@ -157,7 +169,6 @@ public class AutoClick extends Module {
 			}
 			invClick = 0;
 		}
-
 	}
 
 	public DoubleSliderValue getLeftCPS() {

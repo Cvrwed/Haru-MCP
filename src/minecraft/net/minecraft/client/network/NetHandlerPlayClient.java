@@ -270,10 +270,6 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 		this.clientWorldController = null;
 	}
 
-	public void receiveQueueNoEvent(Packet var1) {
-		this.netManager.receivePacketNoEvent(var1);
-	}
-
 	/**
 	 * Registers some server properties
 	 * (gametype,hardcore-mode,terraintype,difficulty,player limit), creates a new
@@ -755,8 +751,16 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 		}
 	}
 
-	public void addToSendQueue(Packet p_147297_1_) {
-		this.netManager.sendPacket(p_147297_1_);
+	public void addToSendQueue(Packet packet) {
+		this.netManager.sendPacket(packet);
+	}
+	
+	public void sendSilent(Packet packet) {
+		this.netManager.sendPacketSilent(packet);
+	}
+	
+	public void receiveSilent(Packet packet) {
+		this.netManager.receivePacketSilent(packet);
 	}
 
 	public void handleCollectItem(S0DPacketCollectItem packetIn) {

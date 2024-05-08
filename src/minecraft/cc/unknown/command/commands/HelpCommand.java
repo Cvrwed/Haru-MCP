@@ -13,7 +13,7 @@ public class HelpCommand extends Command {
 	        StringBuilder message = new StringBuilder();
 	        
 	        for(Command c : Haru.instance.getCommandManager().getCommand()) {
-	            message.append(getColor("Green")).append(" - ").append(getColor("White")).append(getColor("Blue")).append(c.syntax).append(getColor("Gray") +" [").append(c.desc + "]").append("\n");
+	            message.append(getColor("Green")).append(" - ").append(getColor("White")).append(getColor("Blue")).append(c.name).append(getColor("Gray") +" [").append(c.desc + "]").append("\n");
 	        }
 
 	        this.sendChat(message.toString());

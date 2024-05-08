@@ -9,7 +9,7 @@ import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.network.PacketEvent;
 import net.minecraft.network.play.server.S32PacketConfirmTransaction;
 
-@Flips(name = "Transaction", alias = "transaction", desc = "Show server transaction IDs", syntax = ".transaction")
+@Flips(name = "Transaction", alias = "s32", desc = "Show server transaction IDs", syntax = ".transaction")
 public class TransactionCommand extends Command {
 
     private AtomicBoolean toggle = new AtomicBoolean(false);

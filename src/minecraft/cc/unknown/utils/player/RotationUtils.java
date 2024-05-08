@@ -35,9 +35,6 @@ public class RotationUtils implements Loona {
 
 	public static boolean keepCurrentRotation = false;
 
-	public double x = random.nextDouble();
-	public double y = random.nextDouble();
-	public double z = random.nextDouble();
 
 	public static Rotation getRotationsEntity(EntityLivingBase entity) {
 		return getRotations(entity.posX, entity.posY + entity.getEyeHeight() - 0.4, entity.posZ);
@@ -111,13 +108,6 @@ public class RotationUtils implements Loona {
 					reset();
 			}
 		}
-
-		if (random.nextGaussian() > 0.8D)
-			x = Math.random();
-		if (random.nextGaussian() > 0.8D)
-			y = Math.random();
-		if (random.nextGaussian() > 0.8D)
-			z = Math.random();
 	}
 
 	@EventLink
@@ -143,18 +133,18 @@ public class RotationUtils implements Loona {
 	}
 
 	public static void setTargetRotation(final Rotation rotation) {
-		setTargetRotation(rotation, 0);
+		setTargetRotation(rotation, 0, 0);
 	}
 
-	public static void setTargetRotation(final Rotation rotation, final int c) {
+	public static void setTargetRotation(final Rotation rotation, final int keep, final int rev) {
 		if (Double.isNaN(rotation.getYaw()) || Double.isNaN(rotation.getPitch()) || rotation.getPitch() > 90
 				|| rotation.getPitch() < -90)
 			return;
 
 		rotation.fixedSensitivity(mc.gameSettings.mouseSensitivity);
 		targetRotation = rotation;
-		keepLength = c;
-		revTick = 0;
+		keepLength = keep;
+		revTick = rev;
 	}
 
 	public static void reset() {

@@ -17,10 +17,9 @@ public class Tweaks extends Module {
 	public BooleanValue noScoreboard = new BooleanValue("No Scoreboard", false);
 	public BooleanValue noHurtCam = new BooleanValue("No Hurt Cam", true);
 	private BooleanValue cancelC15 = new BooleanValue("Cancel C15", true);
-	public BooleanValue rots = new BooleanValue("Rotations", true);
 
 	public Tweaks() {
-		this.registerSetting(noClickDelay, noJumpDelay, noScoreboard, noHurtCam, cancelC15, rots);
+		this.registerSetting(noClickDelay, noJumpDelay, noScoreboard, noHurtCam, cancelC15);
 	}
 
 	@EventLink

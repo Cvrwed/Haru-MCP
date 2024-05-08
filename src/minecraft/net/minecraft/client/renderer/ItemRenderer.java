@@ -1,5 +1,9 @@
 package net.minecraft.client.renderer;
 
+import org.lwjgl.opengl.GL11;
+
+import cc.unknown.Haru;
+import cc.unknown.module.impl.visuals.Fullbright;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -31,10 +35,6 @@ import net.minecraft.world.storage.MapData;
 import net.optifine.DynamicLights;
 import net.optifine.reflect.Reflector;
 import net.optifine.shaders.Shaders;
-import org.lwjgl.opengl.GL11;
-
-import cc.unknown.Haru;
-import cc.unknown.module.impl.visuals.Fullbright;
 
 public class ItemRenderer {
 	private static final ResourceLocation RES_MAP_BACKGROUND = new ResourceLocation("textures/map/map_background.png");
@@ -303,10 +303,11 @@ public class ItemRenderer {
 	}
 
 	private void func_178103_d() {
-		GlStateManager.translate(-0.5F, 0.2F, 0.0F);
+		GlStateManager.translate(-0.24F, 0.17F, 0.0F);
 		GlStateManager.rotate(30.0F, 0.0F, 1.0F, 0.0F);
 		GlStateManager.rotate(-80.0F, 1.0F, 0.0F, 0.0F);
 		GlStateManager.rotate(60.0F, 0.0F, 1.0F, 0.0F);
+		GlStateManager.translate(0.0F, 0.18F, 0.00F);
 	}
 
 	/**
@@ -318,45 +319,38 @@ public class ItemRenderer {
 	 */
 	public void renderItemInFirstPerson(float partialTicks) {
 		if (!Config.isShaders() || !Shaders.isSkipRenderHand()) {
-			float f = 1.0F
-					- (this.prevEquippedProgress + (this.equippedProgress - this.prevEquippedProgress) * partialTicks);
-			AbstractClientPlayer abstractclientplayer = this.mc.player;
-			float f1 = abstractclientplayer.getSwingProgress(partialTicks);
-			float f2 = abstractclientplayer.prevRotationPitch
-					+ (abstractclientplayer.rotationPitch - abstractclientplayer.prevRotationPitch) * partialTicks;
-			float f3 = abstractclientplayer.prevRotationYaw
-					+ (abstractclientplayer.rotationYaw - abstractclientplayer.prevRotationYaw) * partialTicks;
+			float f = 1.0F - (this.prevEquippedProgress + (this.equippedProgress - this.prevEquippedProgress) * partialTicks);
+			EntityPlayerSP player = this.mc.player;
+			float f1 = player.getSwingProgress(partialTicks);
+			float f2 = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks;
+			float f3 = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTicks;
 			this.func_178101_a(f2, f3);
-			this.func_178109_a(abstractclientplayer);
-			this.func_178110_a((EntityPlayerSP) abstractclientplayer, partialTicks);
+			this.func_178109_a(player);
+			this.func_178110_a(player, partialTicks);
 			GlStateManager.enableRescaleNormal();
 			GlStateManager.pushMatrix();
 
 			if (this.itemToRender != null) {
 				if (this.itemToRender.getItem() instanceof ItemMap) {
-					this.renderItemMap(abstractclientplayer, f2, f, f1);
-				} else if (abstractclientplayer.getItemInUseCount() > 0) {
-					EnumAction enumaction = this.itemToRender.getItemUseAction();
-
-					switch (enumaction) {
+					this.renderItemMap(player, f2, f, f1);
+				} else if (player.getItemInUseCount() > 0) {
+					EnumAction action = this.itemToRender.getItemUseAction();
+					switch (action) {
 					case NONE:
 						this.transformFirstPersonItem(f, 0.0F);
 						break;
-
 					case EAT:
 					case DRINK:
-						this.func_178104_a(abstractclientplayer, partialTicks);
-						this.transformFirstPersonItem(f, 0.0F);
+						this.func_178104_a(player, partialTicks);
+						this.transformFirstPersonItem(f, f1);
 						break;
-
 					case BLOCK:
-						this.transformFirstPersonItem(f, 0.0F);
+						this.transformFirstPersonItem(f, f1);
 						this.func_178103_d();
 						break;
-
 					case BOW:
-						this.transformFirstPersonItem(f, 0.0F);
-						this.func_178098_a(partialTicks, abstractclientplayer);
+						this.transformFirstPersonItem(f, f1);
+						this.func_178098_a(partialTicks, player);
 					}
 				} else {
 					this.func_178105_d(f1);
@@ -366,15 +360,15 @@ public class ItemRenderer {
 					this.transformFirstPersonItem(f, f1);
 				}
 
-				this.renderItem(abstractclientplayer, this.itemToRender,
-						ItemCameraTransforms.TransformType.FIRST_PERSON);
-			} else if (!abstractclientplayer.isInvisible()) {
-				this.func_178095_a(abstractclientplayer, f, f1);
+				this.renderItem(player, this.itemToRender, ItemCameraTransforms.TransformType.FIRST_PERSON);
+			} else if (!player.isInvisible()) {
+				this.func_178095_a(player, f, f1);
 			}
 
 			GlStateManager.popMatrix();
 			GlStateManager.disableRescaleNormal();
 			RenderHelper.disableStandardItemLighting();
+
 		}
 	}
 
@@ -462,7 +456,7 @@ public class ItemRenderer {
 	 */
 	private void renderWaterOverlayTexture(float p_78448_1_) {
 		if (!Config.isShaders() || Shaders.isUnderwaterOverlay()) {
-			this.mc.getTextureManager().bindTexture(RES_UNDERWATER_OVERLAY);
+			/*this.mc.getTextureManager().bindTexture(RES_UNDERWATER_OVERLAY);
 			Tessellator tessellator = Tessellator.getInstance();
 			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
 			float f = this.mc.player.getBrightness(p_78448_1_);
@@ -490,7 +484,7 @@ public class ItemRenderer {
 			tessellator.draw();
 			GlStateManager.popMatrix();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			GlStateManager.disableBlend();
+			GlStateManager.disableBlend();*/
 		}
 	}
 

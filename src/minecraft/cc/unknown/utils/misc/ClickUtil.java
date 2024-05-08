@@ -114,11 +114,12 @@ public enum ClickUtil implements Loona {
 				if (leftHold < lastLeftClick) {
 					leftHold = lastLeftClick;
 				}
-				KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), true);
+				mc.gameSettings.keyBindAttack.pressed = true;
 				KeyBinding.onTick(mc.gameSettings.keyBindAttack.getKeyCode());
 
 			} else if (System.currentTimeMillis() - leftHold > leftHoldLength * 1000) {
-				KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), false);
+				mc.gameSettings.keyBindAttack.pressed = false;
+				KeyBinding.onTick(mc.gameSettings.keyBindAttack.getKeyCode());
 
 			}
 		}

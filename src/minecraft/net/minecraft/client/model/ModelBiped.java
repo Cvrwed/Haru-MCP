@@ -181,9 +181,9 @@ public class ModelBiped extends ModelBase {
 	        if(heldItemRight == 3)
 	            this.bipedRightArm.rotateAngleY = 0F;
 	        
-	        final Tweaks rotation = (Tweaks) Haru.instance.getModuleManager().getModule(Tweaks.class);
+	        //final Tweaks rotation = (Tweaks) Haru.instance.getModuleManager().getModule(Tweaks.class);
 
-	        if((rotation.isEnabled() && rotation.rots.isToggled()) && RotationUtils.serverRotation != null && entityIn instanceof EntityPlayer
+	        if(RotationUtils.serverRotation != null && entityIn instanceof EntityPlayer
 	                && entityIn.equals(Minecraft.getMinecraft().player)) {
 	        	this.bipedHead.rotateAngleX = RotationUtils.serverRotation.getPitch() / (180F / (float) Math.PI);
 	        }

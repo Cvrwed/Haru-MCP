@@ -161,8 +161,8 @@ public class Velocity extends Module {
 
 	    EntityPlayerSP player = mc.player;
 	    if (player != null) {
-	    	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer(true));
-	    	mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, blockPos, EnumFacing.DOWN));
+	    	mc.getNetHandler().sendSilent(new C03PacketPlayer(true));
+	    	mc.getNetHandler().sendSilent(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, blockPos, EnumFacing.DOWN));
 	    }
 
 	    world.setBlockToAir(blockPos);
