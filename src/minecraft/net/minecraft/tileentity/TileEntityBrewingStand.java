@@ -46,7 +46,7 @@ public class TileEntityBrewingStand extends TileEntityLockable implements ITicka
     /**
      * Gets the name of this command sender (usually username, but possibly "Rcon")
      */
-    public String getCommandSenderName()
+    public String getName()
     {
         return this.hasCustomName() ? this.customName : "container.brewing";
     }

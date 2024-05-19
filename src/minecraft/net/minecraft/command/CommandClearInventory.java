@@ -66,7 +66,7 @@ public class CommandClearInventory extends CommandBase
 
         if (args.length >= 2 && item == null)
         {
-            throw new CommandException("commands.clear.failure", new Object[] {entityplayermp.getCommandSenderName()});
+            throw new CommandException("commands.clear.failure", new Object[] {entityplayermp.getName()});
         }
         else
         {
@@ -82,17 +82,17 @@ public class CommandClearInventory extends CommandBase
 
             if (k == 0)
             {
-                throw new CommandException("commands.clear.failure", new Object[] {entityplayermp.getCommandSenderName()});
+                throw new CommandException("commands.clear.failure", new Object[] {entityplayermp.getName()});
             }
             else
             {
                 if (j == 0)
                 {
-                    sender.addChatMessage(new ChatComponentTranslation("commands.clear.testing", new Object[] {entityplayermp.getCommandSenderName(), Integer.valueOf(k)}));
+                    sender.addChatMessage(new ChatComponentTranslation("commands.clear.testing", new Object[] {entityplayermp.getName(), Integer.valueOf(k)}));
                 }
                 else
                 {
-                    notifyOperators(sender, this, "commands.clear.success", new Object[] {entityplayermp.getCommandSenderName(), Integer.valueOf(k)});
+                    notifyOperators(sender, this, "commands.clear.success", new Object[] {entityplayermp.getName(), Integer.valueOf(k)});
                 }
             }
         }

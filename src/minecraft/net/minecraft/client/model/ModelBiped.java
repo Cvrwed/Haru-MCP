@@ -1,7 +1,5 @@
 package net.minecraft.client.model;
 
-import cc.unknown.Haru;
-import cc.unknown.module.impl.settings.Tweaks;
 import cc.unknown.utils.player.RotationUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

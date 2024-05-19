@@ -28,27 +28,28 @@ public class AutoClick extends Module {
 
 	private ModeValue clickMode = new ModeValue("Click Mode", "Left", "Left", "Right", "Both");
 
-	private final DoubleSliderValue leftCPS = new DoubleSliderValue("Left Click Speed", 16, 19, 1, 80, 0.05);
+	private final DoubleSliderValue leftCPS = new DoubleSliderValue("Left Click Speed", 16, 19, 1, 80, 0.5);
 	private final BooleanValue weaponOnly = new BooleanValue("Only Use Weapons", false);
 	private final BooleanValue breakBlocks = new BooleanValue("Break Blocks", false);
 	private final BooleanValue hitSelect = new BooleanValue("Precise Hit Selection", false);
 	private final SliderValue hitSelectDistance = new SliderValue("Hit Range", 10, 1, 20, 5);
-	private BooleanValue invClicker = new BooleanValue("Auto-Click in Inventory", false);
-	private ModeValue invMode = new ModeValue("Inventory Click Mode", "Pre", "Pre", "Post");
-	private SliderValue invDelay = new SliderValue("Click Tick Delay", 5, 0, 10, 1);
+	private final BooleanValue invClicker = new BooleanValue("Auto-Click in Inventory", false);
+	private final ModeValue invMode = new ModeValue("Inventory Click Mode", "Pre", "Pre", "Post");
+	private final SliderValue invDelay = new SliderValue("Click Tick Delay", 5, 0, 10, 1);
 
-	private final DoubleSliderValue rightCPS = new DoubleSliderValue("Right Click Speed", 12, 16, 1, 80, 0.05);
+	private final DoubleSliderValue rightCPS = new DoubleSliderValue("Right Click Speed", 12, 16, 1, 80, 0.5);
+	private final SliderValue rightClickDelay = new SliderValue("Right Click Delay", 85, 0, 500, 1.0);
 	private final BooleanValue onlyBlocks = new BooleanValue("Only Use Blocks", false);
 	private final BooleanValue allowEat = new BooleanValue("Allow Eating & Drinking", true);
 	private final BooleanValue allowBow = new BooleanValue("Allow Using Bow", true);
 
-	private ModeValue clickEvent = new ModeValue("Click Event", "Render", "Render", "Render 2", "Tick");
-	private ModeValue clickStyle = new ModeValue("Click Style", "Raven", "Raven", "Kuru", "Megumi");
+	private final ModeValue clickEvent = new ModeValue("Click Event", "Render", "Render", "Render 2", "Tick");
+	private final ModeValue clickStyle = new ModeValue("Click Style", "Raven", "Raven", "Kuru", "Megumi");
 	private int invClick;
 
 	public AutoClick() {
 		this.registerSetting(clickMode, leftCPS, weaponOnly, breakBlocks, hitSelect, hitSelectDistance, invClicker,
-				invMode, invDelay, rightCPS, onlyBlocks, allowEat, allowBow, clickEvent, clickStyle);
+				invMode, invDelay, rightCPS, rightClickDelay, onlyBlocks, allowEat, allowBow, clickEvent, clickStyle);
 	}
 
 	@EventLink
@@ -78,30 +79,21 @@ public class AutoClick extends Module {
 	@EventLink
 	public void onMotion(MotionEvent e) {
 		if (invClicker.isToggled()) {
-			if ((e.isPre() && invMode.is("Pre"))) {
-				if (Mouse.isButtonDown(0) && (Keyboard.isKeyDown(54) || Keyboard.isKeyDown(42))) {
-					invClick++;
-					inInvClick(mc.currentScreen);
-					return;
-				}
+			if (e.isPre() && invMode.is("Pre")) {
+				shouldClick();
 			}
-			
 			if (e.isPost() && invMode.is("Post")) {
-				if (Mouse.isButtonDown(0) && (Keyboard.isKeyDown(54) || Keyboard.isKeyDown(42))) {
-					invClick++;
-					inInvClick(mc.currentScreen);
-					return;
-				}
+				shouldClick();
 			}
 		}
 	}
 
 	@EventLink
-	public void onRender(RenderEvent e) {
+	public void onRender2D(RenderEvent e) {
 		if (clickEvent.is("Render 2") && e.is2D()) {
 			onClick();
 		}
-		
+
 		if (clickEvent.is("Render") && e.is3D()) {
 			onClick();
 		}
@@ -156,6 +148,14 @@ public class AutoClick extends Module {
 			}
 		}
 	}
+	
+	private void shouldClick() {
+		if (Mouse.isButtonDown(0) && (Keyboard.isKeyDown(54) || Keyboard.isKeyDown(42))) {
+			invClick++;
+			inInvClick(mc.currentScreen);
+			return;
+		}
+	}
 
 	private void inInvClick(GuiScreen gui) {
 		int x = Mouse.getX() * gui.width / mc.displayWidth;
@@ -165,7 +165,6 @@ public class AutoClick extends Module {
 			try {
 				gui.mouseClicked(x, y, 0);
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 			invClick = 0;
 		}
@@ -205,5 +204,9 @@ public class AutoClick extends Module {
 
 	public BooleanValue getOnlyBlocks() {
 		return onlyBlocks;
+	}
+
+	public SliderValue getRightClickDelay() {
+		return rightClickDelay;
 	}
 }

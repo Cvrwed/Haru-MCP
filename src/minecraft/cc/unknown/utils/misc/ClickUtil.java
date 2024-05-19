@@ -32,7 +32,7 @@ import net.minecraft.util.MovingObjectPosition;
 
 public enum ClickUtil implements Loona {
 	instance;
-	
+
 	private long leftk;
 	private long leftl;
 	private double leftm;
@@ -50,17 +50,20 @@ public enum ClickUtil implements Loona {
 	private long lastRightClick;
 	private long rightHold;
 	private boolean rightDown;
+	private boolean rightClickWaiting;
+	private double rightClickWaitStartTime;
+	private boolean allowedClick;
 	private long leftDownTime;
 	private long leftUpTime;
 	private Random rand = null;
-	
+
 	public void megumiLeftClick() {
 		AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
-		
+
 		double speedLeft1 = 1.0 / ThreadLocalRandom.current().nextGaussian() * clicker.getLeftCPS().getInputMax()
 				+ clicker.getLeftCPS().getInputMax();
-		double leftHoldLength = speedLeft1 / ThreadLocalRandom.current().nextGaussian() * clicker.getLeftCPS().getInputMin()
-				+ clicker.getLeftCPS().getInputMin();
+		double leftHoldLength = speedLeft1 / ThreadLocalRandom.current().nextGaussian()
+				* clicker.getLeftCPS().getInputMin() + clicker.getLeftCPS().getInputMin();
 		Mouse.poll();
 
 		if (mc.currentScreen != null || !mc.inGameHasFocus || checkScreen() || checkHit()) {
@@ -72,8 +75,8 @@ public enum ClickUtil implements Loona {
 				return;
 			}
 
-			double speedLeft = 1.0
-					/ ThreadLocalRandom.current().nextDouble(clicker.getLeftCPS().getInputMin() - 0.2D, clicker.getLeftCPS().getInputMax());
+			double speedLeft = 1.0 / ThreadLocalRandom.current().nextDouble(clicker.getLeftCPS().getInputMin() - 0.2D,
+					clicker.getLeftCPS().getInputMax());
 			if (System.currentTimeMillis() - lastLeftClick > speedLeft * 1000) {
 				lastLeftClick = System.currentTimeMillis();
 				if (leftHold < lastLeftClick) {
@@ -91,10 +94,10 @@ public enum ClickUtil implements Loona {
 	public void kuruLeftClick() {
 		AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
 
-		double speedLeft1 = 1.0
-				/ ThreadLocalRandom.current().nextDouble(clicker.getLeftCPS().getInputMin() - 0.2D, clicker.getLeftCPS().getInputMax());
-		double leftHoldLength = speedLeft1
-				/ ThreadLocalRandom.current().nextDouble(clicker.getLeftCPS().getInputMin() - 0.02D, clicker.getLeftCPS().getInputMax());
+		double speedLeft1 = 1.0 / ThreadLocalRandom.current().nextDouble(clicker.getLeftCPS().getInputMin() - 0.2D,
+				clicker.getLeftCPS().getInputMax());
+		double leftHoldLength = speedLeft1 / ThreadLocalRandom.current()
+				.nextDouble(clicker.getLeftCPS().getInputMin() - 0.02D, clicker.getLeftCPS().getInputMax());
 
 		Mouse.poll();
 
@@ -107,19 +110,18 @@ public enum ClickUtil implements Loona {
 				return;
 			}
 
-			double speedLeft = 1.0
-					/ ThreadLocalRandom.current().nextDouble(clicker.getLeftCPS().getInputMin() - 0.2, clicker.getLeftCPS().getInputMax());
+			double speedLeft = 1.0 / ThreadLocalRandom.current().nextDouble(clicker.getLeftCPS().getInputMin() - 0.2,
+					clicker.getLeftCPS().getInputMax());
 			if (System.currentTimeMillis() - lastLeftClick > speedLeft * 1000) {
 				lastLeftClick = System.currentTimeMillis();
 				if (leftHold < lastLeftClick) {
 					leftHold = lastLeftClick;
 				}
-				mc.gameSettings.keyBindAttack.pressed = true;
+				KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), true);
 				KeyBinding.onTick(mc.gameSettings.keyBindAttack.getKeyCode());
 
 			} else if (System.currentTimeMillis() - leftHold > leftHoldLength * 1000) {
-				mc.gameSettings.keyBindAttack.pressed = false;
-				KeyBinding.onTick(mc.gameSettings.keyBindAttack.getKeyCode());
+				KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), false);
 
 			}
 		}
@@ -174,7 +176,7 @@ public enum ClickUtil implements Loona {
 		if (System.currentTimeMillis() > this.leftk) {
 			if (!this.leftn && this.rand.nextInt(200) >= 85) { // 85
 				this.leftn = true;
-				this.leftm = 1.1D + this.rand.nextDouble() * 0.15D; // 1.1 | 0.15 
+				this.leftm = 1.1D + this.rand.nextDouble() * 0.15D; // 1.1 | 0.15
 			} else {
 				this.leftn = false;
 			}
@@ -199,18 +201,20 @@ public enum ClickUtil implements Loona {
 	}
 
 	public boolean hitSelectLogic() {
-	    AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
+		AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
 
-	    if (clicker.getHitSelect().isToggled()) {
-	        if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-	            Entity target = mc.objectMouseOver.entityHit;
-	            if (target instanceof EntityPlayer) {
-	                EntityPlayer targetPlayer = (EntityPlayer) target;
-	                return PlayerUtil.lookingAtPlayer(mc.player, targetPlayer, clicker.getHitSelectDistance().getInput());
-	            }
-	        }
-	    }
-	    return false;
+		if (clicker.getHitSelect().isToggled()) {
+			if (mc.objectMouseOver != null
+					&& mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
+				Entity target = mc.objectMouseOver.entityHit;
+				if (target instanceof EntityPlayer) {
+					EntityPlayer targetPlayer = (EntityPlayer) target;
+					return PlayerUtil.lookingAtPlayer(mc.player, targetPlayer,
+							clicker.getHitSelectDistance().getInput());
+				}
+			}
+		}
+		return false;
 	}
 
 	public boolean breakBlockLogic() {
@@ -237,27 +241,29 @@ public enum ClickUtil implements Loona {
 		}
 		return false;
 	}
-	
+
 	public void kuruRightClick() {
 		AutoClick right = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
 
 		if (mc.currentScreen != null || !mc.inGameHasFocus)
 			return;
-		
-		double speedRight = 1.0 / ThreadLocalRandom.current().nextDouble(right.getRightCPS().getInputMin() - 0.2D, right.getRightCPS().getInputMax());
-		double rightHoldLength = speedRight / ThreadLocalRandom.current().nextDouble(right.getRightCPS().getInputMin() - 0.02D, right.getRightCPS().getInputMax());
 
-		if(!Mouse.isButtonDown(1) && !rightDown) {
+		double speedRight = 1.0 / ThreadLocalRandom.current().nextDouble(right.getRightCPS().getInputMin() - 0.2D,
+				right.getRightCPS().getInputMax());
+		double rightHoldLength = speedRight / ThreadLocalRandom.current()
+				.nextDouble(right.getRightCPS().getInputMin() - 0.02D, right.getRightCPS().getInputMax());
+
+		if (!Mouse.isButtonDown(1) && !rightDown) {
 			KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
 		}
-		
+
 		if (Mouse.isButtonDown(1) || rightDown) {
 			if (!this.rightClickAllowed())
 				return;
 
 			if (System.currentTimeMillis() - lastRightClick > speedRight * 1000) {
 				lastRightClick = System.currentTimeMillis();
-				if (rightHold < lastRightClick){
+				if (rightHold < lastRightClick) {
 					rightHold = lastRightClick;
 				}
 
@@ -270,30 +276,32 @@ public enum ClickUtil implements Loona {
 			}
 		}
 	}
-	
+
 	public void megumiRightClick() {
 		AutoClick right = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
-		
+
 		if (mc.currentScreen != null || !mc.inGameHasFocus)
 			return;
-		
-		double speedRight = 1.0 / ThreadLocalRandom.current().nextGaussian() * right.getRightCPS().getInputMin() - 0.2D + right.getRightCPS().getInputMax();
-		double rightHoldLength = speedRight / ThreadLocalRandom.current().nextGaussian() * right.getRightCPS().getInputMin() - 0.02D + right.getRightCPS().getInputMax();
-		
-		if(!Mouse.isButtonDown(1) && !rightDown) {
+
+		double speedRight = 1.0 / ThreadLocalRandom.current().nextGaussian() * right.getRightCPS().getInputMin() - 0.2D
+				+ right.getRightCPS().getInputMax();
+		double rightHoldLength = speedRight / ThreadLocalRandom.current().nextGaussian()
+				* right.getRightCPS().getInputMin() - 0.02D + right.getRightCPS().getInputMax();
+
+		if (!Mouse.isButtonDown(1) && !rightDown) {
 			KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
 		}
-		
+
 		if (Mouse.isButtonDown(1) || rightDown) {
 			if (!this.rightClickAllowed())
 				return;
-			
+
 			if (System.currentTimeMillis() - lastRightClick > speedRight * 1000) {
 				lastRightClick = System.currentTimeMillis();
-				if (rightHold < lastRightClick){
+				if (rightHold < lastRightClick) {
 					rightHold = lastRightClick;
 				}
-				
+
 				KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
 				KeyBinding.onTick(mc.gameSettings.keyBindUseItem.getKeyCode());
 				rightDown = false;
@@ -322,17 +330,18 @@ public enum ClickUtil implements Loona {
 
 		ItemStack item = mc.player.getHeldItem();
 		if (item != null) {
-			
+
 			if (item.getItem() instanceof ItemSword) {
 				return false;
-			} else if(item.getItem() instanceof ItemFishingRod) {
+			} else if (item.getItem() instanceof ItemFishingRod) {
 				return false;
 			} else if (item.getItem() instanceof ItemBow) {
 				return false;
 			}
-			
+
 			if (right.getAllowEat().isToggled()) {
-				if ((item.getItem() instanceof ItemFood) || item.getItem() instanceof ItemPotion || item.getItem() instanceof ItemBucketMilk) {
+				if ((item.getItem() instanceof ItemFood) || item.getItem() instanceof ItemPotion
+						|| item.getItem() instanceof ItemBucketMilk) {
 					return false;
 				}
 			}
@@ -342,10 +351,27 @@ public enum ClickUtil implements Loona {
 					return false;
 				}
 			}
+
+			if (right.getRightClickDelay().getInput() != 0) {
+				if (!rightClickWaiting && !allowedClick) {
+					this.rightClickWaitStartTime = System.currentTimeMillis();
+					this.rightClickWaiting = true;
+					return false;
+				} else if (this.rightClickWaiting && !allowedClick) {
+					double passedTime = System.currentTimeMillis() - this.rightClickWaitStartTime;
+					if (passedTime >= right.getRightClickDelay().getInput()) {
+						this.allowedClick = true;
+						this.rightClickWaiting = false;
+						return true;
+					} else {
+						return false;
+					}
+				}
+			}
 		}
 
 		return true;
-	}	
+	}
 
 	private void rightClickExecute(int key) {
 		if (!this.rightClickAllowed())
@@ -368,7 +394,7 @@ public enum ClickUtil implements Loona {
 		AutoClick right = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
 
 		double clickSpeed = ranModuleVal(right.getRightCPS(), this.rand) + 0.4D * this.rand.nextDouble();
-		long delay = (int)Math.round(1000.0D / clickSpeed);
+		long delay = (int) Math.round(1000.0D / clickSpeed);
 		if (System.currentTimeMillis() > this.rightk) {
 			if (!this.rightn && this.rand.nextInt(100) >= 85) {
 				this.rightn = true;
@@ -376,41 +402,43 @@ public enum ClickUtil implements Loona {
 			} else {
 				this.rightn = false;
 			}
-			
-			this.rightk = System.currentTimeMillis() + 500L + (long)this.rand.nextInt(1500);
+
+			this.rightk = System.currentTimeMillis() + 500L + (long) this.rand.nextInt(1500);
 		}
 
 		if (this.rightn) {
-			delay = (long)((double)delay * this.rightm);
+			delay = (long) ((double) delay * this.rightm);
 		}
 
 		if (System.currentTimeMillis() > this.rightl) {
 			if (this.rand.nextInt(100) >= 80) {
-				delay += 50L + (long)this.rand.nextInt(100);
+				delay += 50L + (long) this.rand.nextInt(100);
 			}
 
-			this.rightl = System.currentTimeMillis() + 500L + (long)this.rand.nextInt(1500);
+			this.rightl = System.currentTimeMillis() + 500L + (long) this.rand.nextInt(1500);
 		}
 
 		this.rightj = System.currentTimeMillis() + delay;
-		this.righti = System.currentTimeMillis() + delay / 2L - (long)this.rand.nextInt(10);
+		this.righti = System.currentTimeMillis() + delay / 2L - (long) this.rand.nextInt(10);
 	}
-	
-    public boolean isClicking() {
-   	 AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
-   	 if (clicker != null && clicker.isEnabled()) {
-           return clicker.isEnabled() && Mouse.isButtonDown(0);
-        }
-   	 return false;
-    }
-    
-    public double ranModuleVal(SliderValue a, SliderValue b, Random r) {
-       return a.getInput() == b.getInput() ? a.getInput() : a.getInput() + r.nextDouble() * (b.getInput() - a.getInput());
-    }
 
-    public double ranModuleVal(DoubleSliderValue a, Random r) {
-       return a.getInputMin() == a.getInputMax() ? a.getInputMin() : a.getInputMin() + r.nextDouble() * (a.getInputMax() - a.getInputMin());
-    }
+	public boolean isClicking() {
+		AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
+		if (clicker != null && clicker.isEnabled()) {
+			return clicker.isEnabled() && Mouse.isButtonDown(0);
+		}
+		return false;
+	}
+
+	public double ranModuleVal(SliderValue a, SliderValue b, Random r) {
+		return a.getInput() == b.getInput() ? a.getInput()
+				: a.getInput() + r.nextDouble() * (b.getInput() - a.getInput());
+	}
+
+	public double ranModuleVal(DoubleSliderValue a, Random r) {
+		return a.getInputMin() == a.getInputMax() ? a.getInputMin()
+				: a.getInputMin() + r.nextDouble() * (a.getInputMax() - a.getInputMin());
+	}
 
 	public void setLeftDownTime(long leftDownTime) {
 		this.leftDownTime = leftDownTime;
@@ -423,11 +451,12 @@ public enum ClickUtil implements Loona {
 	public void setRand(Random rand) {
 		this.rand = rand;
 	}
-	
+
 	private boolean checkScreen() {
-		return mc.currentScreen != null || mc.currentScreen instanceof GuiInventory || mc.currentScreen instanceof GuiChest;
+		return mc.currentScreen != null || mc.currentScreen instanceof GuiInventory
+				|| mc.currentScreen instanceof GuiChest;
 	}
-	
+
 	private boolean checkHit() {
 		AutoClick left = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
 		return (left.getHitSelect().isToggled() && !hitSelectLogic());

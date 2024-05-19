@@ -412,7 +412,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
 
                 for (ScoreObjective scoreobjective : this.getWorldScoreboard().getObjectivesFromCriteria(IScoreObjectiveCriteria.health))
                 {
-                    this.getWorldScoreboard().getValueFromObjective(this.getCommandSenderName(), scoreobjective).func_96651_a(Arrays.<EntityPlayer>asList(new EntityPlayer[] {this}));
+                    this.getWorldScoreboard().getValueFromObjective(this.getName(), scoreobjective).func_96651_a(Arrays.<EntityPlayer>asList(new EntityPlayer[] {this}));
                 }
             }
 
@@ -516,7 +516,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
 
         for (ScoreObjective scoreobjective : this.worldObj.getScoreboard().getObjectivesFromCriteria(IScoreObjectiveCriteria.deathCount))
         {
-            Score score = this.getWorldScoreboard().getValueFromObjective(this.getCommandSenderName(), scoreobjective);
+            Score score = this.getWorldScoreboard().getValueFromObjective(this.getName(), scoreobjective);
             score.func_96648_a();
         }
 
@@ -964,7 +964,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
 
             for (ScoreObjective scoreobjective : this.getWorldScoreboard().getObjectivesFromCriteria(stat.func_150952_k()))
             {
-                this.getWorldScoreboard().getValueFromObjective(this.getCommandSenderName(), scoreobjective).increseScore(amount);
+                this.getWorldScoreboard().getValueFromObjective(this.getName(), scoreobjective).increseScore(amount);
             }
 
             if (this.statsFile.func_150879_e())
@@ -982,7 +982,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
 
             for (ScoreObjective scoreobjective : this.getWorldScoreboard().getObjectivesFromCriteria(p_175145_1_.func_150952_k()))
             {
-                this.getWorldScoreboard().getValueFromObjective(this.getCommandSenderName(), scoreobjective).setScorePoints(0);
+                this.getWorldScoreboard().getValueFromObjective(this.getName(), scoreobjective).setScorePoints(0);
             }
 
             if (this.statsFile.func_150879_e())

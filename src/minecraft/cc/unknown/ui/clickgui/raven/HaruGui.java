@@ -12,6 +12,7 @@ import cc.unknown.module.impl.visuals.ClickGuiModule;
 import cc.unknown.ui.clickgui.raven.impl.CategoryComp;
 import cc.unknown.ui.clickgui.raven.impl.api.Theme;
 import cc.unknown.utils.client.FuckUtil;
+import cc.unknown.utils.client.RenderUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
@@ -33,7 +34,7 @@ public class HaruGui extends GuiScreen {
 			topOffset += 20;
 		}
 
-		String[] waifuNames = { "uzaki", "megumin", "ai", "mai", "kiwi", "astolfo" };
+		String[] waifuNames = { "uzaki", "megumin", "ai", "mai", "kiwi", "astolfo", "ryo", "hitori" };
 		Arrays.stream(waifuNames)
 				.forEach(name -> waifuMap.put(name, new ResourceLocation("haru/img/clickgui/" + name + ".png")));
 	}
@@ -63,7 +64,7 @@ public class HaruGui extends GuiScreen {
 		});
 
 		if (waifuImage != null) {
-			mc.currentScreen.drawImage(waifuImage, FuckUtil.instance.getWaifuX(), FuckUtil.instance.getWaifuY(),
+			RenderUtil.drawImage(waifuImage, FuckUtil.instance.getWaifuX(), FuckUtil.instance.getWaifuY(),
 					sr.getScaledWidth() / 5.2f, sr.getScaledHeight() / 2f);
 		}
 
@@ -126,8 +127,8 @@ public class HaruGui extends GuiScreen {
 			}
 		});
 
-		if (Haru.instance.getClientConfig() != null) {
-			Haru.instance.getClientConfig().saveConfig();
+		if (Haru.instance.getHudConfig() != null) {
+			Haru.instance.getHudConfig().saveHud();
 		}
 
 	}
@@ -150,8 +151,8 @@ public class HaruGui extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		ClickGuiModule cg = (ClickGuiModule) Haru.instance.getModuleManager().getModule(ClickGuiModule.class);
-		if (cg != null && cg.isEnabled() && Haru.instance.getClientConfig() != null) {
-			Haru.instance.getClientConfig().saveConfig();
+		if (cg != null && cg.isEnabled() && Haru.instance.getHudConfig() != null) {
+			Haru.instance.getHudConfig().saveHud();
 			//Haru.instance.getConfigManager().save();
 			cg.disable();
 		}

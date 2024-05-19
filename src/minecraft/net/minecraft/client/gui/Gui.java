@@ -660,7 +660,7 @@ public class Gui implements Loona {
 
 	private static int getTeamColor(EntityPlayer player) {
 		Scoreboard scoreboard = player.getWorldScoreboard();
-		ScorePlayerTeam playerTeam = scoreboard.getPlayersTeam(player.getCommandSenderName());
+		ScorePlayerTeam playerTeam = scoreboard.getPlayersTeam(player.getName());
 
 		if (playerTeam != null) {
 			String color = playerTeam.getColorPrefix();

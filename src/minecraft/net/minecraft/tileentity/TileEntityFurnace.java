@@ -142,7 +142,7 @@ public class TileEntityFurnace extends TileEntityLockable implements ITickable, 
     /**
      * Gets the name of this command sender (usually username, but possibly "Rcon")
      */
-    public String getCommandSenderName()
+    public String getName()
     {
         return this.hasCustomName() ? this.furnaceCustomName : "container.furnace";
     }

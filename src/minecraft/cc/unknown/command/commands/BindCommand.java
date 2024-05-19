@@ -6,7 +6,7 @@ import cc.unknown.command.Flips;
 import cc.unknown.module.impl.Module;
 import cc.unknown.utils.misc.KeybindUtil;
 
-@Flips(name = "Bind", alias = "bind", desc = "Sets binds for modules.", syntax = ".bind <module> <key>")
+@Flips(name = "Bind", alias = "b", desc = "Sets binds for modules.", syntax = ".bind <module> <key>")
 public class BindCommand extends Command {
 
 	@Override

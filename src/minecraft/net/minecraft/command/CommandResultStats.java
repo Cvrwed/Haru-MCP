@@ -32,9 +32,9 @@ public class CommandResultStats
         {
             ICommandSender icommandsender = new ICommandSender()
             {
-                public String getCommandSenderName()
+                public String getName()
                 {
-                    return sender.getCommandSenderName();
+                    return sender.getName();
                 }
                 public IChatComponent getDisplayName()
                 {

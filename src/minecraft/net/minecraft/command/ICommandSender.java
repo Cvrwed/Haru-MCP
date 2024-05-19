@@ -11,7 +11,7 @@ public interface ICommandSender
     /**
      * Gets the name of this command sender (usually username, but possibly "Rcon")
      */
-    String getCommandSenderName();
+    String getName();
 
     /**
      * Get the formatted ChatComponent that will be used for the sender's username in chat

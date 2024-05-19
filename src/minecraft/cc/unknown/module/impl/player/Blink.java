@@ -10,15 +10,13 @@ import cc.unknown.event.impl.move.MotionEvent;
 import cc.unknown.event.impl.network.DisconnectionEvent;
 import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.render.RenderEvent;
-import cc.unknown.event.impl.world.WorldEvent;
+import cc.unknown.event.impl.world.ChangeWorldEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.ui.clickgui.raven.impl.api.Theme;
 import cc.unknown.utils.network.PacketUtil;
-import io.netty.util.concurrent.GenericFutureListener;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
@@ -157,7 +155,7 @@ public class Blink extends Module {
 			queuedPackets.addAll(packetsReceived);
 		}
 		synchronized (packets) {
-			mc.getNetHandler().getNetworkManager().outboundPacketsQueue.add(new NetworkManager.InboundHandlerTuplePacketListener((Packet) packets, (GenericFutureListener[]) null));
+			PacketUtil.send(packets.toArray(new Packet<?>[0]));
 		}
 
 		reset();
@@ -170,7 +168,7 @@ public class Blink extends Module {
 	}
 
 	@EventLink
-	public void onWorldLoad(WorldEvent e) {
+	public void onWorldLoad(ChangeWorldEvent e) {
 		if (e.getWorldClient() == null) {
 			reset();
 		}

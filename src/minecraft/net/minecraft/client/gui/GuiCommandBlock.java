@@ -92,7 +92,7 @@ public class GuiCommandBlock extends GuiScreen
                 this.localCommandBlock.func_145757_a(packetbuffer);
                 packetbuffer.writeString(this.commandTextField.getText());
                 packetbuffer.writeBoolean(this.localCommandBlock.shouldTrackOutput());
-                this.mc.getNetHandler().addToSendQueue(new C17PacketCustomPayload("MC|AdvCdm", packetbuffer));
+                this.mc.getNetHandler().sendQueue(new C17PacketCustomPayload("MC|AdvCdm", packetbuffer));
 
                 if (!this.localCommandBlock.shouldTrackOutput())
                 {

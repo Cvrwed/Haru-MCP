@@ -150,7 +150,7 @@ public class TileEntityChest extends TileEntityLockable implements ITickable, II
     /**
      * Gets the name of this command sender (usually username, but possibly "Rcon")
      */
-    public String getCommandSenderName()
+    public String getName()
     {
         return this.hasCustomName() ? this.customName : "container.chest";
     }

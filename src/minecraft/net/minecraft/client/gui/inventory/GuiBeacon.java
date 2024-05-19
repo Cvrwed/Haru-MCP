@@ -140,7 +140,7 @@ public class GuiBeacon extends GuiContainer
             PacketBuffer packetbuffer = new PacketBuffer(Unpooled.buffer());
             packetbuffer.writeInt(this.tileBeacon.getField(1));
             packetbuffer.writeInt(this.tileBeacon.getField(2));
-            this.mc.getNetHandler().addToSendQueue(new C17PacketCustomPayload(s, packetbuffer));
+            this.mc.getNetHandler().sendQueue(new C17PacketCustomPayload(s, packetbuffer));
             this.mc.displayGuiScreen((GuiScreen)null);
         }
         else if (button instanceof GuiBeacon.PowerButton)

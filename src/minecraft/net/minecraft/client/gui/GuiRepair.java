@@ -144,7 +144,7 @@ public class GuiRepair extends GuiContainer implements ICrafting
         }
 
         this.anvil.updateItemName(s);
-        this.mc.player.sendQueue.addToSendQueue(new C17PacketCustomPayload("MC|ItemName", (new PacketBuffer(Unpooled.buffer())).writeString(s)));
+        this.mc.player.sendQueue.sendQueue(new C17PacketCustomPayload("MC|ItemName", (new PacketBuffer(Unpooled.buffer())).writeString(s)));
     }
 
     /**

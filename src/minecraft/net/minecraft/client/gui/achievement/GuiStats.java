@@ -56,7 +56,7 @@ public class GuiStats extends GuiScreen implements IProgressMeter
     {
         this.screenTitle = I18n.format("gui.stats", new Object[0]);
         this.doesGuiPauseGame = true;
-        this.mc.getNetHandler().addToSendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.REQUEST_STATS));
+        this.mc.getNetHandler().sendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.REQUEST_STATS));
     }
 
     /**

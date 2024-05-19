@@ -78,13 +78,13 @@ public class CommandTrigger extends CommandBase
             {
                 int i = parseInt(args[2]);
 
-                if (!scoreboard.entityHasObjective(entityplayermp.getCommandSenderName(), scoreobjective))
+                if (!scoreboard.entityHasObjective(entityplayermp.getName(), scoreobjective))
                 {
                     throw new CommandException("commands.trigger.invalidObjective", new Object[] {args[0]});
                 }
                 else
                 {
-                    Score score = scoreboard.getValueFromObjective(entityplayermp.getCommandSenderName(), scoreobjective);
+                    Score score = scoreboard.getValueFromObjective(entityplayermp.getName(), scoreobjective);
 
                     if (score.isLocked())
                     {

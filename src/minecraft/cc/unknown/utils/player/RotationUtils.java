@@ -35,10 +35,23 @@ public class RotationUtils implements Loona {
 
 	public static boolean keepCurrentRotation = false;
 
+	public double x = random.nextDouble();
+	public double y = random.nextDouble();
+	public double z = random.nextDouble();
 
 	public static Rotation getRotationsEntity(EntityLivingBase entity) {
 		return getRotations(entity.posX, entity.posY + entity.getEyeHeight() - 0.4, entity.posZ);
 	}
+	
+    public static float[] getRotationsToPosition(final double x, final double y, final double z) {
+        final double deltaX = x - mc.player.posX;
+        final double deltaY = y - mc.player.posY - mc.player.getEyeHeight();
+        final double deltaZ = z - mc.player.posZ;
+        final double horizontalDistance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+        final float yaw = (float)Math.toDegrees(-Math.atan2(deltaX, deltaZ));
+        final float pitch = (float)Math.toDegrees(-Math.atan2(deltaY, horizontalDistance));
+        return new float[] { yaw, pitch };
+    }
 
 	public static Rotation toRotation(final Vec3 vec, final boolean predict) {
 		final Vec3 eyesPos = new Vec3(mc.player.posX,
@@ -108,6 +121,13 @@ public class RotationUtils implements Loona {
 					reset();
 			}
 		}
+
+		if (random.nextGaussian() > 0.8D)
+			x = Math.random();
+		if (random.nextGaussian() > 0.8D)
+			y = Math.random();
+		if (random.nextGaussian() > 0.8D)
+			z = Math.random();
 	}
 
 	@EventLink
@@ -133,18 +153,18 @@ public class RotationUtils implements Loona {
 	}
 
 	public static void setTargetRotation(final Rotation rotation) {
-		setTargetRotation(rotation, 0, 0);
+		setTargetRotation(rotation, 0);
 	}
 
-	public static void setTargetRotation(final Rotation rotation, final int keep, final int rev) {
+	public static void setTargetRotation(final Rotation rotation, final int c) {
 		if (Double.isNaN(rotation.getYaw()) || Double.isNaN(rotation.getPitch()) || rotation.getPitch() > 90
 				|| rotation.getPitch() < -90)
 			return;
 
 		rotation.fixedSensitivity(mc.gameSettings.mouseSensitivity);
 		targetRotation = rotation;
-		keepLength = keep;
-		revTick = rev;
+		keepLength = c;
+		revTick = 0;
 	}
 
 	public static void reset() {

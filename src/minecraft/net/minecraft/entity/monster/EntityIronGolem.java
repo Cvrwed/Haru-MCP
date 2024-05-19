@@ -292,7 +292,7 @@ public class EntityIronGolem extends EntityGolem
     {
         if (!this.isPlayerCreated() && this.attackingPlayer != null && this.villageObj != null)
         {
-            this.villageObj.setReputationForPlayer(this.attackingPlayer.getCommandSenderName(), -5);
+            this.villageObj.setReputationForPlayer(this.attackingPlayer.getName(), -5);
         }
 
         super.onDeath(cause);

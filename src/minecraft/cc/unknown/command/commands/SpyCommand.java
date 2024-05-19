@@ -21,7 +21,7 @@ public class SpyCommand extends Command {
 		String target = args[1];
 		
 		for (EntityPlayer entity : mc.world.playerEntities) {
-		    if (target.equals(entity.getCommandSenderName())) {
+		    if (target.equals(entity.getName())) {
 		        mc.setRenderViewEntity(entity);
 		        sendChat("Spying to §8${entity.name}§3.");
 		        sendChat("Execute §8.spy §3again to go back to yours.");

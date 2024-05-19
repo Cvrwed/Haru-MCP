@@ -102,7 +102,7 @@ public class CommandPlaySound extends CommandBase
             {
                 if (d5 <= 0.0D)
                 {
-                    throw new CommandException("commands.playsound.playerTooFar", new Object[] {entityplayermp.getCommandSenderName()});
+                    throw new CommandException("commands.playsound.playerTooFar", new Object[] {entityplayermp.getName()});
                 }
 
                 double d8 = d0 - entityplayermp.posX;
@@ -121,7 +121,7 @@ public class CommandPlaySound extends CommandBase
             }
 
             entityplayermp.playerNetServerHandler.sendPacket(new S29PacketSoundEffect(s, d0, d1, d2, (float)d3, (float)d4));
-            notifyOperators(sender, this, "commands.playsound.success", new Object[] {s, entityplayermp.getCommandSenderName()});
+            notifyOperators(sender, this, "commands.playsound.success", new Object[] {s, entityplayermp.getName()});
         }
     }
 

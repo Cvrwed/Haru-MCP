@@ -68,7 +68,7 @@ public class TargetHUD extends Module {
 			if (player == null)
 				return;
 			drawRect(x, y, 120, 40, new Color(0, 0, 0, 120).getRGB());
-			mc.fontRendererObj.drawString(player.getCommandSenderName(), x + 45, y + 8, -1);
+			mc.fontRendererObj.drawString(player.getName(), x + 45, y + 8, -1);
 			double offset = -(player.hurtTime * 20);
 			Color color = new Color(255, (int) (255 + offset), (int) (255 + offset));
 			GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F,

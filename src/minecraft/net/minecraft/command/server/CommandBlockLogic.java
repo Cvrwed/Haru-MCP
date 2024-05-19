@@ -157,7 +157,7 @@ public abstract class CommandBlockLogic implements ICommandSender
                 {
                     public String call() throws Exception
                     {
-                        return CommandBlockLogic.this.getCommandSenderName();
+                        return CommandBlockLogic.this.getName();
                     }
                 });
                 throw new ReportedException(crashreport);
@@ -172,7 +172,7 @@ public abstract class CommandBlockLogic implements ICommandSender
     /**
      * Gets the name of this command sender (usually username, but possibly "Rcon")
      */
-    public String getCommandSenderName()
+    public String getName()
     {
         return this.customName;
     }
@@ -182,7 +182,7 @@ public abstract class CommandBlockLogic implements ICommandSender
      */
     public IChatComponent getDisplayName()
     {
-        return new ChatComponentText(this.getCommandSenderName());
+        return new ChatComponentText(this.getName());
     }
 
     public void setName(String p_145754_1_)

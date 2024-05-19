@@ -63,6 +63,6 @@ public class GuiSleepMP extends GuiChat
     private void wakeFromSleep()
     {
         NetHandlerPlayClient nethandlerplayclient = this.mc.player.sendQueue;
-        nethandlerplayclient.addToSendQueue(new C0BPacketEntityAction(this.mc.player, C0BPacketEntityAction.Action.STOP_SLEEPING));
+        nethandlerplayclient.sendQueue(new C0BPacketEntityAction(this.mc.player, C0BPacketEntityAction.Action.STOP_SLEEPING));
     }
 }

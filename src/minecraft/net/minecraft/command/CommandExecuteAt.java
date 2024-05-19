@@ -72,7 +72,7 @@ public class CommandExecuteAt extends CommandBase
 
                 if (iblockstate.getBlock() != block || k >= 0 && iblockstate.getBlock().getMetaFromState(iblockstate) != k)
                 {
-                    throw new CommandException("commands.execute.failed", new Object[] {"detect", entity.getCommandSenderName()});
+                    throw new CommandException("commands.execute.failed", new Object[] {"detect", entity.getName()});
                 }
 
                 i = 10;
@@ -81,9 +81,9 @@ public class CommandExecuteAt extends CommandBase
             String s = buildString(args, i);
             ICommandSender icommandsender = new ICommandSender()
             {
-                public String getCommandSenderName()
+                public String getName()
                 {
-                    return entity.getCommandSenderName();
+                    return entity.getName();
                 }
                 public IChatComponent getDisplayName()
                 {
@@ -136,7 +136,7 @@ public class CommandExecuteAt extends CommandBase
             }
             catch (Throwable var23)
             {
-                throw new CommandException("commands.execute.failed", new Object[] {s, entity.getCommandSenderName()});
+                throw new CommandException("commands.execute.failed", new Object[] {s, entity.getName()});
             }
         }
     }

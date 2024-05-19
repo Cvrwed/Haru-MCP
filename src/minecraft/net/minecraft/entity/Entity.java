@@ -2123,7 +2123,7 @@ public abstract class Entity implements ICommandSender {
 	/**
 	 * Gets the name of this command sender (usually username, but possibly "Rcon")
 	 */
-	public String getCommandSenderName() {
+	public String getName() {
 		if (this.hasCustomName()) {
 			return this.getCustomNameTag();
 		} else {
@@ -2181,7 +2181,7 @@ public abstract class Entity implements ICommandSender {
 
 	public String toString() {
 		return String.format("%s[\'%s\'/%d, l=\'%s\', x=%.2f, y=%.2f, z=%.2f]",
-				new Object[] { this.getClass().getSimpleName(), this.getCommandSenderName(),
+				new Object[] { this.getClass().getSimpleName(), this.getName(),
 						Integer.valueOf(this.entityId),
 						this.worldObj == null ? "~NULL~" : this.worldObj.getWorldInfo().getWorldName(),
 						Double.valueOf(this.posX), Double.valueOf(this.posY), Double.valueOf(this.posZ) });
@@ -2302,7 +2302,7 @@ public abstract class Entity implements ICommandSender {
 		category.addCrashSection("Entity ID", Integer.valueOf(this.entityId));
 		category.addCrashSectionCallable("Entity Name", new Callable<String>() {
 			public String call() throws Exception {
-				return Entity.this.getCommandSenderName();
+				return Entity.this.getName();
 			}
 		});
 		category.addCrashSection("Entity\'s Exact location", String.format("%.2f, %.2f, %.2f",
@@ -2344,7 +2344,7 @@ public abstract class Entity implements ICommandSender {
 	 * in chat
 	 */
 	public IChatComponent getDisplayName() {
-		ChatComponentText chatcomponenttext = new ChatComponentText(this.getCommandSenderName());
+		ChatComponentText chatcomponenttext = new ChatComponentText(this.getName());
 		chatcomponenttext.getChatStyle().setChatHoverEvent(this.getHoverEvent());
 		chatcomponenttext.getChatStyle().setInsertion(this.getUniqueID().toString());
 		return chatcomponenttext;
@@ -2404,7 +2404,7 @@ public abstract class Entity implements ICommandSender {
 			nbttagcompound.setString("type", s);
 		}
 
-		nbttagcompound.setString("name", this.getCommandSenderName());
+		nbttagcompound.setString("name", this.getName());
 		return new HoverEvent(HoverEvent.Action.SHOW_ENTITY, new ChatComponentText(nbttagcompound.toString()));
 	}
 

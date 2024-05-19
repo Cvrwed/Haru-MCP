@@ -1,8 +1,8 @@
 package cc.unknown.event.impl.network;
 
 import cc.unknown.event.Event;
-import net.minecraft.network.PacketDirection;
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketDirection;
 
 public class PacketEvent extends Event {
     private final PacketDirection direction;

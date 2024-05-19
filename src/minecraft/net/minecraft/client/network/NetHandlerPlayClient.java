@@ -19,7 +19,10 @@ import com.mojang.authlib.GameProfile;
 
 import cc.unknown.Haru;
 import cc.unknown.event.impl.network.DisconnectionEvent;
+import cc.unknown.event.impl.network.KnockBackEvent;
+import cc.unknown.module.impl.combat.Velocity;
 import cc.unknown.ui.clickgui.raven.HaruGui;
+import cc.unknown.utils.Loona;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
 import net.minecraft.client.ClientBrandRetriever;
@@ -463,13 +466,17 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	/**
 	 * Sets the velocity of the specified entity to the specified value
 	 */
+	
 	public void handleEntityVelocity(S12PacketEntityVelocity packetIn) {
 		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
 		Entity entity = this.clientWorldController.getEntityByID(packetIn.getEntityID());
 
 		if (entity != null) {
-			entity.setVelocity((double) packetIn.getMotionX() / 8000.0D, (double) packetIn.getMotionY() / 8000.0D,
-					(double) packetIn.getMotionZ() / 8000.0D);
+			KnockBackEvent knockBack = new KnockBackEvent((double) packetIn.getMotionX() / 8000.0D, (double) packetIn.getMotionY() / 8000.0D, (double) packetIn.getMotionZ() / 8000.0D);
+			if (entity.getEntityId() == Loona.mc.player.getEntityId()) {
+				Haru.instance.getEventBus().post(knockBack);
+			}
+			entity.setVelocity(knockBack.getX(), knockBack.getY(), knockBack.getZ());
 		}
 	}
 
@@ -751,7 +758,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 		}
 	}
 
-	public void addToSendQueue(Packet packet) {
+	public void sendQueue(Packet packet) {
 		this.netManager.sendPacket(packet);
 	}
 	
@@ -1085,7 +1092,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 		}
 
 		if (container != null && !packetIn.func_148888_e()) {
-			this.addToSendQueue(
+			this.sendQueue(
 					new C0FPacketConfirmTransaction(packetIn.getWindowId(), packetIn.getActionNumber(), true));
 		}
 	}
@@ -1145,9 +1152,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 		}
 
 		if (!flag && this.gameController.player != null) {
-			// this.gameController.player.addChatMessage(new ChatComponentText("Unable to
-			// locate sign at " + packetIn.getPos().getX() + ", " + packetIn.getPos().getY()
-			// + ", " + packetIn.getPos().getZ()));
+
 		}
 	}
 
@@ -1198,10 +1203,10 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 * Resets the ItemStack held in hand and closes the window that is opened
 	 */
 	public void handleCloseWindow(S2EPacketCloseWindow packetIn) {
+		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
 		if (this.gameController.currentScreen instanceof HaruGui) {
 			return;
 		}
-		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
 		this.gameController.player.closeScreenAndDropStack();
 	}
 
@@ -1481,7 +1486,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	}
 
 	public void handleKeepAlive(S00PacketKeepAlive packetIn) {
-		this.addToSendQueue(new C00PacketKeepAlive(packetIn.func_149134_c()));
+		this.sendQueue(new C00PacketKeepAlive(packetIn.func_149134_c()));
 	}
 
 	public void handlePlayerAbilities(S39PacketPlayerAbilities packetIn) {

@@ -99,11 +99,11 @@ public class CommandGive extends CommandBase
                 if (entityitem != null)
                 {
                     entityitem.setNoPickupDelay();
-                    entityitem.setOwner(entityplayer.getCommandSenderName());
+                    entityitem.setOwner(entityplayer.getName());
                 }
             }
 
-            notifyOperators(sender, this, "commands.give.success", new Object[] {itemstack.getChatComponent(), Integer.valueOf(i), entityplayer.getCommandSenderName()});
+            notifyOperators(sender, this, "commands.give.success", new Object[] {itemstack.getChatComponent(), Integer.valueOf(i), entityplayer.getName()});
         }
     }
 

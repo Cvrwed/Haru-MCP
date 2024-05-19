@@ -141,7 +141,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
     /**
      * Gets the name of this command sender (usually username, but possibly "Rcon")
      */
-    public String getCommandSenderName()
+    public String getName()
     {
         if (this.hasCustomName())
         {
@@ -455,7 +455,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
     {
         AnimalChest animalchest = this.horseChest;
         this.horseChest = new AnimalChest("HorseChest", this.getChestSize());
-        this.horseChest.setCustomName(this.getCommandSenderName());
+        this.horseChest.setCustomName(this.getName());
 
         if (animalchest != null)
         {
@@ -785,7 +785,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
     {
         if (!this.worldObj.isRemote && (this.riddenByEntity == null || this.riddenByEntity == playerEntity) && this.isTame())
         {
-            this.horseChest.setCustomName(this.getCommandSenderName());
+            this.horseChest.setCustomName(this.getName());
             playerEntity.displayGUIHorse(this, this.horseChest);
         }
     }

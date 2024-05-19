@@ -488,7 +488,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
 			GlStateManager.rotate(f * this.getDeathMaxRotation(bat), 0.0F, 0.0F, 1.0F);
 		} else {
-			String s = EnumChatFormatting.getTextWithoutFormattingCodes(bat.getCommandSenderName());
+			String s = EnumChatFormatting.getTextWithoutFormattingCodes(bat.getName());
 
 			if (s != null && (s.equals("Dinnerbone") || s.equals("Grumm"))
 					&& (!(bat instanceof EntityPlayer) || ((EntityPlayer) bat).isWearing(EnumPlayerModelParts.CAPE))) {

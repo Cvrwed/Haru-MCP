@@ -3363,7 +3363,7 @@ public abstract class World implements IBlockAccess
         {
             EntityPlayer entityplayer = (EntityPlayer)this.playerEntities.get(i);
 
-            if (name.equals(entityplayer.getCommandSenderName()))
+            if (name.equals(entityplayer.getName()))
             {
                 return entityplayer;
             }

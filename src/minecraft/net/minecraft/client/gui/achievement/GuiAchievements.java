@@ -63,7 +63,7 @@ public class GuiAchievements extends GuiScreen implements IProgressMeter
      */
     public void initGui()
     {
-        this.mc.getNetHandler().addToSendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.REQUEST_STATS));
+        this.mc.getNetHandler().sendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.REQUEST_STATS));
         this.buttonList.clear();
         this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 24, this.height / 2 + 74, 80, 20, I18n.format("gui.done", new Object[0])));
     }

@@ -77,11 +77,11 @@ public class CommandTestFor extends CommandBase
 
                 if (!NBTUtil.func_181123_a(nbttagcompound, nbttagcompound1, true))
                 {
-                    throw new CommandException("commands.testfor.failure", new Object[] {entity.getCommandSenderName()});
+                    throw new CommandException("commands.testfor.failure", new Object[] {entity.getName()});
                 }
             }
 
-            notifyOperators(sender, this, "commands.testfor.success", new Object[] {entity.getCommandSenderName()});
+            notifyOperators(sender, this, "commands.testfor.success", new Object[] {entity.getName()});
         }
     }
 

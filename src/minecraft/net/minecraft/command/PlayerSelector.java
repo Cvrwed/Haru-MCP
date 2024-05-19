@@ -333,7 +333,7 @@ public class PlayerSelector
                             return false;
                         }
 
-                        String s1 = p_apply_1_ instanceof EntityPlayerMP ? p_apply_1_.getCommandSenderName() : p_apply_1_.getUniqueID().toString();
+                        String s1 = p_apply_1_ instanceof EntityPlayerMP ? p_apply_1_.getName() : p_apply_1_.getUniqueID().toString();
 
                         if (!scoreboard.entityHasObjective(s1, scoreobjective))
                         {
@@ -380,7 +380,7 @@ public class PlayerSelector
             {
                 public boolean apply(Entity p_apply_1_)
                 {
-                    return p_apply_1_.getCommandSenderName().equals(s_f) != flag;
+                    return p_apply_1_.getName().equals(s_f) != flag;
                 }
             });
         }

@@ -15,6 +15,7 @@ import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.client.ColorUtil;
+import cc.unknown.utils.client.RenderUtil;
 import cc.unknown.utils.player.CombatUtil;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -58,7 +59,7 @@ public class Nametags extends Module {
 				return;
 			}
 
-			if (!CombatUtil.instance.canTarget(e.getTarget(), true)) {
+			if (!CombatUtil.instance.canTarget(e.getTarget())) {
 				return;
 			}
 
@@ -76,7 +77,7 @@ public class Nametags extends Module {
 				double distance = mc.player.getDistanceToEntity(entity);
 
 				if ((range.getInput() != 0.0D && distance > range.getInput())
-						|| entity.getCommandSenderName().matches(".*[-/|<>\\u0e22\\u0e07].*") || entity.getCommandSenderName().isEmpty()
+						|| entity.getName().matches(".*[-/|<>\\u0e22\\u0e07].*") || entity.getName().isEmpty()
 						|| (!showInvis.isToggled() && entity.isInvisible())) {
 					return;
 				}
@@ -88,7 +89,7 @@ public class Nametags extends Module {
 			});
 			RenderManager renderManager = mc.getRenderManager();
 
-			players.stream().filter(player -> CombatUtil.instance.canTarget(player, true)).forEach(player -> {
+			players.stream().filter(player -> CombatUtil.instance.canTarget(player)).forEach(player -> {
 				player.setAlwaysRenderNameTag(false);
 				_x = (float) (player.lastTickPosX + (player.posX - player.lastTickPosX) * mc.timer.renderPartialTicks
 						- renderManager.viewerPosX);
@@ -115,11 +116,11 @@ public class Nametags extends Module {
 		float x = -e - 2.2F;
 		float z = (float) (getWidth(getPlayerName(player)) + 4);
 		if (mode.is("Percentage")) {
-			mc.currentScreen.drawBorderedRect(x, -3.0F, e, 10.0F, 1.0F,
+			RenderUtil.drawBorderedRect(x, -3.0F, e, 10.0F, 1.0F,
 					(new Color(20, 20, 20, opacity.getInputToInt())).getRGB(),
 					(new Color(10, 10, 10, opacity.getInputToInt())).getRGB());
 		} else {
-			mc.currentScreen.drawBorderedRect(x + 5.0F, -3.0F, e, 10.0F, 1.0F,
+			RenderUtil.drawBorderedRect(x + 5.0F, -3.0F, e, 10.0F, 1.0F,
 					(new Color(20, 20, 20, opacity.getInputToInt())).getRGB(),
 					(new Color(10, 10, 10, opacity.getInputToInt())).getRGB());
 		}
@@ -162,7 +163,7 @@ public class Nametags extends Module {
 		float rotateX = mc.gameSettings.thirdPersonView == 2 ? -1.0F : 1.0F;
 		double scaleRatio = (double) (getSize(player) / 10.0F * scale.getInput()) * 1.5D;
 		GL11.glPushMatrix();
-		mc.currentScreen.startDrawing();
+		RenderUtil.startDrawing();
 		GL11.glTranslatef(x, y, z);
 		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(-mc.getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);

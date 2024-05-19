@@ -36,23 +36,23 @@ public class FriendCommand extends Command {
 	        this.sendChat(getColor("Gray") + " You have no friends. :(");
 	    } else {
 	        this.sendChat(getColor("Gray") + " Your friends are:");
-	        friends.stream().map(Entity::getCommandSenderName).forEach(name -> this.sendChat(getColor("Gray") + name));
+	        friends.stream().map(Entity::getName).forEach(name -> this.sendChat(getColor("Gray") + name));
 	    }
 	}
 
 	private void addFriend(Entity friendEntity) {
 		FriendUtil.instance.addFriend(friendEntity);
-	    this.sendChat(getColor("Gray") + " New friend " + friendEntity.getCommandSenderName() + " :)");
+	    this.sendChat(getColor("Gray") + " New friend " + friendEntity.getName() + " :)");
 	}
 
 	private void removeFriend(Entity friendEntity) {
 	    boolean removed = FriendUtil.instance.removeFriend(friendEntity);
 	    if (removed) {
-	        this.sendChat(getColor("Gray") + " Successfully removed " + friendEntity.getCommandSenderName() + " from your friends list!");
+	        this.sendChat(getColor("Gray") + " Successfully removed " + friendEntity.getName() + " from your friends list!");
 	    }
 	}
 	
 	private Entity findEntity(String name) {
-	    return mc.world.getLoadedEntityList().stream().filter(entity -> entity.getCommandSenderName().equalsIgnoreCase(name)).findFirst().orElse(null);
+	    return mc.world.getLoadedEntityList().stream().filter(entity -> entity.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
 	}
 }

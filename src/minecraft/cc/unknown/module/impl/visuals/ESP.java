@@ -11,6 +11,7 @@ import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.ui.clickgui.raven.impl.api.Theme;
+import cc.unknown.utils.client.RenderUtil;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,7 +63,7 @@ public class ESP extends Module {
                     if (te instanceof TileEntityChest || te instanceof TileEntityEnderChest) {
                         if (disableIfChestOpened.isToggled() && ((TileEntityChest) te).lidAngle > 0.0f) continue;
                         
-                        mc.currentScreen.drawChestBox(te.getPos(), chestColorRGB, true);
+                        RenderUtil.drawChestBox(te.getPos(), chestColorRGB, true);
                     }
                 }
             }
@@ -85,13 +86,13 @@ public class ESP extends Module {
 	private void renderPlayer(Entity target, int rgb) {
 		switch (boxMode.getMode()) {
 		case "3D":
-			mc.currentScreen.drawBoxAroundEntity(target, 1, 0.0D, 0.0D, rgb, false);
+			RenderUtil.drawBoxAroundEntity(target, 1, 0.0D, 0.0D, rgb, false);
 			break;
 		case "2D":
-			mc.currentScreen.drawBoxAroundEntity(target, 3, 0.0D, 0.0D, rgb, false);
+			RenderUtil.drawBoxAroundEntity(target, 3, 0.0D, 0.0D, rgb, false);
 			break;
 		case "Health":
-			mc.currentScreen.drawBoxAroundEntity(target, 4, 0.0D, 0.0D, rgb, false);
+			RenderUtil.drawBoxAroundEntity(target, 4, 0.0D, 0.0D, rgb, false);
 			break;
 		}
 	}

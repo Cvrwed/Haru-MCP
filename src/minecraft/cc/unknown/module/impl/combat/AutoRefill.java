@@ -69,7 +69,7 @@ public class AutoRefill extends Module {
 
 	private void openInventory() {
 		mc.getNetHandler()
-				.addToSendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
+				.sendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
 		mc.displayGuiScreen(new GuiInventory(mc.player));
 	}
 

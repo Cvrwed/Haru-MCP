@@ -850,7 +850,7 @@ public abstract class MinecraftServer implements Runnable, ICommandSender, IThre
 	/**
 	 * Gets the name of this command sender (usually username, but possibly "Rcon")
 	 */
-	public String getCommandSenderName() {
+	public String getName() {
 		return "Server";
 	}
 
@@ -1231,7 +1231,7 @@ public abstract class MinecraftServer implements Runnable, ICommandSender, IThre
 	 * in chat
 	 */
 	public IChatComponent getDisplayName() {
-		return new ChatComponentText(this.getCommandSenderName());
+		return new ChatComponentText(this.getName());
 	}
 
 	public boolean isAnnouncingPlayerAchievements() {

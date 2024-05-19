@@ -175,7 +175,7 @@ public class TileEntityHopper extends TileEntityLockable implements IHopper, ITi
     /**
      * Gets the name of this command sender (usually username, but possibly "Rcon")
      */
-    public String getCommandSenderName()
+    public String getName()
     {
         return this.hasCustomName() ? this.customName : "container.hopper";
     }

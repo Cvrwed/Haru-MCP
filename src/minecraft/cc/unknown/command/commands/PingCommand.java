@@ -4,7 +4,7 @@ import cc.unknown.command.Command;
 import cc.unknown.command.Flips;
 import cc.unknown.utils.player.CombatUtil;
 
-@Flips(name = "Ping", alias = "ping", desc = "Show ur ping", syntax = ".ping")
+@Flips(name = "Ping", alias = "pong", desc = "Show ur ping", syntax = ".ping")
 public class PingCommand extends Command {
 
 	@Override

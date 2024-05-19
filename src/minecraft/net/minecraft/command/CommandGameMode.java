@@ -64,7 +64,7 @@ public class CommandGameMode extends CommandBase
 
             if (entityplayer != sender)
             {
-                notifyOperators(sender, this, 1, "commands.gamemode.success.other", new Object[] {entityplayer.getCommandSenderName(), ichatcomponent});
+                notifyOperators(sender, this, 1, "commands.gamemode.success.other", new Object[] {entityplayer.getName(), ichatcomponent});
             }
             else
             {

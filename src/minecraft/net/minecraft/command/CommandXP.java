@@ -72,12 +72,12 @@ public class CommandXP extends CommandBase
                 if (flag1)
                 {
                     entityplayer.addExperienceLevel(-i);
-                    notifyOperators(sender, this, "commands.xp.success.negative.levels", new Object[] {Integer.valueOf(i), entityplayer.getCommandSenderName()});
+                    notifyOperators(sender, this, "commands.xp.success.negative.levels", new Object[] {Integer.valueOf(i), entityplayer.getName()});
                 }
                 else
                 {
                     entityplayer.addExperienceLevel(i);
-                    notifyOperators(sender, this, "commands.xp.success.levels", new Object[] {Integer.valueOf(i), entityplayer.getCommandSenderName()});
+                    notifyOperators(sender, this, "commands.xp.success.levels", new Object[] {Integer.valueOf(i), entityplayer.getName()});
                 }
             }
             else
@@ -90,7 +90,7 @@ public class CommandXP extends CommandBase
                 }
 
                 entityplayer.addExperience(i);
-                notifyOperators(sender, this, "commands.xp.success", new Object[] {Integer.valueOf(i), entityplayer.getCommandSenderName()});
+                notifyOperators(sender, this, "commands.xp.success", new Object[] {Integer.valueOf(i), entityplayer.getName()});
             }
         }
     }

@@ -1,10 +1,14 @@
 package cc.unknown.module.impl.combat;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.move.LivingEvent;
+import cc.unknown.event.impl.move.MotionEvent;
+import cc.unknown.event.impl.network.KnockBackEvent;
+import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.event.impl.player.StrafeEvent;
 import cc.unknown.event.impl.player.TickEvent;
@@ -15,24 +19,33 @@ import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
+import cc.unknown.utils.misc.KeybindUtil;
+import cc.unknown.utils.network.TimedPacket;
 import cc.unknown.utils.player.PlayerUtil;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.util.MathHelper;
 
 @Register(name = "JumpReset", category = Category.Combat)
 public class JumpReset extends Module {
-	private ModeValue mode = new ModeValue("Mode", "Legit", "Hit", "Tick", "Normal", "Legit");
+	private ModeValue mode = new ModeValue("Mode", "Legit", "Hit", "Tick", "Legit");
 	private BooleanValue onlyCombat = new BooleanValue("Enable only during combat", true);
+	private BooleanValue antiCombo = new BooleanValue("Anti Combo", false);
 	private SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
+	private SliderValue comboTicks = new SliderValue("Combo Hits", 1, 0, 20, 1);
 	private DoubleSliderValue tickTicks = new DoubleSliderValue("Ticks", 0, 0, 0, 20, 1);
 	private DoubleSliderValue hitHits = new DoubleSliderValue("Hits", 0, 0, 0, 20, 1);
 
 	private int limit = 0;
 	private boolean reset = false;
+	private boolean shouldspoof = false;
+	private int hitCombo = 0;
+	private int enabledticks = 0;
+	private ConcurrentLinkedQueue<TimedPacket> inboundPacketsQueue = new ConcurrentLinkedQueue<TimedPacket>();
 
 	public JumpReset() {
-		this.registerSetting(mode, onlyCombat, chance, tickTicks, hitHits);
+		this.registerSetting(mode, onlyCombat, antiCombo, chance, comboTicks, tickTicks, hitHits);
 	}
 
 	@EventLink
@@ -59,15 +72,65 @@ public class JumpReset extends Module {
 	}
 
 	@EventLink
-	public void onTick(TickEvent e) {
-		if (mode.is("Normal")) {
-			if (!(mc.currentScreen instanceof GuiScreen) && !mc.player.isBlocking() && !mc.player.isUsingItem()
-					&& !checkLiquids() && mc.player instanceof EntityPlayer && mc.player.onGround
-					&& mc.player.hurtTime > 0 && mc.player.hurtTime < 10
-					&& mc.player.hurtTime == mc.player.maxHurtTime - 1
-					&& MathHelper.rand().nextFloat() <= chance.getInput() / 100) {
-				mc.player.jump();
+	public void onTickPre(TickEvent.Pre e) {
+		if (antiCombo.isToggled()) {
+			if (hitCombo >= comboTicks.getInputToInt()) {
+				shouldspoof = true;
 			}
+			if (shouldspoof) {
+				++enabledticks;
+			}
+			if (enabledticks >= 100) {
+				stop();
+				clearInboundQueue();
+			}
+		}
+	}
+
+	@EventLink
+	public void onPacket(PacketEvent e) {
+		if (e.isSend()) {
+			if (e.getPacket() instanceof C02PacketUseEntity && antiCombo.isToggled()) {
+				C02PacketUseEntity wrapper = (C02PacketUseEntity) e.getPacket();
+				if (wrapper.getAction() == C02PacketUseEntity.Action.ATTACK) {
+					hitCombo = 0;
+					if (shouldspoof) {
+						stop();
+						clearInboundQueue();
+					}
+				}
+			}
+		}
+	}
+
+	@EventLink
+	public void onKnockBack(KnockBackEvent e) {
+		if (mode.is("Legit")) {
+			mc.gameSettings.keyBindSprint.pressed = true;
+			mc.gameSettings.keyBindForward.pressed = true;
+			mc.gameSettings.keyBindJump.pressed = true;
+			mc.gameSettings.keyBindBack.pressed = false;
+			reset = true;
+		}
+
+		if (antiCombo.isToggled()) {
+			++hitCombo;
+		}
+	}
+
+	@EventLink
+	public void onMotion(MotionEvent e) {
+		if (mode.is("Legit") && e.isPost()) {
+			if (reset) {
+				KeyBinding sprint = mc.gameSettings.keyBindSprint;
+				KeyBinding forward = mc.gameSettings.keyBindForward;
+				KeyBinding jump = mc.gameSettings.keyBindJump;
+				KeyBinding back = mc.gameSettings.keyBindBack;
+
+				KeybindUtil.instance.resetKeybindings(sprint, forward, jump, back);
+			}
+			reset = false;
+
 		}
 	}
 
@@ -124,6 +187,20 @@ public class JumpReset extends Module {
 		}
 		return Stream.<Supplier<Boolean>>of(mc.player::isInLava, mc.player::isBurning, mc.player::isInWater,
 				() -> mc.player.isInWeb).map(Supplier::get).anyMatch(Boolean.TRUE::equals);
+	}
+
+	private void stop() {
+		shouldspoof = false;
+		hitCombo = 0;
+		enabledticks = 0;
+	}
+
+	private void clearInboundQueue() {
+		for (final TimedPacket packet : inboundPacketsQueue) {
+			final Packet p = packet.getPacket();
+			p.processPacket(mc.player.sendQueue.getNetworkManager().getNetHandler());
+			inboundPacketsQueue.remove(packet);
+		}
 	}
 
 	private boolean applyChance() {

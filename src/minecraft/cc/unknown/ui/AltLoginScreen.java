@@ -9,6 +9,7 @@ import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import cc.unknown.utils.client.RenderUtil;
 import cc.unknown.utils.network.credential.CookieUtil;
 import cc.unknown.utils.network.credential.LoginData;
 import fr.litarvan.openauth.microsoft.MicrosoftAuthResult;
@@ -55,7 +56,7 @@ public class AltLoginScreen extends GuiScreen {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		mc.currentScreen.drawRect(0.0D, 0.0D, this.width, this.height, (new Color(0)).getRGB());
+		RenderUtil.drawRect(0.0D, 0.0D, this.width, this.height, (new Color(0)).getRGB());
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		ScaledResolution sr = new ScaledResolution(mc);
@@ -83,14 +84,14 @@ public class AltLoginScreen extends GuiScreen {
 		int endX = sr.getScaledWidth() / 2 + buttonWidth / 2;
 
 		for (Button button : buttons) {
-			mc.currentScreen.drawRect(startX, y, endX, y + buttonHeight, 0x50000000);
+			RenderUtil.drawRect(startX, y, endX, y + buttonHeight, 0x50000000);
 
 			button.updateState(mouseX > startX && mouseX < endX && mouseY > y && mouseY < y + buttonHeight);
 
 			if (button.isHovered()) {
 				double scale = 1;
 
-				mc.currentScreen.drawRect(startX, y, startX + buttonWidth * scale, y + buttonHeight,
+				RenderUtil.drawRect(startX, y, startX + buttonWidth * scale, y + buttonHeight,
 						new Color(0, 0, 0).getRGB());
 			}
 

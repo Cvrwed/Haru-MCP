@@ -1242,7 +1242,7 @@ public class GameSettings
                 i |= enumplayermodelparts.getPartMask();
             }
 
-            this.mc.player.sendQueue.addToSendQueue(new C15PacketClientSettings(this.language, this.renderDistanceChunks, this.chatVisibility, this.chatColours, i));
+            this.mc.player.sendQueue.sendQueue(new C15PacketClientSettings(this.language, this.renderDistanceChunks, this.chatVisibility, this.chatColours, i));
         }
     }
 

@@ -133,7 +133,7 @@ public abstract class ServerConfigurationManager {
 			s1 = netManager.getRemoteAddress().toString();
 		}
 
-		logger.info(playerIn.getCommandSenderName() + "[" + s1 + "] logged in with entity id " + playerIn.getEntityId()
+		logger.info(playerIn.getName() + "[" + s1 + "] logged in with entity id " + playerIn.getEntityId()
 				+ " at (" + playerIn.posX + ", " + playerIn.posY + ", " + playerIn.posZ + ")");
 		WorldServer worldserver = this.mcServer.worldServerForDimension(playerIn.dimension);
 		WorldInfo worldinfo = worldserver.getWorldInfo();
@@ -157,7 +157,7 @@ public abstract class ServerConfigurationManager {
 		this.mcServer.refreshStatusNextTick();
 		ChatComponentTranslation chatcomponenttranslation;
 
-		if (!playerIn.getCommandSenderName().equalsIgnoreCase(s)) {
+		if (!playerIn.getName().equalsIgnoreCase(s)) {
 			chatcomponenttranslation = new ChatComponentTranslation("multiplayer.player.joined.renamed",
 					new Object[] { playerIn.getDisplayName(), s });
 		} else {
@@ -275,7 +275,7 @@ public abstract class ServerConfigurationManager {
 		NBTTagCompound nbttagcompound = this.mcServer.worldServers[0].getWorldInfo().getPlayerNBTTagCompound();
 		NBTTagCompound nbttagcompound1;
 
-		if (playerIn.getCommandSenderName().equals(this.mcServer.getServerOwner()) && nbttagcompound != null) {
+		if (playerIn.getName().equals(this.mcServer.getServerOwner()) && nbttagcompound != null) {
 			playerIn.readFromNBT(nbttagcompound);
 			nbttagcompound1 = nbttagcompound;
 			logger.debug("loading single player");
@@ -646,7 +646,7 @@ public abstract class ServerConfigurationManager {
 				s = s + ", ";
 			}
 
-			s = s + ((EntityPlayerMP) list.get(i)).getCommandSenderName();
+			s = s + ((EntityPlayerMP) list.get(i)).getName();
 
 			if (p_181058_1_) {
 				s = s + " (" + ((EntityPlayerMP) list.get(i)).getUniqueID().toString() + ")";
@@ -663,7 +663,7 @@ public abstract class ServerConfigurationManager {
 		String[] astring = new String[this.playerEntityList.size()];
 
 		for (int i = 0; i < this.playerEntityList.size(); ++i) {
-			astring[i] = ((EntityPlayerMP) this.playerEntityList.get(i)).getCommandSenderName();
+			astring[i] = ((EntityPlayerMP) this.playerEntityList.get(i)).getName();
 		}
 
 		return astring;
@@ -709,7 +709,7 @@ public abstract class ServerConfigurationManager {
 
 	public EntityPlayerMP getPlayerByUsername(String username) {
 		for (EntityPlayerMP entityplayermp : this.playerEntityList) {
-			if (entityplayermp.getCommandSenderName().equalsIgnoreCase(username)) {
+			if (entityplayermp.getName().equalsIgnoreCase(username)) {
 				return entityplayermp;
 			}
 		}
@@ -922,7 +922,7 @@ public abstract class ServerConfigurationManager {
 			File file2 = new File(file1, uuid.toString() + ".json");
 
 			if (!file2.exists()) {
-				File file3 = new File(file1, playerIn.getCommandSenderName() + ".json");
+				File file3 = new File(file1, playerIn.getName() + ".json");
 
 				if (file3.exists() && file3.isFile()) {
 					file3.renameTo(file2);

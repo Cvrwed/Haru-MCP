@@ -10,7 +10,6 @@ import com.mojang.authlib.GameProfile;
 
 import cc.unknown.Haru;
 import cc.unknown.event.impl.move.HitSlowDownEvent;
-import cc.unknown.event.impl.player.PreJumpEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockDirectional;
@@ -644,7 +643,7 @@ public abstract class EntityPlayer extends EntityLivingBase {
 		this.setPosition(this.posX, this.posY, this.posZ);
 		this.motionY = 0.10000000149011612D;
 
-		if (this.getCommandSenderName().equals("Notch")) {
+		if (this.getName().equals("Notch")) {
 			this.dropItem(new ItemStack(Items.apple, 1), true, false);
 		}
 
@@ -698,13 +697,13 @@ public abstract class EntityPlayer extends EntityLivingBase {
 		}
 
 		for (ScoreObjective scoreobjective : collection) {
-			Score score = this.getWorldScoreboard().getValueFromObjective(this.getCommandSenderName(), scoreobjective);
+			Score score = this.getWorldScoreboard().getValueFromObjective(this.getName(), scoreobjective);
 			score.func_96648_a();
 		}
 	}
 
 	private Collection<ScoreObjective> func_175137_e(Entity p_175137_1_) {
-		ScorePlayerTeam scoreplayerteam = this.getWorldScoreboard().getPlayersTeam(this.getCommandSenderName());
+		ScorePlayerTeam scoreplayerteam = this.getWorldScoreboard().getPlayersTeam(this.getName());
 
 		if (scoreplayerteam != null) {
 			int i = scoreplayerteam.getChatFormat().getColorIndex();
@@ -712,14 +711,14 @@ public abstract class EntityPlayer extends EntityLivingBase {
 			if (i >= 0 && i < IScoreObjectiveCriteria.field_178793_i.length) {
 				for (ScoreObjective scoreobjective : this.getWorldScoreboard()
 						.getObjectivesFromCriteria(IScoreObjectiveCriteria.field_178793_i[i])) {
-					Score score = this.getWorldScoreboard().getValueFromObjective(p_175137_1_.getCommandSenderName(),
+					Score score = this.getWorldScoreboard().getValueFromObjective(p_175137_1_.getName(),
 							scoreobjective);
 					score.func_96648_a();
 				}
 			}
 		}
 
-		ScorePlayerTeam scoreplayerteam1 = this.getWorldScoreboard().getPlayersTeam(p_175137_1_.getCommandSenderName());
+		ScorePlayerTeam scoreplayerteam1 = this.getWorldScoreboard().getPlayersTeam(p_175137_1_.getName());
 
 		if (scoreplayerteam1 != null) {
 			int j = scoreplayerteam1.getChatFormat().getColorIndex();
@@ -759,7 +758,7 @@ public abstract class EntityPlayer extends EntityLivingBase {
 			entityitem.setPickupDelay(40);
 
 			if (traceItem) {
-				entityitem.setThrower(this.getCommandSenderName());
+				entityitem.setThrower(this.getName());
 			}
 
 			if (dropAround) {
@@ -1551,8 +1550,6 @@ public abstract class EntityPlayer extends EntityLivingBase {
 	 * Causes this entity to do an upwards motion (jumping).
 	 */
 	public void jump() {
-	    if ((new PreJumpEvent()).call().isCancelled())
-	        return; 
 		super.jump();
 		this.triggerAchievement(StatList.jumpStat);
 
@@ -1929,7 +1926,7 @@ public abstract class EntityPlayer extends EntityLivingBase {
 	/**
 	 * Gets the name of this command sender (usually username, but possibly "Rcon")
 	 */
-	public String getCommandSenderName() {
+	public String getName() {
 		return this.gameProfile.getName();
 	}
 
@@ -2001,7 +1998,7 @@ public abstract class EntityPlayer extends EntityLivingBase {
 	}
 
 	public Team getTeam() {
-		return this.getWorldScoreboard().getPlayersTeam(this.getCommandSenderName());
+		return this.getWorldScoreboard().getPlayersTeam(this.getName());
 	}
 
 	/**
@@ -2010,11 +2007,11 @@ public abstract class EntityPlayer extends EntityLivingBase {
 	 */
 	public IChatComponent getDisplayName() {
 		IChatComponent ichatcomponent = new ChatComponentText(
-				ScorePlayerTeam.formatPlayerName(this.getTeam(), this.getCommandSenderName()));
+				ScorePlayerTeam.formatPlayerName(this.getTeam(), this.getName()));
 		ichatcomponent.getChatStyle().setChatClickEvent(
-				new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + this.getCommandSenderName() + " "));
+				new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + this.getName() + " "));
 		ichatcomponent.getChatStyle().setChatHoverEvent(this.getHoverEvent());
-		ichatcomponent.getChatStyle().setInsertion(this.getCommandSenderName());
+		ichatcomponent.getChatStyle().setInsertion(this.getName());
 		return ichatcomponent;
 	}
 

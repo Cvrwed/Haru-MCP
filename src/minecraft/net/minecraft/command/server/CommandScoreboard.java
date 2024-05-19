@@ -649,7 +649,7 @@ public class CommandScoreboard extends CommandBase
 
         if (p_147190_1_ instanceof EntityPlayer && p_147190_3_ == p_147190_2_.length)
         {
-            String s4 = getCommandSenderAsPlayer(p_147190_1_).getCommandSenderName();
+            String s4 = getCommandSenderAsPlayer(p_147190_1_).getName();
 
             if (scoreboard.addPlayerToTeam(s4, s))
             {
@@ -718,7 +718,7 @@ public class CommandScoreboard extends CommandBase
 
         if (p_147199_1_ instanceof EntityPlayer && p_147199_3_ == p_147199_2_.length)
         {
-            String s3 = getCommandSenderAsPlayer(p_147199_1_).getCommandSenderName();
+            String s3 = getCommandSenderAsPlayer(p_147199_1_).getName();
 
             if (scoreboard.removePlayerFromTeams(s3))
             {

@@ -57,7 +57,7 @@ public class GuiEditSign extends GuiScreen
 
         if (nethandlerplayclient != null)
         {
-            nethandlerplayclient.addToSendQueue(new C12PacketUpdateSign(this.tileSign.getPos(), this.tileSign.signText));
+            nethandlerplayclient.sendQueue(new C12PacketUpdateSign(this.tileSign.getPos(), this.tileSign.signText));
         }
 
         this.tileSign.setEditable(true);

@@ -24,7 +24,7 @@ public class PlayerMenuObject implements ISpectatorMenuObject
 
     public void func_178661_a(SpectatorMenu menu)
     {
-        Minecraft.getMinecraft().getNetHandler().addToSendQueue(new C18PacketSpectate(this.profile.getId()));
+        Minecraft.getMinecraft().getNetHandler().sendQueue(new C18PacketSpectate(this.profile.getId()));
     }
 
     public IChatComponent getSpectatorName()

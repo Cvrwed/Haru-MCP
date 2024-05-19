@@ -15,7 +15,7 @@ public class LayerDeadmau5Head implements LayerRenderer<AbstractClientPlayer>
 
     public void doRenderLayer(AbstractClientPlayer entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale)
     {
-        if (entitylivingbaseIn.getCommandSenderName().equals("deadmau5") && entitylivingbaseIn.hasSkin() && !entitylivingbaseIn.isInvisible())
+        if (entitylivingbaseIn.getName().equals("deadmau5") && entitylivingbaseIn.hasSkin() && !entitylivingbaseIn.isInvisible())
         {
             this.playerRenderer.bindTexture(entitylivingbaseIn.getLocationSkin());
 

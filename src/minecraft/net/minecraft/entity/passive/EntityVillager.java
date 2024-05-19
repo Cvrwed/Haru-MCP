@@ -397,7 +397,7 @@ public class EntityVillager extends EntityAgeable implements IMerchant, INpc
                     i = -3;
                 }
 
-                this.villageObj.setReputationForPlayer(livingBase.getCommandSenderName(), i);
+                this.villageObj.setReputationForPlayer(livingBase.getName(), i);
 
                 if (this.isEntityAlive())
                 {
@@ -420,7 +420,7 @@ public class EntityVillager extends EntityAgeable implements IMerchant, INpc
             {
                 if (entity instanceof EntityPlayer)
                 {
-                    this.villageObj.setReputationForPlayer(entity.getCommandSenderName(), -2);
+                    this.villageObj.setReputationForPlayer(entity.getName(), -2);
                 }
                 else if (entity instanceof IMob)
                 {
@@ -517,7 +517,7 @@ public class EntityVillager extends EntityAgeable implements IMerchant, INpc
 
             if (this.buyingPlayer != null)
             {
-                this.lastBuyingPlayer = this.buyingPlayer.getCommandSenderName();
+                this.lastBuyingPlayer = this.buyingPlayer.getName();
             }
             else
             {

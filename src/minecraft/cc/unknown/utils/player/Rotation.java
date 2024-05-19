@@ -1,11 +1,10 @@
 package cc.unknown.utils.player;
 
 import cc.unknown.event.impl.player.StrafeEvent;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import cc.unknown.utils.Loona;
 import net.minecraft.util.MathHelper;
 
-public class Rotation {
+public class Rotation implements Loona {
 	public static Rotation instance;
     public float yaw;
     public float pitch;
@@ -66,10 +65,7 @@ public class Rotation {
      * @param strict Whether to apply strict strafe movement.
      */
     public void applyStrafeToPlayer(StrafeEvent event, boolean strict) {
-        Minecraft mc = Minecraft.getMinecraft();
-        EntityPlayerSP player = mc.player;
-
-        float yawDifference = MathHelper.wrapAngle180(player.rotationYaw - yaw - 23.5f - 135).floatValue() + 180;
+        float yawDifference = MathHelper.wrapAngle180(mc.player.rotationYaw - yaw - 23.5f - 135).floatValue() + 180;
         int diff = (int) (yawDifference / 45);
 
         float strafe = event.getStrafe();
@@ -140,8 +136,8 @@ public class Rotation {
             float yawSin = MathHelper.sin(yawRad);
             float yawCos = MathHelper.cos(yawRad);
 
-            player.motionX += calcStrafe * yawCos - calcForward * yawSin;
-            player.motionZ += calcForward * yawCos + calcStrafe * yawSin;
+            mc.player.motionX += calcStrafe * yawCos - calcForward * yawSin;
+            mc.player.motionZ += calcForward * yawCos + calcStrafe * yawSin;
         }
     }
 }

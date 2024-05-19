@@ -174,13 +174,13 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 */
 	public void onUpdate() {
 		if (worldObj.isBlockLoaded(new BlockPos(posX, 0.0D, posZ))) {
-			(new PreUpdateEvent(this)).call();
+			Haru.instance.getEventBus().post(new PreUpdateEvent());
 			super.onUpdate();
 
 			if (isRiding()) {
-				sendQueue.addToSendQueue(
+				sendQueue.sendQueue(
 						new C03PacketPlayer.C05PacketPlayerLook(rotationYaw, rotationPitch, onGround));
-				sendQueue.addToSendQueue(new C0CPacketInput(moveStrafing, moveForward,
+				sendQueue.sendQueue(new C0CPacketInput(moveStrafing, moveForward,
 						movementInput.jump, movementInput.sneak));
 			} else {
 				onUpdateWalkingPlayer();
@@ -200,9 +200,9 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 		boolean flag = isSprinting();
 		if (flag != serverSprintState) {
 			if (flag) {
-				sendQueue.addToSendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.START_SPRINTING));
+				sendQueue.sendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.START_SPRINTING));
 			} else {
-				sendQueue.addToSendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.STOP_SPRINTING));
+				sendQueue.sendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.STOP_SPRINTING));
 			}
 
 			serverSprintState = flag;
@@ -211,9 +211,9 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 		boolean flag1 = isSneaking();
 		if (flag1 != serverSneakState) {
 			if (flag1) {
-				sendQueue.addToSendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.START_SNEAKING));
+				sendQueue.sendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.START_SNEAKING));
 			} else {
-				sendQueue.addToSendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.STOP_SNEAKING));
+				sendQueue.sendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.STOP_SNEAKING));
 			}
 
 			serverSneakState = flag1;
@@ -238,18 +238,18 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 
 			if (ridingEntity == null) {
 				if (moved && rotated) {
-					sendQueue.addToSendQueue(
+					sendQueue.sendQueue(
 							new C06PacketPlayerPosLook(posX, getEntityBoundingBox().minY, posZ, yaw, pitch, onGround));
 				} else if (moved) {
-					sendQueue.addToSendQueue(
+					sendQueue.sendQueue(
 							new C04PacketPlayerPosition(posX, getEntityBoundingBox().minY, posZ, onGround));
 				} else if (rotated) {
-					sendQueue.addToSendQueue(new C05PacketPlayerLook(yaw, pitch, onGround));
+					sendQueue.sendQueue(new C05PacketPlayerLook(yaw, pitch, onGround));
 				} else {
-					sendQueue.addToSendQueue(new C03PacketPlayer(onGround));
+					sendQueue.sendQueue(new C03PacketPlayer(onGround));
 				}
 			} else {
-				sendQueue.addToSendQueue(new C06PacketPlayerPosLook(motionX, -999, motionZ, yaw, pitch, onGround));
+				sendQueue.sendQueue(new C06PacketPlayerPosLook(motionX, -999, motionZ, yaw, pitch, onGround));
 				moved = false;
 			}
 
@@ -279,7 +279,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 		C07PacketPlayerDigging.Action c07packetplayerdigging$action = dropAll
 				? C07PacketPlayerDigging.Action.DROP_ALL_ITEMS
 				: C07PacketPlayerDigging.Action.DROP_ITEM;
-		sendQueue.addToSendQueue(
+		sendQueue.sendQueue(
 				new C07PacketPlayerDigging(c07packetplayerdigging$action, BlockPos.ORIGIN, EnumFacing.DOWN));
 		return null;
 	}
@@ -298,7 +298,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	public void sendChatMessage(String message) {
 	    if ((new ChatSendEvent(message)).call().isCancelled())
 	        return;
-		sendQueue.addToSendQueue(new C01PacketChatMessage(message));
+		sendQueue.sendQueue(new C01PacketChatMessage(message));
 	}
 
 	/**
@@ -306,11 +306,11 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 */
 	public void swingItem() {
 		super.swingItem();
-		sendQueue.addToSendQueue(new C0APacketAnimation());
+		sendQueue.sendQueue(new C0APacketAnimation());
 	}
 
 	public void respawnPlayer() {
-		sendQueue.addToSendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.PERFORM_RESPAWN));
+		sendQueue.sendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.PERFORM_RESPAWN));
 	}
 
 	/**
@@ -328,7 +328,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 * set current crafting inventory back to the 2x2 square
 	 */
 	public void closeScreen() {
-		sendQueue.addToSendQueue(new C0DPacketCloseWindow(openContainer.windowId));
+		sendQueue.sendQueue(new C0DPacketCloseWindow(openContainer.windowId));
 		closeScreenAndDropStack();
 	}
 
@@ -379,7 +379,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 * Sends the player's abilities to the server (if there is one).
 	 */
 	public void sendPlayerAbilities() {
-		sendQueue.addToSendQueue(new C13PacketPlayerAbilities(capabilities));
+		sendQueue.sendQueue(new C13PacketPlayerAbilities(capabilities));
 	}
 
 	/**
@@ -390,12 +390,12 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	}
 
 	protected void sendHorseJump() {
-		sendQueue.addToSendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.RIDING_JUMP,
+		sendQueue.sendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.RIDING_JUMP,
 				(int) (getHorseJumpPower() * 100.0F)));
 	}
 
 	public void sendHorseInventory() {
-		sendQueue.addToSendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.OPEN_INVENTORY));
+		sendQueue.sendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.OPEN_INVENTORY));
 	}
 
 	public void setClientBrand(String brand) {

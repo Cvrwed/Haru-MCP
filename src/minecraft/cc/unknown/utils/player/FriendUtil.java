@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import cc.unknown.utils.Loona;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 
 public enum FriendUtil implements Loona {
 	instance;
@@ -27,7 +26,7 @@ public enum FriendUtil implements Loona {
 	public boolean addFriend(String name) {
 		boolean found = false;
 		for (Entity entity : mc.world.getLoadedEntityList()) {
-			if (entity.getCommandSenderName().equalsIgnoreCase(name) || entity.getCustomNameTag().equalsIgnoreCase(name)) {
+			if (entity.getName().equalsIgnoreCase(name) || entity.getCustomNameTag().equalsIgnoreCase(name)) {
 				if (!isAFriend(entity)) {
 					addFriend(entity);
 					found = true;
@@ -44,7 +43,7 @@ public enum FriendUtil implements Loona {
 			if (networkPlayerInfo.getDisplayName() != null) {
 				String playerName = networkPlayerInfo.getDisplayName().getUnformattedText();
 				Entity entity = mc.world.getPlayerEntityByName(playerName);
-				if (entity != null && (entity.getCommandSenderName().equalsIgnoreCase(name)
+				if (entity != null && (entity.getName().equalsIgnoreCase(name)
 						|| entity.getCustomNameTag().equalsIgnoreCase(name))) {
 					removed = removeFriend(entity);
 					found = true;
@@ -61,10 +60,6 @@ public enum FriendUtil implements Loona {
 			if (en.equals(entity))
 				return true;
 		}
-
-		EntityPlayer e = (EntityPlayer) entity;
-		if (mc.player.isOnSameTeam((EntityPlayer) entity) || mc.player.getDisplayName().getUnformattedText().startsWith(e.getDisplayName().getUnformattedText().substring(0, 2)))
-			return true;
 		return false;
 	}
 }

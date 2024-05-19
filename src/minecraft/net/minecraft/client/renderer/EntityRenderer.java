@@ -1,14 +1,5 @@
 package net.minecraft.client.renderer;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.gson.JsonSyntaxException;
-
-import cc.unknown.Haru;
-import cc.unknown.event.impl.render.RenderEvent;
-import cc.unknown.event.impl.render.RenderEvent.RenderType;
-import cc.unknown.module.impl.settings.Tweaks;
-
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.Calendar;
@@ -16,6 +7,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.GLContext;
+import org.lwjgl.util.glu.Project;
+
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.gson.JsonSyntaxException;
+
+import cc.unknown.Haru;
+import cc.unknown.event.impl.render.RenderEvent;
+import cc.unknown.event.impl.render.RenderEvent.RenderType;
+import cc.unknown.module.impl.other.Tweaks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.material.Material;
@@ -91,15 +101,6 @@ import net.optifine.shaders.Shaders;
 import net.optifine.shaders.ShadersRender;
 import net.optifine.util.TextureUtils;
 import net.optifine.util.TimedEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.GLContext;
-import org.lwjgl.util.glu.Project;
 
 public class EntityRenderer implements IResourceManagerReloadListener {
 	private static final Logger logger = LogManager.getLogger();

@@ -1095,9 +1095,9 @@ public abstract class EntityMinecart extends Entity implements IWorldNameable
     /**
      * Gets the name of this command sender (usually username, but possibly "Rcon")
      */
-    public String getCommandSenderName()
+    public String getName()
     {
-        return this.entityName != null ? this.entityName : super.getCommandSenderName();
+        return this.entityName != null ? this.entityName : super.getName();
     }
 
     /**
@@ -1127,7 +1127,7 @@ public abstract class EntityMinecart extends Entity implements IWorldNameable
         }
         else
         {
-            ChatComponentTranslation chatcomponenttranslation = new ChatComponentTranslation(this.getCommandSenderName(), new Object[0]);
+            ChatComponentTranslation chatcomponenttranslation = new ChatComponentTranslation(this.getName(), new Object[0]);
             chatcomponenttranslation.getChatStyle().setChatHoverEvent(this.getHoverEvent());
             chatcomponenttranslation.getChatStyle().setInsertion(this.getUniqueID().toString());
             return chatcomponenttranslation;

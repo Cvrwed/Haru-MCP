@@ -18,7 +18,7 @@ public class RConConsoleSource implements ICommandSender
     /**
      * Gets the name of this command sender (usually username, but possibly "Rcon")
      */
-    public String getCommandSenderName()
+    public String getName()
     {
         return "Rcon";
     }
@@ -28,7 +28,7 @@ public class RConConsoleSource implements ICommandSender
      */
     public IChatComponent getDisplayName()
     {
-        return new ChatComponentText(this.getCommandSenderName());
+        return new ChatComponentText(this.getName());
     }
 
     /**

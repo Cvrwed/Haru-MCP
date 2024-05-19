@@ -8,7 +8,6 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.ModeValue;
-import cc.unknown.utils.network.PacketUtil;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -56,7 +55,7 @@ public class NoFall extends Module {
 			}
 			break;
 		case "Packet":
-			PacketUtil.send(new C03PacketPlayer(true));
+			mc.getNetHandler().sendQueue(new C03PacketPlayer(true));
 			break;
 		case "Sneak jump":
 			if (mc.player.fallDistance > 10 && mc.gameSettings.keyBindSneak.pressed) {

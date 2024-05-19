@@ -25,7 +25,7 @@ public class LocalBlockIntercommunication implements IInteractionObject
     /**
      * Gets the name of this command sender (usually username, but possibly "Rcon")
      */
-    public String getCommandSenderName()
+    public String getName()
     {
         return this.displayName.getUnformattedText();
     }

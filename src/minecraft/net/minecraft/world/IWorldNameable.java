@@ -7,7 +7,7 @@ public interface IWorldNameable
     /**
      * Gets the name of this command sender (usually username, but possibly "Rcon")
      */
-    String getCommandSenderName();
+    String getName();
 
     /**
      * Returns true if this thing is named

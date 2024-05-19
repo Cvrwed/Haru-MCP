@@ -44,7 +44,7 @@ public class NoSlow extends Module {
 			break;
 		case "C08 Tick":
 			if (mc.player.ticksExisted % 3 == 0) {
-				mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.player.getHeldItem()));
+				mc.getNetHandler().sendQueue(new C08PacketPlayerBlockPlacement(mc.player.getHeldItem()));
 			}
 			break;
 		}

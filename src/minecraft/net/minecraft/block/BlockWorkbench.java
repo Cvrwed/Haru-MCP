@@ -49,7 +49,7 @@ public class BlockWorkbench extends Block
             this.position = pos;
         }
 
-        public String getCommandSenderName()
+        public String getName()
         {
             return null;
         }

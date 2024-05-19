@@ -56,12 +56,12 @@ public class CommandEffect extends CommandBase
             {
                 if (entitylivingbase.getActivePotionEffects().isEmpty())
                 {
-                    throw new CommandException("commands.effect.failure.notActive.all", new Object[] {entitylivingbase.getCommandSenderName()});
+                    throw new CommandException("commands.effect.failure.notActive.all", new Object[] {entitylivingbase.getName()});
                 }
                 else
                 {
                     entitylivingbase.clearActivePotions();
-                    notifyOperators(sender, this, "commands.effect.success.removed.all", new Object[] {entitylivingbase.getCommandSenderName()});
+                    notifyOperators(sender, this, "commands.effect.success.removed.all", new Object[] {entitylivingbase.getName()});
                 }
             }
             else
@@ -126,16 +126,16 @@ public class CommandEffect extends CommandBase
                     {
                         PotionEffect potioneffect = new PotionEffect(i, j, k, false, flag);
                         entitylivingbase.addPotionEffect(potioneffect);
-                        notifyOperators(sender, this, "commands.effect.success", new Object[] {new ChatComponentTranslation(potioneffect.getEffectName(), new Object[0]), Integer.valueOf(i), Integer.valueOf(k), entitylivingbase.getCommandSenderName(), Integer.valueOf(l)});
+                        notifyOperators(sender, this, "commands.effect.success", new Object[] {new ChatComponentTranslation(potioneffect.getEffectName(), new Object[0]), Integer.valueOf(i), Integer.valueOf(k), entitylivingbase.getName(), Integer.valueOf(l)});
                     }
                     else if (entitylivingbase.isPotionActive(i))
                     {
                         entitylivingbase.removePotionEffect(i);
-                        notifyOperators(sender, this, "commands.effect.success.removed", new Object[] {new ChatComponentTranslation(potion1.getName(), new Object[0]), entitylivingbase.getCommandSenderName()});
+                        notifyOperators(sender, this, "commands.effect.success.removed", new Object[] {new ChatComponentTranslation(potion1.getName(), new Object[0]), entitylivingbase.getName()});
                     }
                     else
                     {
-                        throw new CommandException("commands.effect.failure.notActive", new Object[] {new ChatComponentTranslation(potion1.getName(), new Object[0]), entitylivingbase.getCommandSenderName()});
+                        throw new CommandException("commands.effect.failure.notActive", new Object[] {new ChatComponentTranslation(potion1.getName(), new Object[0]), entitylivingbase.getName()});
                     }
                 }
                 else

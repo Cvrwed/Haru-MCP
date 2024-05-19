@@ -60,9 +60,8 @@ import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.event.impl.other.GameEvent;
 import cc.unknown.event.impl.other.MouseEvent;
 import cc.unknown.event.impl.player.TickEvent;
-import cc.unknown.event.impl.world.WorldEvent;
+import cc.unknown.event.impl.world.ChangeWorldEvent;
 import cc.unknown.module.impl.Module;
-import cc.unknown.module.impl.settings.Tweaks;
 import cc.unknown.ui.clickgui.raven.HaruGui;
 import cc.unknown.utils.Loona;
 import cc.unknown.utils.helpers.CPSHelper;
@@ -549,6 +548,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		this.checkGLError("Post startup");
 		this.ingameGUI = new GuiIngame(this);
 		Haru.instance.startClient();
+	    new GameEvent.StartEvent().call();
 
 		if (this.serverName != null) {
 			this.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), this, this.serverName, this.serverPort));
@@ -1310,7 +1310,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	 * game loop to exit cleanly.
 	 */
 	public void shutdown() {
-		Haru.instance.getEventBus().post(new GameEvent.ShutdownEvent());
+		new GameEvent.ShutdownEvent().call();
 		this.running = false;
 	}
 
@@ -1377,7 +1377,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
 	public void clickMouse() {
 		if (this.leftClickCounter <= 0) {
-			Haru.instance.getEventBus().post(new MouseEvent(0));
+			new MouseEvent(0).call();
 			CPSHelper.registerClick(CPSHelper.MouseButton.LEFT);
 			this.player.swingItem();
 
@@ -1419,7 +1419,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	public void rightClickMouse() {
 		if (!this.playerController.func_181040_m()) {
 
-			Haru.instance.getEventBus().post(new MouseEvent(1));
+			new MouseEvent(1).call();
 			CPSHelper.registerClick(CPSHelper.MouseButton.RIGHT);
 
 			this.rightClickDelayTimer = 4;
@@ -1556,7 +1556,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	 * Runs the current tick.
 	 */
 	public void runTick() throws IOException {
-		Haru.instance.getEventBus().post(new TickEvent.Pre());
+		new TickEvent.Pre().call();
 
 		if (this.rightClickDelayTimer > 0) {
 			--this.rightClickDelayTimer;
@@ -1829,7 +1829,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 				if (this.playerController.isRidingHorse()) {
 					this.player.sendHorseInventory();
 				} else {
-					this.getNetHandler().addToSendQueue(
+					this.getNetHandler().sendQueue(
 							new C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
 					this.displayGuiScreen(new GuiInventory(this.player));
 				}
@@ -1890,7 +1890,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
 		if (this.world != null) {
 			if (this.player != null) {
-				Haru.instance.getEventBus().post(new TickEvent());
+				new TickEvent().call();
 				++this.joinPlayerCounter;
 
 				if (this.joinPlayerCounter == 30) {
@@ -1975,14 +1975,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 					if (Loona.mc.currentScreen == null) {
 						module.keybind();
 					} else if (Loona.mc.currentScreen instanceof HaruGui) {
-						Haru.instance.getEventBus().post(new ClickGuiEvent());
+						new ClickGuiEvent().call();
 					}
 				}
 			}
 		} catch (ConcurrentModificationException ignore) {
 		}
 
-		Haru.instance.getEventBus().post(new TickEvent.Post());
+		new TickEvent.Post().call();
 	}
 
 	/**
@@ -2046,7 +2046,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	 * unloads the current world first
 	 */
 	public void loadWorld(WorldClient worldClientIn) {
-		Haru.instance.getEventBus().post(new WorldEvent(worldClientIn));
+		new ChangeWorldEvent(worldClientIn).call();
 		if (worldClientIn != world) {
 			entityRenderer.getMapItemRenderer().clearLoadedMaps();
 		}
@@ -2176,7 +2176,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	 * Called when user clicked he's mouse middle button (pick block)
 	 */
 	public void middleClickMouse() {
-		Haru.instance.getEventBus().post(new MouseEvent(2));
+		new MouseEvent(2).call();
 		if (this.objectMouseOver != null) {
 			boolean flag = this.player.capabilities.isCreativeMode;
 			int i = 0;

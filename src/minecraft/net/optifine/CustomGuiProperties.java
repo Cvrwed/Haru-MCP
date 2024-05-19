@@ -499,7 +499,7 @@ public class CustomGuiProperties
         {
             if (this.nbtName != null)
             {
-                String s = entity.getCommandSenderName();
+                String s = entity.getName();
 
                 if (!this.nbtName.matchesValue(s))
                 {

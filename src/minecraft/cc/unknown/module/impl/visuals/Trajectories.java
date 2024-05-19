@@ -72,11 +72,11 @@ public class Trajectories extends Module {
 				if (itemStack.getItem() instanceof ItemBow) {
 					multipicator = 1.0f;
 				}
-				double motionX = -MathHelper.sin((float) (rotationYaw / 180.0f * Math.PI))
-						* MathHelper.cos((float) (rotationPitch / 180.0f * Math.PI)) * multipicator;
-				double motionZ = MathHelper.cos((float) (rotationYaw / 180.0f * Math.PI))
-						* MathHelper.cos((float) (rotationPitch / 180.0f * Math.PI)) * multipicator;
-				double motionY = -MathHelper.sin((float) (rotationPitch / 180.0f * Math.PI)) * multipicator;
+				double motionX = -MathHelper.sin(rotationYaw / 180.0f * 3.1415927f)
+						* MathHelper.cos(rotationPitch / 180.0f * 3.1415927f) * multipicator;
+				double motionZ = MathHelper.cos(rotationYaw / 180.0f * 3.1415927f)
+						* MathHelper.cos(rotationPitch / 180.0f * 3.1415927f) * multipicator;
+				double motionY = -MathHelper.sin(rotationPitch / 180.0f * 3.1415927f) * multipicator;
 				double x = motionX;
 				double y = motionY;
 				double z = motionZ;

@@ -283,7 +283,7 @@ public abstract class CommandBase implements ICommand
     {
         try
         {
-            return getPlayer(sender, query).getCommandSenderName();
+            return getPlayer(sender, query).getName();
         }
         catch (PlayerNotFoundException playernotfoundexception)
         {
@@ -306,7 +306,7 @@ public abstract class CommandBase implements ICommand
     {
         try
         {
-            return getPlayer(p_175758_0_, p_175758_1_).getCommandSenderName();
+            return getPlayer(p_175758_0_, p_175758_1_).getName();
         }
         catch (PlayerNotFoundException var5)
         {

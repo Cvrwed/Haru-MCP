@@ -172,6 +172,11 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 	}
 
 	public void sendPacket(Packet packetIn) {
+		PacketEvent e = new PacketEvent(PacketDirection.Outbound, packetIn);
+		Haru.instance.getEventBus().post(e);
+		if (e.isCancelled())
+			return;
+		
 		if (isChannelOpen()) {
 			flushOutboundQueue();
 			dispatchPacket(packetIn, (GenericFutureListener<? extends Future<? super Void>>[]) null);
@@ -224,12 +229,8 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 	 * the channel eventloop thread to do that.
 	 */
 
-	private void dispatchPacket(Packet inPacket, final GenericFutureListener<? extends Future<? super Void>>[] futureListeners) {
-		PacketEvent e = new PacketEvent(PacketDirection.Outbound, inPacket);
-		e.call();
-		if (e.isCancelled())
-			return;
-		final ConnectionState connectionstate = ConnectionState.getFromPacket(e.getPacket());
+	public void dispatchPacket(Packet packetIn, final GenericFutureListener<? extends Future<? super Void>>[] futureListeners) {
+		final ConnectionState connectionstate = ConnectionState.getFromPacket(packetIn);
 		final ConnectionState connectionstate1 = (ConnectionState) channel.attr(attrKeyConnectionState).get();
 		if (connectionstate1 != connectionstate) {
 			logger.debug("Disabled auto read");
@@ -238,7 +239,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 		if (channel.eventLoop().inEventLoop()) {
 			if (connectionstate != connectionstate1)
 				setConnectionState(connectionstate);
-			ChannelFuture channelfuture = channel.writeAndFlush(e.getPacket());
+			ChannelFuture channelfuture = channel.writeAndFlush(packetIn);
 			if (futureListeners != null)
 				channelfuture.addListeners((GenericFutureListener[]) futureListeners);
 			channelfuture.addListener((GenericFutureListener) ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
@@ -247,7 +248,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 				public void run() {
 					if (connectionstate != connectionstate1)
 						setConnectionState(connectionstate);
-					ChannelFuture channelfuture1 = channel.writeAndFlush(e.getPacket());
+					ChannelFuture channelfuture1 = channel.writeAndFlush(packetIn);
 					if (futureListeners != null)
 						channelfuture1.addListeners(futureListeners);
 					channelfuture1.addListener((GenericFutureListener) ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);

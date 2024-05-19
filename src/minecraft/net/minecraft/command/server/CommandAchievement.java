@@ -81,7 +81,7 @@ public class CommandAchievement extends CommandBase
                                 entityplayermp.triggerAchievement(achievement4);
                             }
 
-                            notifyOperators(sender, this, "commands.achievement.give.success.all", new Object[] {entityplayermp.getCommandSenderName()});
+                            notifyOperators(sender, this, "commands.achievement.give.success.all", new Object[] {entityplayermp.getName()});
                         }
                         else if (flag1)
                         {
@@ -90,7 +90,7 @@ public class CommandAchievement extends CommandBase
                                 entityplayermp.func_175145_a(achievement5);
                             }
 
-                            notifyOperators(sender, this, "commands.achievement.take.success.all", new Object[] {entityplayermp.getCommandSenderName()});
+                            notifyOperators(sender, this, "commands.achievement.take.success.all", new Object[] {entityplayermp.getName()});
                         }
                     }
                     else
@@ -103,7 +103,7 @@ public class CommandAchievement extends CommandBase
                             {
                                 if (entityplayermp.getStatFile().hasAchievementUnlocked(achievement))
                                 {
-                                    throw new CommandException("commands.achievement.alreadyHave", new Object[] {entityplayermp.getCommandSenderName(), statbase.func_150955_j()});
+                                    throw new CommandException("commands.achievement.alreadyHave", new Object[] {entityplayermp.getName(), statbase.func_150955_j()});
                                 }
 
                                 List<Achievement> list;
@@ -122,7 +122,7 @@ public class CommandAchievement extends CommandBase
                             {
                                 if (!entityplayermp.getStatFile().hasAchievementUnlocked(achievement))
                                 {
-                                    throw new CommandException("commands.achievement.dontHave", new Object[] {entityplayermp.getCommandSenderName(), statbase.func_150955_j()});
+                                    throw new CommandException("commands.achievement.dontHave", new Object[] {entityplayermp.getName(), statbase.func_150955_j()});
                                 }
 
                                 List<Achievement> list1 = Lists.newArrayList(Iterators.filter(AchievementList.achievementList.iterator(), new Predicate<Achievement>()
@@ -166,12 +166,12 @@ public class CommandAchievement extends CommandBase
                         if (flag)
                         {
                             entityplayermp.triggerAchievement(statbase);
-                            notifyOperators(sender, this, "commands.achievement.give.success.one", new Object[] {entityplayermp.getCommandSenderName(), statbase.func_150955_j()});
+                            notifyOperators(sender, this, "commands.achievement.give.success.one", new Object[] {entityplayermp.getName(), statbase.func_150955_j()});
                         }
                         else if (flag1)
                         {
                             entityplayermp.func_175145_a(statbase);
-                            notifyOperators(sender, this, "commands.achievement.take.success.one", new Object[] {statbase.func_150955_j(), entityplayermp.getCommandSenderName()});
+                            notifyOperators(sender, this, "commands.achievement.take.success.one", new Object[] {statbase.func_150955_j(), entityplayermp.getName()});
                         }
                     }
                 }

@@ -26,7 +26,7 @@ import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.network.play.server.S2DPacketOpenWindow;
 import net.minecraft.network.play.server.S2EPacketCloseWindow;
 
-@Flips(name = "Game", alias = "game", desc = "It automatically enters the selected minigame.", syntax = ".game <mini game> <lobby>")
+@Flips(name = "Game", alias = "join", desc = "It automatically enters the selected minigame.", syntax = ".game <mini game> <lobby>")
 public class GameCommand extends Command {
 
     private HashMap<String, Item> hashMap = new HashMap<>();
@@ -119,7 +119,7 @@ public class GameCommand extends Command {
 
                 case 0:
                     if (!this.foundItem && player.inventoryContainer.getSlot(36).getHasStack()) {
-                        PacketUtil.send((Packet<INetHandlerPlayServer>) new C08PacketPlayerBlockPlacement(player.getHeldItem()));
+                        mc.getNetHandler().sendQueue((Packet<INetHandlerPlayServer>) new C08PacketPlayerBlockPlacement(player.getHeldItem()));
                         this.stage++;
                     }
                     break;
@@ -131,7 +131,7 @@ public class GameCommand extends Command {
                             ItemStack slot = inventory.get(i);
                             if (slot != null)
                                 if (slot.getItem() == this.item) {
-                                    PacketUtil.send((Packet<INetHandlerPlayServer>) new C0EPacketClickWindow(container.inventorySlots.windowId, i, 0, 0, slot, (short) 1));
+                                    mc.getNetHandler().sendQueue((Packet<INetHandlerPlayServer>) new C0EPacketClickWindow(container.inventorySlots.windowId, i, 0, 0, slot, (short) 1));
                                     this.stage++;
                                     break;
                                 }
@@ -146,7 +146,7 @@ public class GameCommand extends Command {
                             ItemStack slot = inventory.get(i);
                             if (slot != null)
                                 if (slot.stackSize == this.number) {
-                                    PacketUtil.send((Packet<INetHandlerPlayServer>) new C0EPacketClickWindow(container.inventorySlots.windowId, i, 0, 0, slot, (short) 1));
+                                    mc.getNetHandler().sendQueue((Packet<INetHandlerPlayServer>) new C0EPacketClickWindow(container.inventorySlots.windowId, i, 0, 0, slot, (short) 1));
                                     this.stage++;
                                     break;
                                 }

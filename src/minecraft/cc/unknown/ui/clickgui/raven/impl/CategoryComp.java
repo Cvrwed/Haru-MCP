@@ -7,10 +7,10 @@ import cc.unknown.Haru;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.ui.clickgui.raven.impl.api.Component;
 import cc.unknown.ui.clickgui.raven.impl.api.Theme;
-import cc.unknown.utils.Loona;
+import cc.unknown.utils.client.RenderUtil;
 import net.minecraft.client.gui.FontRenderer;
 
-public class CategoryComp implements Loona {
+public class CategoryComp {
 	private ArrayList<ModuleComp> modulesInCategory = new ArrayList<>();
 	private Category category;
 	private boolean open = false;
@@ -43,15 +43,15 @@ public class CategoryComp implements Loona {
 
 	public void setX(int n) {
 		this.x = n;
-		if (Haru.instance.getClientConfig() != null) {
-			Haru.instance.getClientConfig().saveConfig();
+		if (Haru.instance.getHudConfig() != null) {
+			Haru.instance.getHudConfig().saveHud();
 		}
 	}
 
 	public void setY(int y) {
 		this.y = y;
-		if (Haru.instance.getClientConfig() != null) {
-			Haru.instance.getClientConfig().saveConfig();
+		if (Haru.instance.getHudConfig() != null) {
+			Haru.instance.getHudConfig().saveHud();
 		}
 	}
 
@@ -65,8 +65,8 @@ public class CategoryComp implements Loona {
 
 	public void setOpened(boolean on) {
 		this.open = on;
-		if (Haru.instance.getClientConfig() != null) {
-			Haru.instance.getClientConfig().saveConfig();
+		if (Haru.instance.getHudConfig() != null) {
+			Haru.instance.getHudConfig().saveHud();
 		}
 	}
 
@@ -79,9 +79,9 @@ public class CategoryComp implements Loona {
 				categoryHeight += module.getHeight();
 			}
 
-			mc.currentScreen.drawBorderedRoundedRect(this.x - 1, this.y, this.x + this.width + 1, this.y + this.bh + categoryHeight + 4f, 20f, 2f, Theme.instance.getMainColor().getRGB(), Theme.instance.getBackColor().getRGB());
+			RenderUtil.drawBorderedRoundedRect(this.x - 1, this.y, this.x + this.width + 1, this.y + this.bh + categoryHeight + 4f, 20f, 2f, Theme.instance.getMainColor().getRGB(), Theme.instance.getBackColor().getRGB());
 		} else if (!this.open) {
-			mc.currentScreen.drawBorderedRoundedRect(this.x - 1, this.y, this.x + this.width + 1, this.y + this.bh + 4f, 20f, 2f, Theme.instance.getMainColor().getRGB(), Theme.instance.getBackColor().getRGB());
+			RenderUtil.drawBorderedRoundedRect(this.x - 1, this.y, this.x + this.width + 1, this.y + this.bh + 4f, 20f, 2f, Theme.instance.getMainColor().getRGB(), Theme.instance.getBackColor().getRGB());
 		}
 
 		String center = this.n4m ? this.pvp : this.category.getName();

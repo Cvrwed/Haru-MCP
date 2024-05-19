@@ -11,9 +11,9 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.combat.*;
 import cc.unknown.module.impl.exploit.*;
+import cc.unknown.module.impl.move.*;
 import cc.unknown.module.impl.other.*;
 import cc.unknown.module.impl.player.*;
-import cc.unknown.module.impl.settings.*;
 import cc.unknown.module.impl.visuals.*;
 import cc.unknown.utils.Loona;
 import net.minecraft.client.gui.FontRenderer;
@@ -30,36 +30,40 @@ public class ModuleManager implements Loona {
 				// combat
 				new AutoClick(),
 				new AimAssist(),
+				new AutoBlock(),
 				new AutoRefill(),
-				//new KillAura(),
 				new JumpReset(),
 				new KeepSprint(),
 				new Criticals(),
-				//new BlockHit(),
+				new BlockHit(),
 				new Reach(),
-				new WTap(),
+				new SprintReset(),
 				new Velocity(),
 				
 				// exploit
 				new ChatBypass(),
 				new PingSpoof(),
-				new FakeLag(),
-				new LagRange(),
 				new TimerRange(),
 				new Timer(),
+				new FakeLag(),
+				new LagRange(),
 				new BackTrack(),
+				new Ping(),
+				
+				// Move
+				new Speed(),
 				
 				// other
-				new AntiFireBall(),
 				new Autoplay(),
 				new AutoLeave(),
 				new AutoTool(),
-				new Tweaks(),
+				new AutoRegister(),
 				new SelfDestruct(),
 				new MidClick(),
 				new Inventory(),
 				
 				// player
+				new AntiFireBall(),
 				new AntiVoid(),
 				new InvManager(),
 				new Stealer(),
@@ -68,13 +72,13 @@ public class ModuleManager implements Loona {
 				new BridgeAssist(),
 				new Sprint(),
 				new Blink(),
-				//new Scaffold(),
 				new NoSlow(),
 				new NoFall(),
 				
 				// visuals
 				new Ambience(),
 				new Fullbright(),
+				new FreeLook(),
 				new Keystrokes(),
 				new ClickGuiModule(),
 				new HUD(),
@@ -82,7 +86,10 @@ public class ModuleManager implements Loona {
 				new TargetHUD(),
 				new Trajectories(),
 				new Nametags(),
-				new ESP()
+				new ESP(),
+				
+				//
+				new Tweaks()
 				
 				);
 		initialized = true;

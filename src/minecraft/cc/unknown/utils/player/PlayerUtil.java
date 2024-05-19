@@ -51,6 +51,18 @@ public class PlayerUtil implements Loona {
 	public static double fovFromEntity(Entity en) {
 		return ((double) (mc.player.rotationYaw - fovToEntity(en)) % 360.0D + 540.0D) % 360.0D - 180.0D;
 	}
+	
+
+    public static double PitchFromEntity(Entity en, float f) {
+        return (double) (mc.player.rotationPitch - pitchToEntity(en, f));
+    }
+
+    public static float pitchToEntity(Entity ent, float f) {
+        double x = mc.player.getDistanceToEntity(ent);
+        double y = mc.player.posY - (ent.posY + f);
+        double pitch = (((Math.atan2(x, y) * 180.0D) / 3.141592653589793D));
+        return (float) (90 - pitch);
+    }
 
 	public static float fovToEntity(Entity ent) {
 		double x = ent.posX - mc.player.posX;

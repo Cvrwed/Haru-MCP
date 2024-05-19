@@ -311,7 +311,7 @@ public class InvManager extends Module {
 	private void openInventory() {
 		if (!inventoryOpen) {
 			inventoryOpen = true;
-			mc.player.sendQueue.addToSendQueue(
+			mc.player.sendQueue.sendQueue(
 					new C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
 		}
 	}
@@ -319,7 +319,7 @@ public class InvManager extends Module {
 	private void closeInventory() {
 		if (inventoryOpen) {
 			inventoryOpen = false;
-			mc.player.sendQueue.addToSendQueue(new C0DPacketCloseWindow(0));
+			mc.player.sendQueue.sendQueue(new C0DPacketCloseWindow(0));
 		}
 	}
 

@@ -6,7 +6,6 @@ import org.lwjgl.input.Mouse;
 
 import cc.unknown.Haru;
 import cc.unknown.event.impl.EventLink;
-import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.event.impl.other.MouseEvent;
 import cc.unknown.module.impl.Module;
@@ -14,7 +13,6 @@ import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.DoubleSliderValue;
-import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.misc.ClickUtil;
 import cc.unknown.utils.player.PlayerUtil;
@@ -22,9 +20,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.init.Blocks;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
-import net.minecraft.network.play.server.S37PacketStatistics;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
@@ -33,55 +29,21 @@ import net.minecraft.util.vec.Vec3;
 
 @Register(name = "Reach", category = Category.Combat)
 public class Reach extends Module {
-	private ModeValue mode = new ModeValue("Mode", "Basic", "Basic", "Verus");
 	private DoubleSliderValue rangeCombat = new DoubleSliderValue("Range", 3, 3, 2.9, 6, 0.01);
 	private SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
+	private BooleanValue weapon_only = new BooleanValue("Only Weapon", false);
 	private BooleanValue moving_only = new BooleanValue("Only Move", false);
 	private BooleanValue sprint_only = new BooleanValue("Only Sprint", false);
+	private BooleanValue speed_only = new BooleanValue("Only Speed Potion", false);
 	private BooleanValue hit_through_blocks = new BooleanValue("Hit through blocks", false);
-	private int oldTransaction = 0;
-	private short newTransaction = 0;
 
 	public Reach() {
-		this.registerSetting(mode, rangeCombat, chance, moving_only, sprint_only, hit_through_blocks);
+		this.registerSetting(rangeCombat, chance, weapon_only, moving_only, sprint_only, speed_only, hit_through_blocks);
 	}
 	
 	@EventLink
 	public void onGui(ClickGuiEvent e) {
 		this.setSuffix("- [" + rangeCombat.getInputMin() + ", " + rangeCombat.getInputMax() + "]");
-	}
-	
-	@Override
-	public void onEnable() {
-		this.oldTransaction = 0;
-		this.newTransaction = 0;
-	}
-
-	@EventLink
-	public void onPacket(PacketEvent e) {
-		if (mc.player == null || mc.player.ticksExisted < 20) return;
-		Packet<?> p = e.getPacket();
-
-		if (e.isSend()) {
-			if (mode.is("Verus")) {
-				if (p instanceof C0FPacketConfirmTransaction) {
-					C0FPacketConfirmTransaction wrapper = (C0FPacketConfirmTransaction) p;
-					this.oldTransaction++;
-					if (this.oldTransaction <= 1) {
-						this.newTransaction = wrapper.getUid();
-					}
-					wrapper.setUid(newTransaction);
-				}
-			}
-		}
-		
-		if (e.isReceive()) {
-			if (mode.is("Verus")) {
-				if (p instanceof S37PacketStatistics) {
-					this.oldTransaction = 0;
-				}
-			}
-		}
 	}
 		
 	@EventLink
@@ -98,7 +60,11 @@ public class Reach extends Module {
 		} else if (moving_only.isToggled() && (double) mc.player.moveForward == 0.0D
 				&& (double) mc.player.moveStrafing == 0.0D) {
 			return false;
+		} else if (weapon_only.isToggled() && !PlayerUtil.isHoldingWeapon()) {
+			return false;
 		} else if (sprint_only.isToggled() && !mc.player.isSprinting()) {
+			return false;
+		} else if (speed_only.isToggled() && !mc.player.isPotionActive(Potion.moveSpeed)) {
 			return false;
 		} else if (!(chance.getInput() == 100 || Math.random() <= chance.getInput() / 100)) {
 			return false;
