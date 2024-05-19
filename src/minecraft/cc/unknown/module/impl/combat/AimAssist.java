@@ -117,9 +117,22 @@ public class AimAssist extends Module {
 	}
 
 	@EventLink
+<<<<<<< HEAD
 	public void onJump(JumpEvent e) {
 		if (target != null && moveFix.isToggled()) {
 			e.setYaw(mc.player.rotationYaw);
+=======
+	public void onStrafe(StrafeEvent e) {
+		if (moveFix.isToggled()) {
+			e.setYaw(mc.player.rotationYaw);
+		}
+	}
+
+	@EventLink
+	public void onJump(JumpEvent e) {
+		if (moveFix.isToggled()) {
+			e.setYaw(mc.player.rotationPlayer);
+>>>>>>> 014d6fc6c9c4116c73423375aa0bac7ee6c326fb
 		}
 	}
 
