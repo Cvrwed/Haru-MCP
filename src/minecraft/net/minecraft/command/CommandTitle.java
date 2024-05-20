@@ -3,7 +3,7 @@ package net.minecraft.command;
 import com.google.gson.JsonParseException;
 import java.util.List;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.S45PacketTitle;
+import net.minecraft.network.play.server.SPacketTitle;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.IChatComponent;
@@ -71,11 +71,11 @@ public class CommandTitle extends CommandBase
             }
 
             EntityPlayerMP entityplayermp = getPlayer(sender, args[0]);
-            S45PacketTitle.Type s45packettitle$type = S45PacketTitle.Type.byName(args[1]);
+            SPacketTitle.Type s45packettitle$type = SPacketTitle.Type.byName(args[1]);
 
-            if (s45packettitle$type != S45PacketTitle.Type.CLEAR && s45packettitle$type != S45PacketTitle.Type.RESET)
+            if (s45packettitle$type != SPacketTitle.Type.CLEAR && s45packettitle$type != SPacketTitle.Type.RESET)
             {
-                if (s45packettitle$type == S45PacketTitle.Type.TIMES)
+                if (s45packettitle$type == SPacketTitle.Type.TIMES)
                 {
                     if (args.length != 5)
                     {
@@ -86,7 +86,7 @@ public class CommandTitle extends CommandBase
                         int i = parseInt(args[2]);
                         int j = parseInt(args[3]);
                         int k = parseInt(args[4]);
-                        S45PacketTitle s45packettitle2 = new S45PacketTitle(i, j, k);
+                        SPacketTitle s45packettitle2 = new SPacketTitle(i, j, k);
                         entityplayermp.playerNetServerHandler.sendPacket(s45packettitle2);
                         notifyOperators(sender, this, "commands.title.success", new Object[0]);
                     }
@@ -110,7 +110,7 @@ public class CommandTitle extends CommandBase
                         throw new SyntaxErrorException("commands.tellraw.jsonException", new Object[] {throwable == null ? "" : throwable.getMessage()});
                     }
 
-                    S45PacketTitle s45packettitle1 = new S45PacketTitle(s45packettitle$type, ChatComponentProcessor.processComponent(sender, ichatcomponent, entityplayermp));
+                    SPacketTitle s45packettitle1 = new SPacketTitle(s45packettitle$type, ChatComponentProcessor.processComponent(sender, ichatcomponent, entityplayermp));
                     entityplayermp.playerNetServerHandler.sendPacket(s45packettitle1);
                     notifyOperators(sender, this, "commands.title.success", new Object[0]);
                 }
@@ -121,7 +121,7 @@ public class CommandTitle extends CommandBase
             }
             else
             {
-                S45PacketTitle s45packettitle = new S45PacketTitle(s45packettitle$type, (IChatComponent)null);
+                SPacketTitle s45packettitle = new SPacketTitle(s45packettitle$type, (IChatComponent)null);
                 entityplayermp.playerNetServerHandler.sendPacket(s45packettitle);
                 notifyOperators(sender, this, "commands.title.success", new Object[0]);
             }
@@ -130,7 +130,7 @@ public class CommandTitle extends CommandBase
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
-        return args.length == 1 ? getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : (args.length == 2 ? getListOfStringsMatchingLastWord(args, S45PacketTitle.Type.getNames()) : null);
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : (args.length == 2 ? getListOfStringsMatchingLastWord(args, SPacketTitle.Type.getNames()) : null);
     }
 
     /**

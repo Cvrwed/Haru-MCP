@@ -7,7 +7,7 @@ import java.util.UUID;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringUtils;
 
@@ -69,7 +69,7 @@ public class TileEntitySkull extends TileEntity
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         this.writeToNBT(nbttagcompound);
-        return new S35PacketUpdateTileEntity(this.pos, 4, nbttagcompound);
+        return new SPacketUpdateTileEntity(this.pos, 4, nbttagcompound);
     }
 
     public void setType(int type)

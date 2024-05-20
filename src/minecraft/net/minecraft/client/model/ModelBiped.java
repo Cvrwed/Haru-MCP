@@ -1,6 +1,6 @@
 package net.minecraft.client.model;
 
-import cc.unknown.utils.player.RotationUtils;
+import cc.unknown.utils.player.rotation.RotationManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -179,11 +179,9 @@ public class ModelBiped extends ModelBase {
 	        if(heldItemRight == 3)
 	            this.bipedRightArm.rotateAngleY = 0F;
 	        
-	        //final Tweaks rotation = (Tweaks) Haru.instance.getModuleManager().getModule(Tweaks.class);
-
-	        if(RotationUtils.serverRotation != null && entityIn instanceof EntityPlayer
+	        if(RotationManager.serverRotation != null && entityIn instanceof EntityPlayer
 	                && entityIn.equals(Minecraft.getMinecraft().player)) {
-	        	this.bipedHead.rotateAngleX = RotationUtils.serverRotation.getPitch() / (180F / (float) Math.PI);
+	        	this.bipedHead.rotateAngleX = RotationManager.serverRotation.getPitch() / (180F / (float) Math.PI);
 	        }
 			this.bipedBody.rotateAngleY = MathHelper.sin(MathHelper.sqrt_float(f) * (float) Math.PI * 2.0F) * 0.2F;
 			this.bipedRightArm.rotationPointZ = MathHelper.sin(this.bipedBody.rotateAngleY) * 5.0F;

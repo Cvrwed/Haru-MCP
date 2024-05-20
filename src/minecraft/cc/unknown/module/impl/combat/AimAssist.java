@@ -18,6 +18,7 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.BooleanValue;
+import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.misc.ClickUtil;
 import cc.unknown.utils.player.CombatUtil;
@@ -33,6 +34,7 @@ import net.minecraft.util.BlockPos;
 @Register(name = "AimAssist", category = Category.Combat)
 public class AimAssist extends Module {
 
+	private ModeValue mode = new ModeValue("Priority", "Low Health", "Low Health");
 	private SliderValue horizontalAimSpeed = new SliderValue("Horizontal Aim Speed", 45, 5, 100, 1);
 	private SliderValue horizontalAimFineTuning = new SliderValue("Horizontal Aim Fine-tuning", 15, 2, 97, 1);
 	private BooleanValue horizontalRandomization = new BooleanValue("Horizontal Randomization", false);
@@ -54,10 +56,10 @@ public class AimAssist extends Module {
 	private BooleanValue disableAimWhileBreakingBlock = new BooleanValue("Disable Aim While Breaking Block", false);
 	private BooleanValue weaponOnly = new BooleanValue("Weapon Only Aim", false);
 	private Random random = new Random();
-	private EntityPlayer target; // i fix.... i think
+	private EntityPlayer target = null; // i fix.... i think
 
 	public AimAssist() {
-		this.registerSetting(horizontalAimSpeed, horizontalAimFineTuning, horizontalRandomization,
+		this.registerSetting(mode, horizontalAimSpeed, horizontalAimFineTuning, horizontalRandomization,
 				horizontalRandomizationAmount, fieldOfView, enemyDetectionRange, verticalAlignmentCheck,
 				verticalRandomization, verticalRandomizationAmount, verticalAimSpeed, verticalAimFineTuning, clickAim,
 				centerAim, moveFix, ignoreFriendlyEntities, ignoreTeammates, aimAtInvisibleEnemies, lineOfSightCheck,
@@ -143,7 +145,11 @@ public class AimAssist extends Module {
 	    }
 
 		if (entities != null && entities.size() > 0) {
-	        entities.sort(Comparator.comparingDouble(EntityPlayer::getHealth).reversed());
+			switch (mode.getMode()) {
+			case "Low Health":
+		        entities.sort(Comparator.comparingDouble(EntityPlayer::getHealth).reversed());
+		        break;
+			}
 			return entities.get(0);
 		}
 

@@ -11,7 +11,7 @@ import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.client.Cold;
-import net.minecraft.network.play.server.S02PacketChat;
+import net.minecraft.network.play.server.SPacketChat;
 
 @Register(name = "AutoLeave", category = Category.Other)
 public class AutoLeave extends Module {
@@ -41,8 +41,8 @@ public class AutoLeave extends Module {
 
     @EventLink
     public void onPacket(PacketEvent e) {
-        if (e.isReceive() && e.getPacket() instanceof S02PacketChat) {
-            S02PacketChat packet = (S02PacketChat) e.getPacket();
+        if (e.isReceive() && e.getPacket() instanceof SPacketChat) {
+            SPacketChat packet = (SPacketChat) e.getPacket();
             String message = packet.getChatComponent().getUnformattedText();
             if (message.contains("Deseas salirte de la arena")) {
                 waiting.set(true);

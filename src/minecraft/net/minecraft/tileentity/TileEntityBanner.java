@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 
 public class TileEntityBanner extends TileEntity
 {
@@ -95,7 +95,7 @@ public class TileEntityBanner extends TileEntity
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         this.writeToNBT(nbttagcompound);
-        return new S35PacketUpdateTileEntity(this.pos, 6, nbttagcompound);
+        return new SPacketUpdateTileEntity(this.pos, 6, nbttagcompound);
     }
 
     public int getBaseColor()

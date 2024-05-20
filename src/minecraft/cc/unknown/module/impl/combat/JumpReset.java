@@ -24,7 +24,7 @@ import cc.unknown.utils.network.TimedPacket;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.util.MathHelper;
 
 @Register(name = "JumpReset", category = Category.Combat)
@@ -43,14 +43,15 @@ public class JumpReset extends Module {
 	private int hitCombo = 0;
 	private int enabledticks = 0;
 	private ConcurrentLinkedQueue<TimedPacket> inboundPacketsQueue = new ConcurrentLinkedQueue<TimedPacket>();
+	private int counter;
 
 	public JumpReset() {
-		this.registerSetting(mode, onlyCombat, antiCombo, chance, comboTicks, tickTicks, hitHits);
+		registerSetting(mode, onlyCombat, antiCombo, chance, comboTicks, tickTicks, hitHits);
 	}
 
 	@EventLink
 	public void onGui(ClickGuiEvent e) {
-		this.setSuffix("- [" + mode.getMode() + "]");
+		setSuffix("- [" + mode.getMode() + "]");
 	}
 
 	@EventLink
@@ -90,9 +91,9 @@ public class JumpReset extends Module {
 	@EventLink
 	public void onPacket(PacketEvent e) {
 		if (e.isSend()) {
-			if (e.getPacket() instanceof C02PacketUseEntity && antiCombo.isToggled()) {
-				C02PacketUseEntity wrapper = (C02PacketUseEntity) e.getPacket();
-				if (wrapper.getAction() == C02PacketUseEntity.Action.ATTACK) {
+			if (e.getPacket() instanceof CPacketUseEntity && antiCombo.isToggled()) {
+				CPacketUseEntity wrapper = (CPacketUseEntity) e.getPacket();
+				if (wrapper.getAction() == CPacketUseEntity.Mode.ATTACK) {
 					hitCombo = 0;
 					if (shouldspoof) {
 						stop();
@@ -106,31 +107,38 @@ public class JumpReset extends Module {
 	@EventLink
 	public void onKnockBack(KnockBackEvent e) {
 		if (mode.is("Legit")) {
-			mc.gameSettings.keyBindSprint.pressed = true;
-			mc.gameSettings.keyBindForward.pressed = true;
-			mc.gameSettings.keyBindJump.pressed = true;
-			mc.gameSettings.keyBindBack.pressed = false;
+			if (!mc.player.onGround || !(e.getY() > 0.0) || mc.currentScreen != null) return;;
+			double velocityDist = Math.hypot(e.getX(), e.getZ());
+			if (counter >= 4 && (velocityDist < 0.6 || counter >= 7)) {
+				counter = 0;
+				return;
+			}
 			reset = true;
+			++counter;
+			return;
 		}
 
 		if (antiCombo.isToggled()) {
 			++hitCombo;
 		}
 	}
+	
+	@EventLink
+	public void onInput(TickEvent.Input e) {
+		if (mode.is("Legit")) {
+            if (!reset) return;
+            mc.gameSettings.keyBindJump.pressed = true;
+            mc.gameSettings.keyBindForward.pressed = true;
+            mc.gameSettings.keyBindSprint.pressed = true;
+		}
+	}
 
 	@EventLink
 	public void onMotion(MotionEvent e) {
-		if (mode.is("Legit") && e.isPost()) {
-			if (reset) {
-				KeyBinding sprint = mc.gameSettings.keyBindSprint;
-				KeyBinding forward = mc.gameSettings.keyBindForward;
-				KeyBinding jump = mc.gameSettings.keyBindJump;
-				KeyBinding back = mc.gameSettings.keyBindBack;
-
-				KeybindUtil.instance.resetKeybindings(sprint, forward, jump, back);
-			}
-			reset = false;
-
+		if (mode.is("Legit") && e.isPre()) {
+            if (!reset) return;
+            KeybindUtil.instance.resetKeybindings(mc.gameSettings.keyBindJump, mc.gameSettings.keyBindForward, mc.gameSettings.keyBindSprint);
+            reset = false;
 		}
 	}
 

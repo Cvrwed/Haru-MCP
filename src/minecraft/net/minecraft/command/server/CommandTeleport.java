@@ -9,7 +9,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
@@ -86,31 +86,31 @@ public class CommandTeleport extends CommandBase
 
                     if (entity instanceof EntityPlayerMP)
                     {
-                        Set<S08PacketPlayerPosLook.EnumFlags> set = EnumSet.<S08PacketPlayerPosLook.EnumFlags>noneOf(S08PacketPlayerPosLook.EnumFlags.class);
+                        Set<SPacketPlayerPosLook.EnumFlags> set = EnumSet.<SPacketPlayerPosLook.EnumFlags>noneOf(SPacketPlayerPosLook.EnumFlags.class);
 
                         if (commandbase$coordinatearg.func_179630_c())
                         {
-                            set.add(S08PacketPlayerPosLook.EnumFlags.X);
+                            set.add(SPacketPlayerPosLook.EnumFlags.X);
                         }
 
                         if (commandbase$coordinatearg1.func_179630_c())
                         {
-                            set.add(S08PacketPlayerPosLook.EnumFlags.Y);
+                            set.add(SPacketPlayerPosLook.EnumFlags.Y);
                         }
 
                         if (commandbase$coordinatearg2.func_179630_c())
                         {
-                            set.add(S08PacketPlayerPosLook.EnumFlags.Z);
+                            set.add(SPacketPlayerPosLook.EnumFlags.Z);
                         }
 
                         if (commandbase$coordinatearg4.func_179630_c())
                         {
-                            set.add(S08PacketPlayerPosLook.EnumFlags.X_ROT);
+                            set.add(SPacketPlayerPosLook.EnumFlags.X_ROT);
                         }
 
                         if (commandbase$coordinatearg3.func_179630_c())
                         {
-                            set.add(S08PacketPlayerPosLook.EnumFlags.Y_ROT);
+                            set.add(SPacketPlayerPosLook.EnumFlags.Y_ROT);
                         }
 
                         float f = (float)commandbase$coordinatearg3.func_179629_b();

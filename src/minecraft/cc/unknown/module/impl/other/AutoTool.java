@@ -8,7 +8,7 @@ import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.util.MovingObjectPosition;
 
 @Register(name = "AutoTool", category = Category.Other)
@@ -20,9 +20,9 @@ public class AutoTool extends Module {
 	@EventLink
 	public void onPacket(PacketEvent e) {
 		if (e.isSend()) {
-			if (e.getPacket() instanceof C02PacketUseEntity) {
-				C02PacketUseEntity wrapper = (C02PacketUseEntity) e.getPacket();
-				if (wrapper.getAction() == C02PacketUseEntity.Action.ATTACK)
+			if (e.getPacket() instanceof CPacketUseEntity) {
+				CPacketUseEntity wrapper = (CPacketUseEntity) e.getPacket();
+				if (wrapper.getAction() == CPacketUseEntity.Mode.ATTACK)
 					mining = false;
 			}
 		}

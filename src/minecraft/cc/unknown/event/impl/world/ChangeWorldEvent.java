@@ -5,7 +5,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 
 public class ChangeWorldEvent extends Event {
 	
-    private final WorldClient worldClient;
+    private final WorldClient changeWorld;
 
     /**
      * Constructs a new WorldEvent object with the specified world client.
@@ -13,7 +13,7 @@ public class ChangeWorldEvent extends Event {
      * @param worldClient The world client associated with the event.
      */
     public ChangeWorldEvent(WorldClient worldClient) {
-        this.worldClient = worldClient;
+        this.changeWorld = worldClient;
     }
 
     /**
@@ -21,7 +21,7 @@ public class ChangeWorldEvent extends Event {
      *
      * @return The world client associated with the event.
      */
-    public WorldClient getWorldClient() {
-        return worldClient;
+    public WorldClient getChangeWorld() {
+        return changeWorld;
     }
 }

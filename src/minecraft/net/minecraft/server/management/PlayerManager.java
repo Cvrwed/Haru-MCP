@@ -13,9 +13,9 @@ import java.util.Set;
 import java.util.Map.Entry;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S21PacketChunkData;
-import net.minecraft.network.play.server.S22PacketMultiBlockChange;
-import net.minecraft.network.play.server.S23PacketBlockChange;
+import net.minecraft.network.play.server.SPacketChunkData;
+import net.minecraft.network.play.server.SPacketMultiBlockChange;
+import net.minecraft.network.play.server.SPacketBlockChange;
 import net.minecraft.src.Config;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -555,7 +555,7 @@ public class PlayerManager
 
                 if (chunk.isPopulated())
                 {
-                    player.playerNetServerHandler.sendPacket(new S21PacketChunkData(chunk, true, 0));
+                    player.playerNetServerHandler.sendPacket(new SPacketChunkData(chunk, true, 0));
                 }
 
                 this.playersWatchingChunk.remove(player);
@@ -637,7 +637,7 @@ public class PlayerManager
                     int i2 = this.locationOfBlockChange[0] & 255;
                     int k2 = (this.locationOfBlockChange[0] >> 8 & 15) + this.chunkCoords.chunkZPos * 16;
                     BlockPos blockpos = new BlockPos(k1, i2, k2);
-                    this.sendToAllPlayersWatchingChunk(new S23PacketBlockChange(PlayerManager.this.theWorldServer, blockpos));
+                    this.sendToAllPlayersWatchingChunk(new SPacketBlockChange(PlayerManager.this.theWorldServer, blockpos));
 
                     if (PlayerManager.this.theWorldServer.getBlockState(blockpos).getBlock().hasTileEntity())
                     {
@@ -646,7 +646,7 @@ public class PlayerManager
                 }
                 else if (this.numBlocksToUpdate != 64)
                 {
-                    this.sendToAllPlayersWatchingChunk(new S22PacketMultiBlockChange(this.numBlocksToUpdate, this.locationOfBlockChange, PlayerManager.this.theWorldServer.getChunkFromChunkCoords(this.chunkCoords.chunkXPos, this.chunkCoords.chunkZPos)));
+                    this.sendToAllPlayersWatchingChunk(new SPacketMultiBlockChange(this.numBlocksToUpdate, this.locationOfBlockChange, PlayerManager.this.theWorldServer.getChunkFromChunkCoords(this.chunkCoords.chunkXPos, this.chunkCoords.chunkZPos)));
 
                     for (int j1 = 0; j1 < this.numBlocksToUpdate; ++j1)
                     {
@@ -665,7 +665,7 @@ public class PlayerManager
                 {
                     int i = this.chunkCoords.chunkXPos * 16;
                     int j = this.chunkCoords.chunkZPos * 16;
-                    this.sendToAllPlayersWatchingChunk(new S21PacketChunkData(PlayerManager.this.theWorldServer.getChunkFromChunkCoords(this.chunkCoords.chunkXPos, this.chunkCoords.chunkZPos), false, this.flagsYAreasToUpdate));
+                    this.sendToAllPlayersWatchingChunk(new SPacketChunkData(PlayerManager.this.theWorldServer.getChunkFromChunkCoords(this.chunkCoords.chunkXPos, this.chunkCoords.chunkZPos), false, this.flagsYAreasToUpdate));
 
                     for (int k = 0; k < 16; ++k)
                     {

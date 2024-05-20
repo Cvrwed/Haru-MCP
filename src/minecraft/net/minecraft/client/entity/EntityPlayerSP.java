@@ -3,13 +3,14 @@ package net.minecraft.client.entity;
 import cc.unknown.Haru;
 import cc.unknown.event.impl.move.LivingEvent;
 import cc.unknown.event.impl.move.MotionEvent;
-import cc.unknown.event.impl.move.PreUpdateEvent;
 import cc.unknown.event.impl.move.MotionEvent.MotionType;
+import cc.unknown.event.impl.move.UpdateEvent;
+import cc.unknown.event.impl.move.UpdateEvent.Mode;
 import cc.unknown.event.impl.network.ChatSendEvent;
+import cc.unknown.event.impl.player.EntityActionEvent;
 import cc.unknown.module.impl.player.NoSlow;
 import cc.unknown.module.impl.player.Sprint;
 import cc.unknown.utils.player.PlayerUtil;
-import cc.unknown.utils.player.Rotation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -39,18 +40,15 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.C01PacketChatMessage;
-import net.minecraft.network.play.client.C03PacketPlayer;
-import net.minecraft.network.play.client.C07PacketPlayerDigging;
-import net.minecraft.network.play.client.C0APacketAnimation;
-import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.network.play.client.C0CPacketInput;
-import net.minecraft.network.play.client.C0DPacketCloseWindow;
-import net.minecraft.network.play.client.C13PacketPlayerAbilities;
-import net.minecraft.network.play.client.C16PacketClientStatus;
-import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition;
-import net.minecraft.network.play.client.C03PacketPlayer.C05PacketPlayerLook;
-import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook;
+import net.minecraft.network.play.client.CPacketAnimation;
+import net.minecraft.network.play.client.CPacketChatMessage;
+import net.minecraft.network.play.client.CPacketClientStatus;
+import net.minecraft.network.play.client.CPacketCloseWindow;
+import net.minecraft.network.play.client.CPacketEntityAction;
+import net.minecraft.network.play.client.CPacketInput;
+import net.minecraft.network.play.client.CPacketPlayer;
+import net.minecraft.network.play.client.CPacketPlayerAbilities;
+import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.potion.Potion;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatFileWriter;
@@ -172,115 +170,107 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	/**
 	 * Called to update the entity's position/logic.
 	 */
-	public void onUpdate() {
-		if (worldObj.isBlockLoaded(new BlockPos(posX, 0.0D, posZ))) {
-			Haru.instance.getEventBus().post(new PreUpdateEvent());
-			super.onUpdate();
+    public void onUpdate() {
+        if (this.worldObj.isBlockLoaded(new BlockPos(this.posX, 0.0D, this.posZ))) {
+        	UpdateEvent e = new UpdateEvent(Mode.Pre);
+            e.call();
+            if (e.isCancelled()) return;
+            super.onUpdate();
+            Haru.instance.getEventBus().post(new UpdateEvent(Mode.Post));
 
-			if (isRiding()) {
-				sendQueue.sendQueue(
-						new C03PacketPlayer.C05PacketPlayerLook(rotationYaw, rotationPitch, onGround));
-				sendQueue.sendQueue(new C0CPacketInput(moveStrafing, moveForward,
-						movementInput.jump, movementInput.sneak));
-			} else {
-				onUpdateWalkingPlayer();
-			}
-		}
-	}
-
+            if (this.isRiding()) {
+                this.sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerLook(this.rotationYaw, this.rotationPitch, this.onGround));
+                this.sendQueue.sendQueue(new CPacketInput(this.moveStrafing, this.moveForward, this.movementInput.jump, this.movementInput.sneak));
+            } else {
+                this.onUpdateWalkingPlayer();
+        		Haru.instance.getEventBus().post(new MotionEvent(MotionType.Post, posX, posY, posZ, rotationYaw, rotationPitch, onGround));
+            }
+        }
+    }
+    
 	/**
 	 * called every tick when the player is on foot. Performs all the things that
 	 * normally happen during movement.
 	 */
-	public void onUpdateWalkingPlayer() {
-		MotionEvent pre = new MotionEvent(MotionType.Pre, posX, getEntityBoundingBox().minY, posZ, rotationYaw,
-				rotationPitch, onGround);
-		Haru.instance.getEventBus().post(pre);
+    
+    public void onUpdateWalkingPlayer() {
+        boolean flag = this.isSprinting();
+        EntityActionEvent entityActionEvent = new EntityActionEvent(this.isSprinting(), this.isSneaking());
+        Haru.instance.getEventBus().post(entityActionEvent);
 
-		boolean flag = isSprinting();
-		if (flag != serverSprintState) {
-			if (flag) {
-				sendQueue.sendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.START_SPRINTING));
-			} else {
-				sendQueue.sendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.STOP_SPRINTING));
-			}
+        if (flag != this.serverSprintState) {
+            if (flag) {
+                this.sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.START_SPRINTING));
+            } else {
+                this.sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.STOP_SPRINTING));
+            }
 
-			serverSprintState = flag;
-		}
+            this.serverSprintState = flag;
+        }
 
-		boolean flag1 = isSneaking();
-		if (flag1 != serverSneakState) {
-			if (flag1) {
-				sendQueue.sendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.START_SNEAKING));
-			} else {
-				sendQueue.sendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.STOP_SNEAKING));
-			}
+        boolean flag1 = this.isSneaking();
 
-			serverSneakState = flag1;
-		}
+        if (flag1 != this.serverSneakState) {
+            if (flag1) {
+                this.sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.START_SNEAKING));
+            } else {
+                this.sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.STOP_SNEAKING));
+            }
 
-		if (isCurrentViewEntity()) {
-			float yaw = rotationYaw;
-			float pitch = rotationPitch;
+            this.serverSneakState = flag1;
+        }
 
-			if (Rotation.instance != null) {
-				yaw = Rotation.instance.getYaw();
-				pitch = Rotation.instance.getPitch();
-			}
+        if (this.isCurrentViewEntity()) {
+    		MotionEvent motionEvent = new MotionEvent(MotionType.Pre, posX, getEntityBoundingBox().minY, posZ, rotationYaw, rotationPitch, onGround);
+    		Haru.instance.getEventBus().post(motionEvent);
+            if (motionEvent.isCancelled()) return;
+            
+            double d0 = motionEvent.getX() - this.lastReportedPosX;
+            double d1 = motionEvent.getY() - this.lastReportedPosY;
+            double d2 = motionEvent.getZ() - this.lastReportedPosZ;
+            double d3 = motionEvent.getYaw() - this.lastReportedYaw;
+            double d4 = motionEvent.getPitch() - this.lastReportedPitch;
+            boolean flag2 = d0 * d0 + d1 * d1 + d2 * d2 > 9.0E-4D || this.positionUpdateTicks >= 20;
+            boolean flag3 = d3 != 0.0D || d4 != 0.0D;
 
-			double xDiff = posX - lastReportedPosX;
-			double yDiff = getEntityBoundingBox().minY - lastReportedPosY;
-			double zDiff = posZ - lastReportedPosZ;
-			double yawDiff = yaw - lastReportedYaw;
-			double pitchDiff = pitch - lastReportedPitch;
-			boolean moved = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff > 9.0E-4 || positionUpdateTicks >= 20;
-			boolean rotated = yawDiff != 0 || pitchDiff != 0;
+            if (this.ridingEntity == null) {
+                if (flag2 && flag3) {
+                    this.sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerPosLook(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), motionEvent.getYaw(), motionEvent.getPitch(), motionEvent.isOnGround()));
+                } else if (flag2) {
+                    this.sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerPosition(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), motionEvent.isOnGround()));
+                } else if (flag3) {
+                    this.sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerLook(motionEvent.getYaw(), motionEvent.getPitch(), motionEvent.isOnGround()));
+                } else {
+                    this.sendQueue.sendQueue(new CPacketPlayer(motionEvent.isOnGround()));
+                }
+            } else {
+                this.sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerPosLook(this.motionX, -999.0D, this.motionZ, motionEvent.getYaw(), motionEvent.getPitch(), motionEvent.isOnGround()));
+                flag2 = false;
+            }
 
-			if (ridingEntity == null) {
-				if (moved && rotated) {
-					sendQueue.sendQueue(
-							new C06PacketPlayerPosLook(posX, getEntityBoundingBox().minY, posZ, yaw, pitch, onGround));
-				} else if (moved) {
-					sendQueue.sendQueue(
-							new C04PacketPlayerPosition(posX, getEntityBoundingBox().minY, posZ, onGround));
-				} else if (rotated) {
-					sendQueue.sendQueue(new C05PacketPlayerLook(yaw, pitch, onGround));
-				} else {
-					sendQueue.sendQueue(new C03PacketPlayer(onGround));
-				}
-			} else {
-				sendQueue.sendQueue(new C06PacketPlayerPosLook(motionX, -999, motionZ, yaw, pitch, onGround));
-				moved = false;
-			}
+            ++this.positionUpdateTicks;
 
-			++positionUpdateTicks;
+            if (flag2) {
+                this.lastReportedPosX = motionEvent.getX();
+                this.lastReportedPosY = motionEvent.getY();
+                this.lastReportedPosZ = motionEvent.getZ();
+                this.positionUpdateTicks = 0;
+            }
 
-			if (moved) {
-				lastReportedPosX = posX;
-				lastReportedPosY = getEntityBoundingBox().minY;
-				lastReportedPosZ = posZ;
-				positionUpdateTicks = 0;
-			}
-
-			if (rotated) {
-				lastReportedYaw = yaw;
-				lastReportedPitch = pitch;
-			}
-		}
-
-		Haru.instance.getEventBus()
-				.post(new MotionEvent(MotionType.Post, posX, posY, posZ, rotationYaw, rotationPitch, onGround));
-	}
+            if (flag3) {
+                this.lastReportedYaw = motionEvent.getYaw();
+                this.lastReportedPitch = motionEvent.getPitch();
+            }
+        }
+    }
 
 	/**
 	 * Called when player presses the drop item key
 	 */
 	public EntityItem dropOneItem(boolean dropAll) {
-		C07PacketPlayerDigging.Action c07packetplayerdigging$action = dropAll
-				? C07PacketPlayerDigging.Action.DROP_ALL_ITEMS
-				: C07PacketPlayerDigging.Action.DROP_ITEM;
-		sendQueue.sendQueue(
-				new C07PacketPlayerDigging(c07packetplayerdigging$action, BlockPos.ORIGIN, EnumFacing.DOWN));
+		CPacketPlayerDigging.Action c07packetplayerdigging$action = dropAll ? CPacketPlayerDigging.Action.DROP_ALL_ITEMS
+				: CPacketPlayerDigging.Action.DROP_ITEM;
+		sendQueue.sendQueue(new CPacketPlayerDigging(c07packetplayerdigging$action, BlockPos.ORIGIN, EnumFacing.DOWN));
 		return null;
 	}
 
@@ -296,9 +286,9 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 * @param message used on EntityPlayerSP.sendChatMessage - as inbound message
 	 */
 	public void sendChatMessage(String message) {
-	    if ((new ChatSendEvent(message)).call().isCancelled())
-	        return;
-		sendQueue.sendQueue(new C01PacketChatMessage(message));
+		if ((new ChatSendEvent(message)).call().isCancelled())
+			return;
+		sendQueue.sendQueue(new CPacketChatMessage(message));
 	}
 
 	/**
@@ -306,11 +296,11 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 */
 	public void swingItem() {
 		super.swingItem();
-		sendQueue.sendQueue(new C0APacketAnimation());
+		sendQueue.sendQueue(new CPacketAnimation());
 	}
 
 	public void respawnPlayer() {
-		sendQueue.sendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.PERFORM_RESPAWN));
+		sendQueue.sendQueue(new CPacketClientStatus(CPacketClientStatus.EnumState.PERFORM_RESPAWN));
 	}
 
 	/**
@@ -328,7 +318,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 * set current crafting inventory back to the 2x2 square
 	 */
 	public void closeScreen() {
-		sendQueue.sendQueue(new C0DPacketCloseWindow(openContainer.windowId));
+		sendQueue.sendQueue(new CPacketCloseWindow(openContainer.windowId));
 		closeScreenAndDropStack();
 	}
 
@@ -379,7 +369,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 * Sends the player's abilities to the server (if there is one).
 	 */
 	public void sendPlayerAbilities() {
-		sendQueue.sendQueue(new C13PacketPlayerAbilities(capabilities));
+		sendQueue.sendQueue(new CPacketPlayerAbilities(capabilities));
 	}
 
 	/**
@@ -390,12 +380,12 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	}
 
 	protected void sendHorseJump() {
-		sendQueue.sendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.RIDING_JUMP,
+		sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.RIDING_JUMP,
 				(int) (getHorseJumpPower() * 100.0F)));
 	}
 
 	public void sendHorseInventory() {
-		sendQueue.sendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.OPEN_INVENTORY));
+		sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.OPEN_INVENTORY));
 	}
 
 	public void setClientBrand(String brand) {
@@ -635,10 +625,8 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 			isJumping = movementInput.jump;
 			prevRenderArmYaw = renderArmYaw;
 			prevRenderArmPitch = renderArmPitch;
-			renderArmPitch = (float) ((double) renderArmPitch
-					+ (double) (rotationPitch - renderArmPitch) * 0.5D);
-			renderArmYaw = (float) ((double) renderArmYaw
-					+ (double) (rotationYaw - renderArmYaw) * 0.5D);
+			renderArmPitch = (float) ((double) renderArmPitch + (double) (rotationPitch - renderArmPitch) * 0.5D);
+			renderArmYaw = (float) ((double) renderArmYaw + (double) (rotationYaw - renderArmYaw) * 0.5D);
 		}
 	}
 
@@ -685,8 +673,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 			}
 
 			inPortal = false;
-		} else if (isPotionActive(Potion.confusion)
-				&& getActivePotionEffect(Potion.confusion).getDuration() > 60) {
+		} else if (isPotionActive(Potion.confusion) && getActivePotionEffect(Potion.confusion).getDuration() > 60) {
 			timeInPortal += 0.006666667F;
 
 			if (timeInPortal > 1.0F) {
@@ -715,7 +702,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 		final Sprint sprint = (Sprint) Haru.instance.getModuleManager().getModule(Sprint.class);
 		final NoSlow noSlow = (NoSlow) Haru.instance.getModuleManager().getModule(NoSlow.class);
 
-		if (isUsingItem() && !isRiding()) {	
+		if (isUsingItem() && !isRiding()) {
 			if (noSlow.isEnabled() && PlayerUtil.isMoving() && noSlow != null) {
 				noSlow.slow();
 			} else {

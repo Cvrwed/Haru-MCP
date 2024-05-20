@@ -5,7 +5,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import cc.unknown.Haru;
-import cc.unknown.command.commands.*;
+import cc.unknown.command.commands.BindCommand;
+import cc.unknown.command.commands.CategoryCommand;
+import cc.unknown.command.commands.ClearCommand;
+import cc.unknown.command.commands.ConfigCommand;
+import cc.unknown.command.commands.FriendCommand;
+import cc.unknown.command.commands.GameCommand;
+import cc.unknown.command.commands.HelpCommand;
+import cc.unknown.command.commands.PingCommand;
+import cc.unknown.command.commands.SpyCommand;
+import cc.unknown.command.commands.ToggleCommand;
+import cc.unknown.command.commands.TransactionCommand;
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.network.ChatSendEvent;
 import cc.unknown.module.impl.Module;

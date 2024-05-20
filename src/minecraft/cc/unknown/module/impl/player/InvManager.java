@@ -32,8 +32,8 @@ import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
-import net.minecraft.network.play.client.C0DPacketCloseWindow;
-import net.minecraft.network.play.client.C16PacketClientStatus;
+import net.minecraft.network.play.client.CPacketCloseWindow;
+import net.minecraft.network.play.client.CPacketClientStatus;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.combat.DamageSource;
 
@@ -312,14 +312,14 @@ public class InvManager extends Module {
 		if (!inventoryOpen) {
 			inventoryOpen = true;
 			mc.player.sendQueue.sendQueue(
-					new C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
+					new CPacketClientStatus(CPacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
 		}
 	}
 
 	private void closeInventory() {
 		if (inventoryOpen) {
 			inventoryOpen = false;
-			mc.player.sendQueue.sendQueue(new C0DPacketCloseWindow(0));
+			mc.player.sendQueue.sendQueue(new CPacketCloseWindow(0));
 		}
 	}
 

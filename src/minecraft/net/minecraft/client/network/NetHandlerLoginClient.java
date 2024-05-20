@@ -16,11 +16,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.network.ConnectionState;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.login.INetHandlerLoginClient;
-import net.minecraft.network.login.client.C01PacketEncryptionResponse;
-import net.minecraft.network.login.server.S00PacketDisconnect;
-import net.minecraft.network.login.server.S01PacketEncryptionRequest;
-import net.minecraft.network.login.server.S02PacketLoginSuccess;
-import net.minecraft.network.login.server.S03PacketEnableCompression;
+import net.minecraft.network.login.client.CPacketEncryptionResponse;
+import net.minecraft.network.login.server.SPacketServerDisconnect;
+import net.minecraft.network.login.server.SPacketEncryptionRequest;
+import net.minecraft.network.login.server.SPacketLoginSuccess;
+import net.minecraft.network.login.server.SPacketEnableCompression;
 import net.minecraft.util.CryptManager;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.chat.ChatComponentTranslation;
@@ -43,7 +43,7 @@ public class NetHandlerLoginClient implements INetHandlerLoginClient
         this.previousGuiScreen = p_i45059_3_;
     }
 
-    public void handleEncryptionRequest(S01PacketEncryptionRequest packetIn)
+    public void handleEncryptionRequest(SPacketEncryptionRequest packetIn)
     {
         final SecretKey secretkey = CryptManager.createNewSharedKey();
         String s = packetIn.getServerId();
@@ -84,7 +84,7 @@ public class NetHandlerLoginClient implements INetHandlerLoginClient
             }
         }
 
-        this.networkManager.sendPacket(new C01PacketEncryptionResponse(secretkey, publickey, packetIn.getVerifyToken()), new GenericFutureListener < Future <? super Void >> ()
+        this.networkManager.sendPacket(new CPacketEncryptionResponse(secretkey, publickey, packetIn.getVerifyToken()), new GenericFutureListener < Future <? super Void >> ()
         {
             public void operationComplete(Future <? super Void > p_operationComplete_1_) throws Exception
             {
@@ -98,7 +98,7 @@ public class NetHandlerLoginClient implements INetHandlerLoginClient
         return this.mc.getSessionService();
     }
 
-    public void handleLoginSuccess(S02PacketLoginSuccess packetIn)
+    public void handleLoginSuccess(SPacketLoginSuccess packetIn)
     {
         this.gameProfile = packetIn.getProfile();
         this.networkManager.setConnectionState(ConnectionState.PLAY);
@@ -113,12 +113,12 @@ public class NetHandlerLoginClient implements INetHandlerLoginClient
         this.mc.displayGuiScreen(new GuiDisconnected(this.previousGuiScreen, "connect.failed", reason));
     }
 
-    public void handleDisconnect(S00PacketDisconnect packetIn)
+    public void handleDisconnect(SPacketServerDisconnect packetIn)
     {
         this.networkManager.closeChannel(packetIn.func_149603_c());
     }
 
-    public void handleEnableCompression(S03PacketEnableCompression packetIn)
+    public void handleEnableCompression(SPacketEnableCompression packetIn)
     {
         if (!this.networkManager.isLocalChannel())
         {

@@ -14,8 +14,8 @@ import cc.unknown.utils.network.PacketUtil;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.C02PacketUseEntity;
-import net.minecraft.network.play.client.C0BPacketEntityAction;
+import net.minecraft.network.play.client.CPacketUseEntity;
+import net.minecraft.network.play.client.CPacketEntityAction;
 
 @Register(name = "SprintReset", category = Category.Combat)
 public class SprintReset extends Module {
@@ -47,24 +47,24 @@ public class SprintReset extends Module {
 		}
 
 		Packet<?> p = e.getPacket();
-		if (e.isSend() && p instanceof C02PacketUseEntity) {
-			C02PacketUseEntity wrapper = (C02PacketUseEntity) p;
-			if (wrapper.getAction() == C02PacketUseEntity.Action.ATTACK) {
+		if (e.isSend() && p instanceof CPacketUseEntity) {
+			CPacketUseEntity wrapper = (CPacketUseEntity) p;
+			if (wrapper.getAction() == CPacketUseEntity.Mode.ATTACK) {
                 double distanceToTarget = mc.player.getDistanceToEntity(wrapper.getEntityFromWorld(mc.world));
                 if (distanceToTarget < tapRange.getInputToInt()) {
                 	hitsCount++;
                     if (hitsCount >= onceEvery.getInputToInt()) {
 						switch (mode.getMode()) {
 						case "Packet":
-							if (mc.player.isSprinting()) mc.getNetHandler().sendQueue(new C0BPacketEntityAction(mc.player, C0BPacketEntityAction.Action.STOP_SPRINTING));
+							if (mc.player.isSprinting()) mc.getNetHandler().sendQueue(new CPacketEntityAction(mc.player, CPacketEntityAction.Mode.STOP_SPRINTING));
 							for (int i = 0; i < (packets.getInputToInt() - 2.0); i++) {
 								if (i % 2 == 0) {
-									mc.getNetHandler().sendQueue(new C0BPacketEntityAction(mc.player, C0BPacketEntityAction.Action.START_SPRINTING));
+									mc.getNetHandler().sendQueue(new CPacketEntityAction(mc.player, CPacketEntityAction.Mode.START_SPRINTING));
 								} else {
-									mc.getNetHandler().sendQueue(new C0BPacketEntityAction(mc.player, C0BPacketEntityAction.Action.STOP_SPRINTING));
+									mc.getNetHandler().sendQueue(new CPacketEntityAction(mc.player, CPacketEntityAction.Mode.STOP_SPRINTING));
 								}
 							}
-							if (mc.player.isSprinting()) mc.getNetHandler().sendQueue(new C0BPacketEntityAction(mc.player, C0BPacketEntityAction.Action.START_SPRINTING));
+							if (mc.player.isSprinting()) mc.getNetHandler().sendQueue(new CPacketEntityAction(mc.player, CPacketEntityAction.Mode.START_SPRINTING));
 							break;
 						case "STap":
 						case "WTap":

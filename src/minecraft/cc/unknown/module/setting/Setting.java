@@ -1,17 +1,19 @@
 package cc.unknown.module.setting;
 
+import java.util.function.Supplier;
+
 import com.google.gson.JsonObject;
 
 public abstract class Setting {
 	
-	public String settingName;
+	public String name;
 	
 	public Setting(String name) {
-		this.settingName = name;
+		this.name = name;
 	}
-
+	
 	public String getName() {
-		return this.settingName;
+		return this.name;
 	}
 
     public abstract void resetToDefaults();

@@ -11,7 +11,7 @@ import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.client.Cold;
-import net.minecraft.network.play.server.S02PacketChat;
+import net.minecraft.network.play.server.SPacketChat;
 
 @Register(name = "AutoPlay", category = Category.Other)
 public class Autoplay extends Module {
@@ -46,8 +46,8 @@ public class Autoplay extends Module {
 
     @EventLink
     public void onPacket(PacketEvent e) {
-        if (e.isReceive() && e.getPacket() instanceof S02PacketChat) {
-            String msg = ((S02PacketChat) e.getPacket()).getChatComponent().getUnformattedText();
+        if (e.isReceive() && e.getPacket() instanceof SPacketChat) {
+            String msg = ((SPacketChat) e.getPacket()).getChatComponent().getUnformattedText();
             if (containsAny(msg, "Jugar de nuevo", "ha ganado", "Want to play again?")) {
                 message.set(msg);
                 command.set(getCommand());

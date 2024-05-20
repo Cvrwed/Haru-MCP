@@ -10,7 +10,7 @@ public class PingCommand extends Command {
 	@Override
 	public void onExecute(String[] args) {
 	    if (args.length == 0) {
-	        int ping = CombatUtil.instance.getPing(mc.player);
+	        int ping = CombatUtil.instance.getPing();
 	        String color;
 	        if (ping >= 0 && ping <= 99) {
 	            color = getColor("Green");

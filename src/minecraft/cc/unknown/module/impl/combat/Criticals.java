@@ -18,9 +18,9 @@ import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayServer;
-import net.minecraft.network.play.client.C02PacketUseEntity;
-import net.minecraft.network.play.client.C0APacketAnimation;
-import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import net.minecraft.network.play.client.CPacketUseEntity;
+import net.minecraft.network.play.client.CPacketAnimation;
+import net.minecraft.network.play.server.SPacketPlayerPosLook;
 
 @Register(name = "Criticals", category = Category.Combat)
 public class Criticals extends Module {
@@ -61,7 +61,7 @@ public class Criticals extends Module {
 
 			if (!timer.reached(packetSendingRate.getInputToLong()) && onAir) {
 				e.setCancelled(true);
-				if (e.getPacket() instanceof C02PacketUseEntity && e.getPacket() instanceof C0APacketAnimation) {
+				if (e.getPacket() instanceof CPacketUseEntity && e.getPacket() instanceof CPacketAnimation) {
 					if (aggressive.isToggled()) {
 						e.setCancelled(false);
 					} else {
@@ -77,13 +77,13 @@ public class Criticals extends Module {
 				releasePackets();
 			}
 
-			if (e.getPacket() instanceof C02PacketUseEntity) {
-				C02PacketUseEntity wrapper = (C02PacketUseEntity) e.getPacket();
+			if (e.getPacket() instanceof CPacketUseEntity) {
+				CPacketUseEntity wrapper = (CPacketUseEntity) e.getPacket();
 
 				Entity entity = wrapper.getEntityFromWorld(mc.world);
 				if (entity == null)
 					return;
-				if (wrapper.getAction() == C02PacketUseEntity.Action.ATTACK) {
+				if (wrapper.getAction() == CPacketUseEntity.Mode.ATTACK) {
 					if (!mc.player.onGround) {
 						if (!onAir && hitGround && mc.player.fallDistance <= 1
 								&& (criticalHitChance.getInputToInt() / 100) > Math.random()) {
@@ -104,13 +104,15 @@ public class Criticals extends Module {
 
 		if (e.isReceive()) {
 			if (mc.player == null) hitGround = true;
-			if (e.getPacket() instanceof S08PacketPlayerPosLook) hitGround = true;
+			if (e.getPacket() instanceof SPacketPlayerPosLook) hitGround = true;
 		}
 	}
 
 	@EventLink
 	public void onDisconnect(final DisconnectionEvent e) {
-		this.disable();
+		if (e.isClient()) {
+			this.disable();
+		}
 	}
 
 	private void releasePackets() {

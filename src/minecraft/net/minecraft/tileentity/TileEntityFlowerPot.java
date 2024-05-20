@@ -3,7 +3,7 @@ package net.minecraft.tileentity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.ResourceLocation;
 
 public class TileEntityFlowerPot extends TileEntity
@@ -55,7 +55,7 @@ public class TileEntityFlowerPot extends TileEntity
         this.writeToNBT(nbttagcompound);
         nbttagcompound.removeTag("Item");
         nbttagcompound.setInteger("Item", Item.getIdFromItem(this.flowerPotItem));
-        return new S35PacketUpdateTileEntity(this.pos, 5, nbttagcompound);
+        return new SPacketUpdateTileEntity(this.pos, 5, nbttagcompound);
     }
 
     public void setFlowerPotData(Item potItem, int potData)

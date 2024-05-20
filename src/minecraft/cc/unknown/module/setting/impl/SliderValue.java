@@ -2,6 +2,7 @@ package cc.unknown.module.setting.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.function.Supplier;
 
 import com.google.gson.JsonObject;
 

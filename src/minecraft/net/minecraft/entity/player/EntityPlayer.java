@@ -50,7 +50,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.play.server.S12PacketEntityVelocity;
+import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.potion.Potion;
 import net.minecraft.scoreboard.IScoreObjectiveCriteria;
 import net.minecraft.scoreboard.Score;
@@ -1196,7 +1196,7 @@ public abstract class EntityPlayer extends EntityLivingBase {
 
 						if (targetEntity instanceof EntityPlayerMP && targetEntity.velocityChanged) {
 							((EntityPlayerMP) targetEntity).playerNetServerHandler
-									.sendPacket(new S12PacketEntityVelocity(targetEntity));
+									.sendPacket(new SPacketEntityVelocity(targetEntity));
 							targetEntity.velocityChanged = false;
 							targetEntity.motionX = d0;
 							targetEntity.motionY = d1;

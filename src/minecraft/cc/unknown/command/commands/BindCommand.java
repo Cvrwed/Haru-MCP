@@ -1,5 +1,7 @@
 package cc.unknown.command.commands;
 
+import org.lwjgl.input.Keyboard;
+
 import cc.unknown.Haru;
 import cc.unknown.command.Command;
 import cc.unknown.command.Flips;
@@ -33,4 +35,5 @@ public class BindCommand extends Command {
 			this.sendChat(getColor("Red") + "Key or module §cwas not found!", value);
 		}
 	}
+
 }

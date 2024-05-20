@@ -5,7 +5,7 @@ import java.io.IOException;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.server.CommandBlockLogic;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
+import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.util.IChatComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -92,7 +92,7 @@ public class GuiCommandBlock extends GuiScreen
                 this.localCommandBlock.func_145757_a(packetbuffer);
                 packetbuffer.writeString(this.commandTextField.getText());
                 packetbuffer.writeBoolean(this.localCommandBlock.shouldTrackOutput());
-                this.mc.getNetHandler().sendQueue(new C17PacketCustomPayload("MC|AdvCdm", packetbuffer));
+                this.mc.getNetHandler().sendQueue(new CPacketCustomPayload("MC|AdvCdm", packetbuffer));
 
                 if (!this.localCommandBlock.shouldTrackOutput())
                 {

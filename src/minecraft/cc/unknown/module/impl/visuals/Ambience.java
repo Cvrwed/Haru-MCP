@@ -7,7 +7,7 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.SliderValue;
-import net.minecraft.network.play.server.S03PacketTimeUpdate;
+import net.minecraft.network.play.server.SPacketTimeUpdate;
 
 @Register(name = "Ambience", category = Category.Visuals)
 public class Ambience extends Module {
@@ -28,7 +28,7 @@ public class Ambience extends Module {
 	@EventLink
 	public void onReceive(PacketEvent e) {
 		if (e.isReceive()) {
-			if (e.getPacket() instanceof S03PacketTimeUpdate) {
+			if (e.getPacket() instanceof SPacketTimeUpdate) {
 				e.setCancelled(true);
 			}
 		}

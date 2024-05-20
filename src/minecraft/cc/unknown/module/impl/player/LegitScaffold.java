@@ -6,7 +6,6 @@ import org.lwjgl.input.Keyboard;
 
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.move.MotionEvent;
-import cc.unknown.event.impl.move.MoveInputEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.module.impl.Module;
@@ -28,15 +27,15 @@ public class LegitScaffold extends Module {
 	private SliderValue shiftTime = new SliderValue("Shift Time", 140, 5, 200, 5);
 	private BooleanValue pitchCheck = new BooleanValue("Pitch Check", false);
 	private DoubleSliderValue pitchRange = new DoubleSliderValue("Pitch Range", 70, 85, 0, 90, 1);
-    private BooleanValue onlyGround = new BooleanValue("Only Ground", false);
-    private BooleanValue holdShift = new BooleanValue("Hold Shift", false);
-    private BooleanValue slotSwap = new BooleanValue("Block Switching", true);
-    private BooleanValue blocksOnly = new BooleanValue("Blocks Only", true);
-    private BooleanValue backwards = new BooleanValue("Backwards Movement Only", true);
+	private BooleanValue onlyGround = new BooleanValue("Only Ground", false);
+	private BooleanValue holdShift = new BooleanValue("Hold Shift", false);
+	private BooleanValue slotSwap = new BooleanValue("Block Switching", true);
+	private BooleanValue blocksOnly = new BooleanValue("Blocks Only", true);
+	private BooleanValue backwards = new BooleanValue("Backwards Movement Only", true);
 
-    private boolean shouldBridge = false;
-    private int ticks;
-    private Cold shiftTimer = new Cold(0);
+	private boolean shouldBridge = false;
+	private int ticks;
+	private Cold shiftTimer = new Cold(0);
 
 	public LegitScaffold() {
 		this.registerSetting(shiftTime, pitchCheck, pitchRange, onlyGround, holdShift, slotSwap, blocksOnly, backwards);
@@ -46,29 +45,33 @@ public class LegitScaffold extends Module {
 	public void onGui(ClickGuiEvent e) {
 		this.setSuffix("- [" + shiftTime.getInputToInt() + " ms]");
 	}
-	
+
 	@Override
 	public void onDisable() {
 		mc.gameSettings.keyBindSneak.pressed = false;
 		if (PlayerUtil.playerOverAir()) {
 			mc.gameSettings.keyBindSneak.pressed = false;
 		}
+
+		mc.gameSettings.keyBindJump.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindJump);
+		mc.gameSettings.keyBindUseItem.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindUseItem);
+		mc.gameSettings.keyBindSneak.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSneak);
 	}
-	
+
 	@EventLink
 	public void onSuicide(MotionEvent e) {
-        if (mc.currentScreen != null && !e.isPre()) return;
-        if (mc.playerController.getCurrentGameType() == WorldSettings.GameType.SPECTATOR) return;
-        
-        if (PlayerUtil.playerOverAir() && (!onlyGround.isToggled() || mc.player.onGround) && mc.player.motionY < 0.1) {
-        	shiftTimer.reset();
-        }
-        
-        if (backwards.isToggled() && shouldBridgeCheck()) {
-            shouldBridge = false;
-            return;
-        }
-        
+		if (mc.currentScreen != null && !e.isPre()) return;
+		if (mc.playerController.getCurrentGameType() == WorldSettings.GameType.SPECTATOR) return;
+
+		if (PlayerUtil.playerOverAir() && (!onlyGround.isToggled() || mc.player.onGround) && mc.player.motionY < 0.1) {
+			shiftTimer.reset();
+		}
+
+		if (backwards.isToggled() && shouldBridgeCheck()) {
+			shouldBridge = false;
+			return;
+		}
+
 		if (pitchCheck.isToggled() && shouldPitchCheck()) {
 			shouldBridge = false;
 			if (Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode())) {
@@ -76,33 +79,36 @@ public class LegitScaffold extends Module {
 			}
 			return;
 		}
-        
-        if (blocksOnly.isToggled() && shouldSkipBlockCheck()) {
-        	return;
-        }
-        
+
+		if (blocksOnly.isToggled() && shouldSkipBlockCheck()) {
+			return;
+		}
+
 		shouldBridge = !shiftTimer.reached((long) shiftTime.getInput());
 
-        if (holdShift.isToggled()) {
-            mc.gameSettings.keyBindSneak.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSneak) && shouldBridge;
-        } else {
-            mc.gameSettings.keyBindSneak.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSneak) || shouldBridge;
-        }
-        
-        if (shouldBridge) {
-            ticks++;
-        } else {
-            ticks = 0;
-        }
+		if (holdShift.isToggled()) {
+			mc.gameSettings.keyBindSneak.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSneak) && shouldBridge;
+		} else {
+			mc.gameSettings.keyBindSneak.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSneak) || shouldBridge;
+		}
+
+		if (shouldBridge) {
+			ticks++;
+		} else {
+			ticks = 0;
+		}
 	}
-	
+
 	@EventLink
 	public void onRender(RenderEvent e) {
-		if (!PlayerUtil.inGame()&& !e.is3D()) return;
-		if (slotSwap.isToggled() && shouldSkipBlockCheck()) swapToBlock();
-		if (mc.currentScreen != null || mc.player.getHeldItem() == null) return;
+		if (!PlayerUtil.inGame() && !e.is3D())
+			return;
+		if (slotSwap.isToggled() && shouldSkipBlockCheck())
+			swapToBlock();
+		if (mc.currentScreen != null || mc.player.getHeldItem() == null)
+			return;
 	}
-	
+
 	public void swapToBlock() {
 		for (int slot = 0; slot <= 8; slot++) {
 			ItemStack itemInSlot = mc.player.inventory.getStackInSlot(slot);
@@ -118,22 +124,22 @@ public class LegitScaffold extends Module {
 			}
 		}
 	}
-	
+
 	private boolean shouldSkipBlockCheck() {
-	    return ((BooleanSupplier) () -> {
-	    	ItemStack heldItem = mc.player.getHeldItem();
-	    	return heldItem == null || !(heldItem.getItem() instanceof ItemBlock);
-	    }).getAsBoolean();
+		return ((BooleanSupplier) () -> {
+			ItemStack heldItem = mc.player.getHeldItem();
+			return heldItem == null || !(heldItem.getItem() instanceof ItemBlock);
+		}).getAsBoolean();
 	}
-	
+
 	private boolean shouldPitchCheck() {
-	    return ((BooleanSupplier) () -> {
-	        boolean maxPitch = mc.player.rotationPitch > pitchRange.getInputMax();
-	        boolean minPitch = mc.player.rotationPitch < pitchRange.getInputMin();
-	        return (maxPitch || minPitch);
-	    }).getAsBoolean();
+		return ((BooleanSupplier) () -> {
+			boolean maxPitch = mc.player.rotationPitch > pitchRange.getInputMax();
+			boolean minPitch = mc.player.rotationPitch < pitchRange.getInputMin();
+			return (maxPitch || minPitch);
+		}).getAsBoolean();
 	}
-	
+
 	private boolean shouldBridgeCheck() {
 		return ((BooleanSupplier) () -> {
 			double moveForward = mc.player.movementInput.moveForward;

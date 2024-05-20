@@ -9,6 +9,7 @@ import org.lwjgl.input.Keyboard;
 import com.google.gson.JsonObject;
 
 import cc.unknown.Haru;
+import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.Setting;
 import cc.unknown.module.setting.impl.BooleanValue;
@@ -20,14 +21,13 @@ public class Module implements Loona {
 	private boolean isToggled = false;
 	private boolean enabled = false;
 	private boolean hidden = true;
-	private int key = 0;
+	private int key;
 	private Register register;
-
+	
 	public Module() {
 		if (this.getClass().isAnnotationPresent(Register.class)) {
 			this.register = this.getClass().getAnnotation(Register.class);
 			this.key = getRegister().key();
-			this.enabled = getRegister().enable();
 		} else {
 			throw new RuntimeException("@Register not found" + this.getClass().getSimpleName());
 		}
@@ -93,13 +93,13 @@ public class Module implements Loona {
 	public void enable() {
 		this.enabled = true;
 		this.onEnable();
-		Haru.instance.getEventBus().register(this);
+        Haru.instance.getEventBus().register(this);
 	}
 
 	public void disable() {
 		this.enabled = false;
 		this.onDisable();
-		Haru.instance.getEventBus().unregister(this);
+    	Haru.instance.getEventBus().unregister(this);
 	}
 	
 	public void setToggled(boolean enabled) {

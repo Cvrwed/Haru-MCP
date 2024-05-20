@@ -7,7 +7,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
-import net.minecraft.network.play.server.S38PacketPlayerListItem;
+import net.minecraft.network.play.server.SPacketPlayerListItem;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
@@ -43,7 +43,7 @@ public class NetworkPlayerInfo
         this.gameProfile = p_i46294_1_;
     }
 
-    public NetworkPlayerInfo(S38PacketPlayerListItem.AddPlayerData p_i46295_1_)
+    public NetworkPlayerInfo(SPacketPlayerListItem.AddPlayerData p_i46295_1_)
     {
         this.gameProfile = p_i46295_1_.getProfile();
         this.gameType = p_i46295_1_.getGameMode();

@@ -2,7 +2,7 @@ package net.minecraft.command;
 
 import java.util.List;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.S29PacketSoundEffect;
+import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.vec.Vec3;
@@ -120,7 +120,7 @@ public class CommandPlaySound extends CommandBase
                 d3 = d5;
             }
 
-            entityplayermp.playerNetServerHandler.sendPacket(new S29PacketSoundEffect(s, d0, d1, d2, (float)d3, (float)d4));
+            entityplayermp.playerNetServerHandler.sendPacket(new SPacketSoundEffect(s, d0, d1, d2, (float)d3, (float)d4));
             notifyOperators(sender, this, "commands.playsound.success", new Object[] {s, entityplayermp.getName()});
         }
     }

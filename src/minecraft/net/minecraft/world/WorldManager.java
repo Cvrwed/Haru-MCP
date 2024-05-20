@@ -3,9 +3,9 @@ package net.minecraft.world;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.S25PacketBlockBreakAnim;
-import net.minecraft.network.play.server.S28PacketEffect;
-import net.minecraft.network.play.server.S29PacketSoundEffect;
+import net.minecraft.network.play.server.SPacketBlockBreakAnim;
+import net.minecraft.network.play.server.SPacketEffect;
+import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 
@@ -51,7 +51,7 @@ public class WorldManager implements IWorldAccess
      */
     public void playSound(String soundName, double x, double y, double z, float volume, float pitch)
     {
-        this.mcServer.getConfigurationManager().sendToAllNear(x, y, z, volume > 1.0F ? (double)(16.0F * volume) : 16.0D, this.theWorldServer.provider.getDimensionId(), new S29PacketSoundEffect(soundName, x, y, z, volume, pitch));
+        this.mcServer.getConfigurationManager().sendToAllNear(x, y, z, volume > 1.0F ? (double)(16.0F * volume) : 16.0D, this.theWorldServer.provider.getDimensionId(), new SPacketSoundEffect(soundName, x, y, z, volume, pitch));
     }
 
     /**
@@ -59,7 +59,7 @@ public class WorldManager implements IWorldAccess
      */
     public void playSoundToNearExcept(EntityPlayer except, String soundName, double x, double y, double z, float volume, float pitch)
     {
-        this.mcServer.getConfigurationManager().sendToAllNearExcept(except, x, y, z, volume > 1.0F ? (double)(16.0F * volume) : 16.0D, this.theWorldServer.provider.getDimensionId(), new S29PacketSoundEffect(soundName, x, y, z, volume, pitch));
+        this.mcServer.getConfigurationManager().sendToAllNearExcept(except, x, y, z, volume > 1.0F ? (double)(16.0F * volume) : 16.0D, this.theWorldServer.provider.getDimensionId(), new SPacketSoundEffect(soundName, x, y, z, volume, pitch));
     }
 
     /**
@@ -85,12 +85,12 @@ public class WorldManager implements IWorldAccess
 
     public void playAuxSFX(EntityPlayer player, int sfxType, BlockPos blockPosIn, int p_180439_4_)
     {
-        this.mcServer.getConfigurationManager().sendToAllNearExcept(player, (double)blockPosIn.getX(), (double)blockPosIn.getY(), (double)blockPosIn.getZ(), 64.0D, this.theWorldServer.provider.getDimensionId(), new S28PacketEffect(sfxType, blockPosIn, p_180439_4_, false));
+        this.mcServer.getConfigurationManager().sendToAllNearExcept(player, (double)blockPosIn.getX(), (double)blockPosIn.getY(), (double)blockPosIn.getZ(), 64.0D, this.theWorldServer.provider.getDimensionId(), new SPacketEffect(sfxType, blockPosIn, p_180439_4_, false));
     }
 
     public void broadcastSound(int p_180440_1_, BlockPos p_180440_2_, int p_180440_3_)
     {
-        this.mcServer.getConfigurationManager().sendPacketToAllPlayers(new S28PacketEffect(p_180440_1_, p_180440_2_, p_180440_3_, true));
+        this.mcServer.getConfigurationManager().sendPacketToAllPlayers(new SPacketEffect(p_180440_1_, p_180440_2_, p_180440_3_, true));
     }
 
     public void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress)
@@ -105,7 +105,7 @@ public class WorldManager implements IWorldAccess
 
                 if (d0 * d0 + d1 * d1 + d2 * d2 < 1024.0D)
                 {
-                    entityplayermp.playerNetServerHandler.sendPacket(new S25PacketBlockBreakAnim(breakerId, pos, progress));
+                    entityplayermp.playerNetServerHandler.sendPacket(new SPacketBlockBreakAnim(breakerId, pos, progress));
                 }
             }
         }

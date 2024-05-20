@@ -20,7 +20,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.C16PacketClientStatus;
+import net.minecraft.network.play.client.CPacketClientStatus;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatCrafting;
 import net.minecraft.stats.StatFileWriter;
@@ -56,7 +56,7 @@ public class GuiStats extends GuiScreen implements IProgressMeter
     {
         this.screenTitle = I18n.format("gui.stats", new Object[0]);
         this.doesGuiPauseGame = true;
-        this.mc.getNetHandler().sendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.REQUEST_STATS));
+        this.mc.getNetHandler().sendQueue(new CPacketClientStatus(CPacketClientStatus.EnumState.REQUEST_STATS));
     }
 
     /**

@@ -1,6 +1,7 @@
 package cc.unknown.module.impl.player;
 
 import cc.unknown.event.impl.EventLink;
+import cc.unknown.event.impl.move.MotionEvent;
 import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.event.impl.player.TickEvent;
@@ -8,13 +9,14 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.ModeValue;
+import cc.unknown.utils.player.MoveUtil;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
@@ -23,7 +25,7 @@ import net.minecraft.util.enums.EnumFacing;
 @Register(name = "NoFall", category = Category.Player)
 public class NoFall extends Module {
 	private boolean handling;
-	public static ModeValue mode = new ModeValue("Mode", "Legit", "Legit", "Packet", "Tick No Ground", "Sneak jump");
+	public static ModeValue mode = new ModeValue("Mode", "Legit", "Legit", "Packet", "Tick No Ground", "Sneak jump", "Grim");
 
 	public NoFall() {
 		this.registerSetting(mode);
@@ -55,11 +57,38 @@ public class NoFall extends Module {
 			}
 			break;
 		case "Packet":
-			mc.getNetHandler().sendQueue(new C03PacketPlayer(true));
+			mc.getNetHandler().sendQueue(new CPacketPlayer(true));
 			break;
 		case "Sneak jump":
 			if (mc.player.fallDistance > 10 && mc.gameSettings.keyBindSneak.pressed) {
-				mc.gameSettings.keyBindSneak.pressed = mc.world.getCollidingBoundingBoxes(mc.player, mc.player.getCollisionBoundingBox().offset(0.0, mc.player.motionX, 0.0)) != null;
+				mc.gameSettings.keyBindSneak.pressed = mc.player.getCollisionBoundingBox().offset(0.0, mc.player.motionX, 0.0) != null;
+			}
+			break;
+		}
+	}
+	
+	@EventLink
+	public void onMotion(MotionEvent e) {
+		switch (mode.getMode()) {
+		case "Grim":
+			if(mc.player.fallDistance >= 3) {
+				mc.player.motionX *= 0.2D;
+		        mc.player.motionZ *= 0.2D;
+	
+		        float distance = mc.player.fallDistance;
+	
+		        if (MoveUtil.isOnGround(2)) {
+		            if (distance > 2) {
+		            	MoveUtil.strafe(0.19f);
+		            }
+	
+		            if (distance > 3 && MoveUtil.getSpeed() < 0.2) {
+		                e.setOnGround(true);
+		                distance = 0;
+		            }
+		        }
+	
+		        mc.player.fallDistance = distance;
 			}
 			break;
 		}
@@ -69,8 +98,8 @@ public class NoFall extends Module {
 	public void onPacket(PacketEvent e) {
 		if (e.isSend()) {
 			if (mode.is("Tick No Ground")) {
-				if (e.getPacket() instanceof C03PacketPlayer) {
-					C03PacketPlayer c03 = (C03PacketPlayer) e.getPacket();
+				if (e.getPacket() instanceof CPacketPlayer) {
+					CPacketPlayer c03 = (CPacketPlayer) e.getPacket();
 					if (mc.player != null && mc.player.fallDistance > 1.5)
 						c03.onGround = mc.player.ticksExisted % 2 == 0;
 				}

@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.network.play.client.C16PacketClientStatus;
+import net.minecraft.network.play.client.CPacketClientStatus;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.enums.EnumChatFormatting;
 
@@ -70,7 +70,7 @@ public class GuiWinGame extends GuiScreen
 
     private void sendRespawnPacket()
     {
-        this.mc.player.sendQueue.sendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.PERFORM_RESPAWN));
+        this.mc.player.sendQueue.sendQueue(new CPacketClientStatus(CPacketClientStatus.EnumState.PERFORM_RESPAWN));
         this.mc.displayGuiScreen((GuiScreen)null);
     }
 

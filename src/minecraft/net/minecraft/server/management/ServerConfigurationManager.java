@@ -26,21 +26,21 @@ import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.S01PacketJoinGame;
-import net.minecraft.network.play.server.S02PacketChat;
-import net.minecraft.network.play.server.S03PacketTimeUpdate;
-import net.minecraft.network.play.server.S05PacketSpawnPosition;
-import net.minecraft.network.play.server.S07PacketRespawn;
-import net.minecraft.network.play.server.S09PacketHeldItemChange;
-import net.minecraft.network.play.server.S1DPacketEntityEffect;
-import net.minecraft.network.play.server.S1FPacketSetExperience;
-import net.minecraft.network.play.server.S2BPacketChangeGameState;
-import net.minecraft.network.play.server.S38PacketPlayerListItem;
-import net.minecraft.network.play.server.S39PacketPlayerAbilities;
-import net.minecraft.network.play.server.S3EPacketTeams;
-import net.minecraft.network.play.server.S3FPacketCustomPayload;
-import net.minecraft.network.play.server.S41PacketServerDifficulty;
-import net.minecraft.network.play.server.S44PacketWorldBorder;
+import net.minecraft.network.play.server.SPacketJoinGame;
+import net.minecraft.network.play.server.SPacketChat;
+import net.minecraft.network.play.server.SPacketTimeUpdate;
+import net.minecraft.network.play.server.SPacketSpawnPosition;
+import net.minecraft.network.play.server.SPacketRespawn;
+import net.minecraft.network.play.server.SPacketHeldItemChange;
+import net.minecraft.network.play.server.SPacketEntityEffect;
+import net.minecraft.network.play.server.SPacketSetExperience;
+import net.minecraft.network.play.server.SPacketChangeGameState;
+import net.minecraft.network.play.server.SPacketPlayerListItem;
+import net.minecraft.network.play.server.SPacketPlayerAbilities;
+import net.minecraft.network.play.server.SPacketTeams;
+import net.minecraft.network.play.server.SPacketCustomPayload;
+import net.minecraft.network.play.server.SPacketServerDifficulty;
+import net.minecraft.network.play.server.SPacketWorldBorder;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -140,17 +140,17 @@ public abstract class ServerConfigurationManager {
 		BlockPos blockpos = worldserver.getSpawnPoint();
 		this.setPlayerGameTypeBasedOnOther(playerIn, (EntityPlayerMP) null, worldserver);
 		NetHandlerPlayServer nethandlerplayserver = new NetHandlerPlayServer(this.mcServer, netManager, playerIn);
-		nethandlerplayserver.sendPacket(new S01PacketJoinGame(playerIn.getEntityId(),
+		nethandlerplayserver.sendPacket(new SPacketJoinGame(playerIn.getEntityId(),
 				playerIn.theItemInWorldManager.getGameType(), worldinfo.isHardcoreModeEnabled(),
 				worldserver.provider.getDimensionId(), worldserver.getDifficulty(), this.getMaxPlayers(),
 				worldinfo.getTerrainType(), worldserver.getGameRules().getGameRuleBooleanValue("reducedDebugInfo")));
-		nethandlerplayserver.sendPacket(new S3FPacketCustomPayload("MC|Brand",
+		nethandlerplayserver.sendPacket(new SPacketCustomPayload("MC|Brand",
 				(new PacketBuffer(Unpooled.buffer())).writeString(this.getServerInstance().getServerModName())));
 		nethandlerplayserver
-				.sendPacket(new S41PacketServerDifficulty(worldinfo.getDifficulty(), worldinfo.isDifficultyLocked()));
-		nethandlerplayserver.sendPacket(new S05PacketSpawnPosition(blockpos));
-		nethandlerplayserver.sendPacket(new S39PacketPlayerAbilities(playerIn.capabilities));
-		nethandlerplayserver.sendPacket(new S09PacketHeldItemChange(playerIn.inventory.currentItem));
+				.sendPacket(new SPacketServerDifficulty(worldinfo.getDifficulty(), worldinfo.isDifficultyLocked()));
+		nethandlerplayserver.sendPacket(new SPacketSpawnPosition(blockpos));
+		nethandlerplayserver.sendPacket(new SPacketPlayerAbilities(playerIn.capabilities));
+		nethandlerplayserver.sendPacket(new SPacketHeldItemChange(playerIn.inventory.currentItem));
 		playerIn.getStatFile().func_150877_d();
 		playerIn.getStatFile().sendAchievements(playerIn);
 		this.sendScoreboard((ServerScoreboard) worldserver.getScoreboard(), playerIn);
@@ -177,7 +177,7 @@ public abstract class ServerConfigurationManager {
 		}
 
 		for (PotionEffect potioneffect : playerIn.getActivePotionEffects()) {
-			nethandlerplayserver.sendPacket(new S1DPacketEntityEffect(playerIn.getEntityId(), potioneffect));
+			nethandlerplayserver.sendPacket(new SPacketEntityEffect(playerIn.getEntityId(), potioneffect));
 		}
 
 		playerIn.addSelfToInternalCraftingInventory();
@@ -198,7 +198,7 @@ public abstract class ServerConfigurationManager {
 		Set<ScoreObjective> set = Sets.<ScoreObjective>newHashSet();
 
 		for (ScorePlayerTeam scoreplayerteam : scoreboardIn.getTeams()) {
-			playerIn.playerNetServerHandler.sendPacket(new S3EPacketTeams(scoreplayerteam, 0));
+			playerIn.playerNetServerHandler.sendPacket(new SPacketTeams(scoreplayerteam, 0));
 		}
 
 		for (int i = 0; i < 19; ++i) {
@@ -222,27 +222,27 @@ public abstract class ServerConfigurationManager {
 		worldServers[0].getWorldBorder().addListener(new IBorderListener() {
 			public void onSizeChanged(WorldBorder border, double newSize) {
 				ServerConfigurationManager.this
-						.sendPacketToAllPlayers(new S44PacketWorldBorder(border, S44PacketWorldBorder.Action.SET_SIZE));
+						.sendPacketToAllPlayers(new SPacketWorldBorder(border, SPacketWorldBorder.Action.SET_SIZE));
 			}
 
 			public void onTransitionStarted(WorldBorder border, double oldSize, double newSize, long time) {
 				ServerConfigurationManager.this.sendPacketToAllPlayers(
-						new S44PacketWorldBorder(border, S44PacketWorldBorder.Action.LERP_SIZE));
+						new SPacketWorldBorder(border, SPacketWorldBorder.Action.LERP_SIZE));
 			}
 
 			public void onCenterChanged(WorldBorder border, double x, double z) {
 				ServerConfigurationManager.this.sendPacketToAllPlayers(
-						new S44PacketWorldBorder(border, S44PacketWorldBorder.Action.SET_CENTER));
+						new SPacketWorldBorder(border, SPacketWorldBorder.Action.SET_CENTER));
 			}
 
 			public void onWarningTimeChanged(WorldBorder border, int newTime) {
 				ServerConfigurationManager.this.sendPacketToAllPlayers(
-						new S44PacketWorldBorder(border, S44PacketWorldBorder.Action.SET_WARNING_TIME));
+						new SPacketWorldBorder(border, SPacketWorldBorder.Action.SET_WARNING_TIME));
 			}
 
 			public void onWarningDistanceChanged(WorldBorder border, int newDistance) {
 				ServerConfigurationManager.this.sendPacketToAllPlayers(
-						new S44PacketWorldBorder(border, S44PacketWorldBorder.Action.SET_WARNING_BLOCKS));
+						new SPacketWorldBorder(border, SPacketWorldBorder.Action.SET_WARNING_BLOCKS));
 			}
 
 			public void onDamageAmountChanged(WorldBorder border, double newAmount) {
@@ -305,7 +305,7 @@ public abstract class ServerConfigurationManager {
 	public void playerLoggedIn(EntityPlayerMP playerIn) {
 		this.playerEntityList.add(playerIn);
 		this.uuidToPlayerMap.put(playerIn.getUniqueID(), playerIn);
-		this.sendPacketToAllPlayers(new S38PacketPlayerListItem(S38PacketPlayerListItem.Action.ADD_PLAYER,
+		this.sendPacketToAllPlayers(new SPacketPlayerListItem(SPacketPlayerListItem.Action.ADD_PLAYER,
 				new EntityPlayerMP[] { playerIn }));
 		WorldServer worldserver = this.mcServer.worldServerForDimension(playerIn.dimension);
 		worldserver.spawnEntityInWorld(playerIn);
@@ -313,8 +313,8 @@ public abstract class ServerConfigurationManager {
 
 		for (int i = 0; i < this.playerEntityList.size(); ++i) {
 			EntityPlayerMP entityplayermp = (EntityPlayerMP) this.playerEntityList.get(i);
-			playerIn.playerNetServerHandler.sendPacket(new S38PacketPlayerListItem(
-					S38PacketPlayerListItem.Action.ADD_PLAYER, new EntityPlayerMP[] { entityplayermp }));
+			playerIn.playerNetServerHandler.sendPacket(new SPacketPlayerListItem(
+					SPacketPlayerListItem.Action.ADD_PLAYER, new EntityPlayerMP[] { entityplayermp }));
 		}
 	}
 
@@ -351,7 +351,7 @@ public abstract class ServerConfigurationManager {
 			this.playerStatFiles.remove(uuid);
 		}
 
-		this.sendPacketToAllPlayers(new S38PacketPlayerListItem(S38PacketPlayerListItem.Action.REMOVE_PLAYER,
+		this.sendPacketToAllPlayers(new SPacketPlayerListItem(SPacketPlayerListItem.Action.REMOVE_PLAYER,
 				new EntityPlayerMP[] { playerIn }));
 	}
 
@@ -455,7 +455,7 @@ public abstract class ServerConfigurationManager {
 						0.0F);
 				entityplayermp.setSpawnPoint(blockpos, flag);
 			} else {
-				entityplayermp.playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(0, 0.0F));
+				entityplayermp.playerNetServerHandler.sendPacket(new SPacketChangeGameState(0, 0.0F));
 			}
 		}
 
@@ -466,14 +466,14 @@ public abstract class ServerConfigurationManager {
 			entityplayermp.setPosition(entityplayermp.posX, entityplayermp.posY + 1.0D, entityplayermp.posZ);
 		}
 
-		entityplayermp.playerNetServerHandler.sendPacket(new S07PacketRespawn(entityplayermp.dimension,
+		entityplayermp.playerNetServerHandler.sendPacket(new SPacketRespawn(entityplayermp.dimension,
 				entityplayermp.worldObj.getDifficulty(), entityplayermp.worldObj.getWorldInfo().getTerrainType(),
 				entityplayermp.theItemInWorldManager.getGameType()));
 		BlockPos blockpos2 = worldserver.getSpawnPoint();
 		entityplayermp.playerNetServerHandler.setPlayerLocation(entityplayermp.posX, entityplayermp.posY,
 				entityplayermp.posZ, entityplayermp.rotationYaw, entityplayermp.rotationPitch);
-		entityplayermp.playerNetServerHandler.sendPacket(new S05PacketSpawnPosition(blockpos2));
-		entityplayermp.playerNetServerHandler.sendPacket(new S1FPacketSetExperience(entityplayermp.experience,
+		entityplayermp.playerNetServerHandler.sendPacket(new SPacketSpawnPosition(blockpos2));
+		entityplayermp.playerNetServerHandler.sendPacket(new SPacketSetExperience(entityplayermp.experience,
 				entityplayermp.experienceTotal, entityplayermp.experienceLevel));
 		this.updateTimeAndWeatherForPlayer(entityplayermp, worldserver);
 		worldserver.getPlayerManager().addPlayer(entityplayermp);
@@ -493,7 +493,7 @@ public abstract class ServerConfigurationManager {
 		WorldServer worldserver = this.mcServer.worldServerForDimension(playerIn.dimension);
 		playerIn.dimension = dimension;
 		WorldServer worldserver1 = this.mcServer.worldServerForDimension(playerIn.dimension);
-		playerIn.playerNetServerHandler.sendPacket(new S07PacketRespawn(playerIn.dimension,
+		playerIn.playerNetServerHandler.sendPacket(new SPacketRespawn(playerIn.dimension,
 				playerIn.worldObj.getDifficulty(), playerIn.worldObj.getWorldInfo().getTerrainType(),
 				playerIn.theItemInWorldManager.getGameType()));
 		worldserver.removePlayerEntityDangerously(playerIn);
@@ -507,7 +507,7 @@ public abstract class ServerConfigurationManager {
 		this.syncPlayerInventory(playerIn);
 
 		for (PotionEffect potioneffect : playerIn.getActivePotionEffects()) {
-			playerIn.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(playerIn.getEntityId(), potioneffect));
+			playerIn.playerNetServerHandler.sendPacket(new SPacketEntityEffect(playerIn.getEntityId(), potioneffect));
 		}
 	}
 
@@ -586,7 +586,7 @@ public abstract class ServerConfigurationManager {
 	public void onTick() {
 		if (++this.playerPingIndex > 600) {
 			this.sendPacketToAllPlayers(
-					new S38PacketPlayerListItem(S38PacketPlayerListItem.Action.UPDATE_LATENCY, this.playerEntityList));
+					new SPacketPlayerListItem(SPacketPlayerListItem.Action.UPDATE_LATENCY, this.playerEntityList));
 			this.playerPingIndex = 0;
 		}
 	}
@@ -791,15 +791,15 @@ public abstract class ServerConfigurationManager {
 	public void updateTimeAndWeatherForPlayer(EntityPlayerMP playerIn, WorldServer worldIn) {
 		WorldBorder worldborder = this.mcServer.worldServers[0].getWorldBorder();
 		playerIn.playerNetServerHandler
-				.sendPacket(new S44PacketWorldBorder(worldborder, S44PacketWorldBorder.Action.INITIALIZE));
-		playerIn.playerNetServerHandler.sendPacket(new S03PacketTimeUpdate(worldIn.getTotalWorldTime(),
+				.sendPacket(new SPacketWorldBorder(worldborder, SPacketWorldBorder.Action.INITIALIZE));
+		playerIn.playerNetServerHandler.sendPacket(new SPacketTimeUpdate(worldIn.getTotalWorldTime(),
 				worldIn.getWorldTime(), worldIn.getGameRules().getGameRuleBooleanValue("doDaylightCycle")));
 
 		if (worldIn.isRaining()) {
-			playerIn.playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(1, 0.0F));
-			playerIn.playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(7, worldIn.getRainStrength(1.0F)));
+			playerIn.playerNetServerHandler.sendPacket(new SPacketChangeGameState(1, 0.0F));
+			playerIn.playerNetServerHandler.sendPacket(new SPacketChangeGameState(7, worldIn.getRainStrength(1.0F)));
 			playerIn.playerNetServerHandler
-					.sendPacket(new S2BPacketChangeGameState(8, worldIn.getThunderStrength(1.0F)));
+					.sendPacket(new SPacketChangeGameState(8, worldIn.getThunderStrength(1.0F)));
 		}
 	}
 
@@ -809,7 +809,7 @@ public abstract class ServerConfigurationManager {
 	public void syncPlayerInventory(EntityPlayerMP playerIn) {
 		playerIn.sendContainerToPlayer(playerIn.inventoryContainer);
 		playerIn.setPlayerHealthUpdated();
-		playerIn.playerNetServerHandler.sendPacket(new S09PacketHeldItemChange(playerIn.inventory.currentItem));
+		playerIn.playerNetServerHandler.sendPacket(new SPacketHeldItemChange(playerIn.inventory.currentItem));
 	}
 
 	/**
@@ -902,7 +902,7 @@ public abstract class ServerConfigurationManager {
 	public void sendChatMsgImpl(IChatComponent component, boolean isChat) {
 		this.mcServer.addChatMessage(component);
 		byte b0 = (byte) (isChat ? 1 : 0);
-		this.sendPacketToAllPlayers(new S02PacketChat(component, b0));
+		this.sendPacketToAllPlayers(new SPacketChat(component, b0));
 	}
 
 	/**

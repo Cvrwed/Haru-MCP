@@ -15,11 +15,11 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.BooleanValue;
-import cc.unknown.ui.clickgui.raven.impl.api.Theme;
+import cc.unknown.ui.clickgui.impl.api.Theme;
 import cc.unknown.utils.network.PacketUtil;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.C02PacketUseEntity;
-import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.CPacketUseEntity;
+import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.vec.Vec3;
 
 @Register(name = "Blink", category = Category.Player)
@@ -81,8 +81,8 @@ public class Blink extends Module {
 				packets.add(p);
 			}
 
-			if (p instanceof C03PacketPlayer && ((C03PacketPlayer) p).isMoving()) {
-				C03PacketPlayer wrapper = (C03PacketPlayer) p;
+			if (p instanceof CPacketPlayer && ((CPacketPlayer) p).isMoving()) {
+				CPacketPlayer wrapper = (CPacketPlayer) p;
 				Vec3 packetPos = new Vec3(wrapper.x, wrapper.y, wrapper.z);
 				synchronized (positions) {
 					positions.add(packetPos);
@@ -90,9 +90,9 @@ public class Blink extends Module {
 				}
 			}
 
-			if (p instanceof C02PacketUseEntity) {
-				C02PacketUseEntity wrapper = (C02PacketUseEntity) p;
-				if (disableAttack.isToggled() && wrapper.getAction() == C02PacketUseEntity.Action.ATTACK)
+			if (p instanceof CPacketUseEntity) {
+				CPacketUseEntity wrapper = (CPacketUseEntity) p;
+				if (disableAttack.isToggled() && wrapper.getAction() == CPacketUseEntity.Mode.ATTACK)
 					blink();
 				return;
 			}
@@ -169,15 +169,18 @@ public class Blink extends Module {
 
 	@EventLink
 	public void onWorldLoad(ChangeWorldEvent e) {
-		if (e.getWorldClient() == null) {
+		if (e.getChangeWorld() == null) {
 			reset();
 		}
 	}
-
+	
 	@EventLink
 	public void onDisconnect(final DisconnectionEvent e) {
-		this.packets.clear();
-		if (disableDisconnect.isToggled())
-			this.disable();
+		if (e.isClient()) {
+			this.packets.clear();
+			if (disableDisconnect.isToggled()) {
+				this.disable();
+			}
+		}
 	}
 }

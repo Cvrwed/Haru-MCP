@@ -11,4 +11,8 @@ public class TickEvent extends Event {
     public static class Post extends TickEvent {
 
     }
+    
+    public static class Input extends TickEvent {
+    	
+    }
 }

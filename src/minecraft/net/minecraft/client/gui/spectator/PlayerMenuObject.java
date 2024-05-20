@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.network.play.client.C18PacketSpectate;
+import net.minecraft.network.play.client.CPacketSpectate;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.chat.ChatComponentText;
@@ -24,7 +24,7 @@ public class PlayerMenuObject implements ISpectatorMenuObject
 
     public void func_178661_a(SpectatorMenu menu)
     {
-        Minecraft.getMinecraft().getNetHandler().sendQueue(new C18PacketSpectate(this.profile.getId()));
+        Minecraft.getMinecraft().getNetHandler().sendQueue(new CPacketSpectate(this.profile.getId()));
     }
 
     public IChatComponent getSpectatorName()

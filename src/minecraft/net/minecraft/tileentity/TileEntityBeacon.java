@@ -19,7 +19,7 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.stats.AchievementList;
@@ -251,7 +251,7 @@ public class TileEntityBeacon extends TileEntityLockable implements ITickable, I
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         this.writeToNBT(nbttagcompound);
-        return new S35PacketUpdateTileEntity(this.pos, 3, nbttagcompound);
+        return new SPacketUpdateTileEntity(this.pos, 3, nbttagcompound);
     }
 
     public double getMaxRenderDistanceSquared()

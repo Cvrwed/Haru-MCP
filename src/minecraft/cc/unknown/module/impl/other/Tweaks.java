@@ -8,7 +8,7 @@ import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.utils.player.PlayerUtil;
-import net.minecraft.network.play.client.C15PacketClientSettings;
+import net.minecraft.network.play.client.CPacketClientSettings;
 
 @Register(name = "Tweaks", category = Category.Other)
 public class Tweaks extends Module {
@@ -40,7 +40,7 @@ public class Tweaks extends Module {
 	public void onCancelC15(PacketEvent e) {
 		if (cancelC15.isToggled() && PlayerUtil.inGame() && this.isEnabled()) {
 			if (e.isSend()) {
-				if (e.getPacket() instanceof C15PacketClientSettings) {
+				if (e.getPacket() instanceof CPacketClientSettings) {
 					e.setCancelled(true);
 				}
 			}

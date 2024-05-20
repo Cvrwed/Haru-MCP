@@ -1,7 +1,7 @@
 package cc.unknown.module.impl.visuals;
 
-import static cc.unknown.ui.clickgui.EditHudPositionScreen.arrayListX;
-import static cc.unknown.ui.clickgui.EditHudPositionScreen.arrayListY;
+import static cc.unknown.ui.HudPosition.arrayListX;
+import static cc.unknown.ui.HudPosition.arrayListY;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -18,9 +18,9 @@ import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
-import cc.unknown.ui.clickgui.EditHudPositionScreen;
-import cc.unknown.ui.clickgui.raven.HaruGui;
-import cc.unknown.ui.clickgui.raven.impl.api.Theme;
+import cc.unknown.ui.HudPosition;
+import cc.unknown.ui.clickgui.HaruGui;
+import cc.unknown.ui.clickgui.impl.api.Theme;
 import cc.unknown.utils.client.ColorUtil;
 import cc.unknown.utils.client.FuckUtil;
 import cc.unknown.utils.client.FuckUtil.PositionMode;
@@ -55,7 +55,7 @@ public class HUD extends Module {
 	public void guiButtonToggled(BooleanValue b) {
 		if (b == editPosition) {
 			editPosition.disable();
-			mc.displayGuiScreen(new EditHudPositionScreen());
+			mc.displayGuiScreen(new HudPosition());
 		}
 	}
 

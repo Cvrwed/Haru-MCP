@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.S37PacketStatistics;
+import net.minecraft.network.play.server.SPacketStatistics;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.TupleIntJsonSerializable;
@@ -225,7 +225,7 @@ public class StatisticsFile extends StatFileWriter
             }
         }
 
-        p_150876_1_.playerNetServerHandler.sendPacket(new S37PacketStatistics(map));
+        p_150876_1_.playerNetServerHandler.sendPacket(new SPacketStatistics(map));
     }
 
     public void sendAchievements(EntityPlayerMP player)
@@ -241,7 +241,7 @@ public class StatisticsFile extends StatFileWriter
             }
         }
 
-        player.playerNetServerHandler.sendPacket(new S37PacketStatistics(map));
+        player.playerNetServerHandler.sendPacket(new SPacketStatistics(map));
     }
 
     public boolean func_150879_e()

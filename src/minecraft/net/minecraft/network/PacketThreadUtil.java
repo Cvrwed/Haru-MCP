@@ -1,8 +1,8 @@
 package net.minecraft.network;
 
-import net.minecraft.network.play.server.S01PacketJoinGame;
-import net.minecraft.network.play.server.S07PacketRespawn;
-import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import net.minecraft.network.play.server.SPacketJoinGame;
+import net.minecraft.network.play.server.SPacketRespawn;
+import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.src.Config;
 import net.minecraft.util.IThreadListener;
 
@@ -32,19 +32,19 @@ public class PacketThreadUtil
 
     protected static void clientPreProcessPacket(Packet p_clientPreProcessPacket_0_)
     {
-        if (p_clientPreProcessPacket_0_ instanceof S08PacketPlayerPosLook)
+        if (p_clientPreProcessPacket_0_ instanceof SPacketPlayerPosLook)
         {
             Config.getRenderGlobal().onPlayerPositionSet();
         }
 
-        if (p_clientPreProcessPacket_0_ instanceof S07PacketRespawn)
+        if (p_clientPreProcessPacket_0_ instanceof SPacketRespawn)
         {
-            S07PacketRespawn s07packetrespawn = (S07PacketRespawn)p_clientPreProcessPacket_0_;
+            SPacketRespawn s07packetrespawn = (SPacketRespawn)p_clientPreProcessPacket_0_;
             lastDimensionId = s07packetrespawn.getDimensionID();
         }
-        else if (p_clientPreProcessPacket_0_ instanceof S01PacketJoinGame)
+        else if (p_clientPreProcessPacket_0_ instanceof SPacketJoinGame)
         {
-            S01PacketJoinGame s01packetjoingame = (S01PacketJoinGame)p_clientPreProcessPacket_0_;
+            SPacketJoinGame s01packetjoingame = (SPacketJoinGame)p_clientPreProcessPacket_0_;
             lastDimensionId = s01packetjoingame.getDimension();
         }
         else

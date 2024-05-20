@@ -3,20 +3,20 @@ package cc.unknown.module.impl.visuals;
 import java.awt.Color;
 
 import cc.unknown.event.impl.EventLink;
-import cc.unknown.event.impl.move.PreUpdateEvent;
+import cc.unknown.event.impl.move.UpdateEvent;
 import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.SliderValue;
-import cc.unknown.ui.clickgui.raven.impl.api.Theme;
+import cc.unknown.ui.clickgui.impl.api.Theme;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.network.play.client.CPacketUseEntity;
 
 @Register(name = "TargetHUD", category = Category.Visuals)
 public class TargetHUD extends Module {
@@ -37,7 +37,8 @@ public class TargetHUD extends Module {
 	}
 
 	@EventLink
-	public void onPre(PreUpdateEvent e) {
+	public void onPre(UpdateEvent e) {
+		if (!e.isPre()) return;
 		ticksSinceAttack++;
 
 		if (ticksSinceAttack > 20) {
@@ -48,10 +49,10 @@ public class TargetHUD extends Module {
 	@EventLink
 	public void onPacket(PacketEvent e) {
 		if (e.isSend()) {
-			if (e.getPacket() instanceof C02PacketUseEntity) {
-				C02PacketUseEntity wrapper = (C02PacketUseEntity) e.getPacket();
+			if (e.getPacket() instanceof CPacketUseEntity) {
+				CPacketUseEntity wrapper = (CPacketUseEntity) e.getPacket();
 				if (wrapper.getEntityFromWorld(mc.world) instanceof EntityPlayer
-						&& wrapper.getAction() == C02PacketUseEntity.Action.ATTACK) {
+						&& wrapper.getAction() == CPacketUseEntity.Mode.ATTACK) {
 					ticksSinceAttack = 0;
 					player = (EntityPlayer) wrapper.getEntityFromWorld(mc.world);
 				}

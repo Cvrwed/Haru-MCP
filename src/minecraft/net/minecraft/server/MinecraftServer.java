@@ -51,7 +51,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetworkSystem;
 import net.minecraft.network.ServerStatusResponse;
-import net.minecraft.network.play.server.S03PacketTimeUpdate;
+import net.minecraft.network.play.server.SPacketTimeUpdate;
 import net.minecraft.profiler.IPlayerUsage;
 import net.minecraft.profiler.PlayerUsageSnooper;
 import net.minecraft.profiler.Profiler;
@@ -661,7 +661,7 @@ public abstract class MinecraftServer implements Runnable, ICommandSender, IThre
 				if (this.tickCounter % 20 == 0) {
 					this.theProfiler.startSection("timeSync");
 					this.serverConfigManager.sendPacketToAllPlayersInDimension(
-							new S03PacketTimeUpdate(worldserver.getTotalWorldTime(), worldserver.getWorldTime(),
+							new SPacketTimeUpdate(worldserver.getTotalWorldTime(), worldserver.getWorldTime(),
 									worldserver.getGameRules().getGameRuleBooleanValue("doDaylightCycle")),
 							worldserver.provider.getDimensionId());
 					this.theProfiler.endSection();

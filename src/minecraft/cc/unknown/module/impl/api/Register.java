@@ -16,8 +16,5 @@ public @interface Register {
 	
 	Category category();
 	
-	int key() default Keyboard.KEY_NONE;
-	
-	boolean enable() default false;
-	
+	int key() default Keyboard.KEY_NONE;	
 }

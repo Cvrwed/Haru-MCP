@@ -32,7 +32,7 @@ import java.util.concurrent.Callable;
 import net.minecraft.client.network.NetHandlerHandshakeMemory;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
-import net.minecraft.network.play.server.S40PacketDisconnect;
+import net.minecraft.network.play.server.SPacketClientDisconnect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.NetHandlerHandshakeTCP;
 import net.minecraft.util.LazyLoadBase;
@@ -221,7 +221,7 @@ public class NetworkSystem
 
                             logger.warn((String)("Failed to handle packet for " + networkmanager.getRemoteAddress()), (Throwable)exception);
                             final ChatComponentText chatcomponenttext = new ChatComponentText("Internal server error");
-                            networkmanager.sendPacket(new S40PacketDisconnect(chatcomponenttext), new GenericFutureListener < Future <? super Void >> ()
+                            networkmanager.sendPacket(new SPacketClientDisconnect(chatcomponenttext), new GenericFutureListener < Future <? super Void >> ()
                             {
                                 public void operationComplete(Future <? super Void > p_operationComplete_1_) throws Exception
                                 {

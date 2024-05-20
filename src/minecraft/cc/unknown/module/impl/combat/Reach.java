@@ -53,6 +53,12 @@ public class Reach extends Module {
 			callReach();
 		}
 	}
+	
+	public double getReach() {
+	    double min = Math.min(rangeCombat.getInputMin(), rangeCombat.getInputMax());
+	    double max = Math.max(rangeCombat.getInputMin(), rangeCombat.getInputMax());
+	    return Math.random() * (max - min) + min;
+	}
 
 	private boolean callReach() {
 		if (!PlayerUtil.inGame()) {
@@ -76,84 +82,90 @@ public class Reach extends Module {
 				}
 			}
 
-			double reach = ClickUtil.instance.ranModuleVal(rangeCombat, MathHelper.rand());
-			Object[] object = findEntitiesWithinReach(reach);
-			if (object == null) {
-				return false;
-			} else {
-				Entity en = (Entity) object[0];
-				mc.objectMouseOver = new MovingObjectPosition(en, (Vec3) object[1]);
-				mc.pointedEntity = en;
-				return true;
-			}
+		    double reach = getReach();
+
+		    Object[] entityData = getEntity(reach, 0.0);
+		    if (entityData == null) {
+		        return false;
+		    } else {
+		        Entity entity = (Entity) entityData[0];
+		        mc.objectMouseOver = new MovingObjectPosition(entity, (Vec3) entityData[1]);
+		        mc.pointedEntity = entity;
+		        return true;
+		    }
 		}
 	}
+	
+	public Object[] getEntity(double distance, double expand) {
+	    Entity renderViewEntity = mc.getRenderViewEntity();
+	    Entity entity = null;
 
-	private Object[] findEntitiesWithinReach(double reach) {
-		Reach reich = (Reach) Haru.instance.getModuleManager().getModule(Reach.class);
+	    if (renderViewEntity != null && mc.world != null) {
+	        mc.mcProfiler.startSection("pick");
 
-		if (!reich.isEnabled()) {
-			reach = mc.playerController.extendedReach() ? 6.0D : 3.0D;
-		}
+	        double var3 = distance;
+	        double var5 = var3;
+	        Vec3 var7 = renderViewEntity.getPositionEyes(0.0f);
+	        Vec3 var8 = renderViewEntity.getLook(0.0f);
+	        Vec3 var9 = var7.addVector(var8.xCoord * var3, var8.yCoord * var3, var8.zCoord * var3);
+	        Vec3 var10 = null;
 
-		Entity renderView = mc.getRenderViewEntity();
-		Entity target = null;
-		if (renderView == null) {
-			return null;
-		} else {
-			mc.mcProfiler.startSection("pick");
-			Vec3 eyePosition = renderView.getPositionEyes(1.0F);
-			Vec3 playerLook = renderView.getLook(1.0F);
-			Vec3 reachTarget = eyePosition.addVector(playerLook.xCoord * reach, playerLook.yCoord * reach,
-					playerLook.zCoord * reach);
-			Vec3 targetHitVec = null;
-			List<Entity> targetsWithinReach = mc.world.getEntitiesWithinAABBExcludingEntity(renderView,
-					renderView.getEntityBoundingBox()
-							.addCoord(playerLook.xCoord * reach, playerLook.yCoord * reach, playerLook.zCoord * reach)
-							.expand(1.0D, 1.0D, 1.0D));
-			double adjustedReach = reach;
+	        float var11 = 1.0f;
+	        List<Entity> var12 = mc.world.getEntitiesWithinAABBExcludingEntity(
+	            renderViewEntity,
+	            renderViewEntity.getEntityBoundingBox()
+	                .addCoord(var8.xCoord * var3, var8.yCoord * var3, var8.zCoord * var3)
+	                .expand(var11, var11, var11)
+	        );
 
-			for (Entity entity : targetsWithinReach) {
-				if (entity.canBeCollidedWith()) {
-					float ex = (float) ((double) entity.getCollisionBorderSize());
-					AxisAlignedBB entityBoundingBox = entity.getEntityBoundingBox().expand(ex, ex, ex);
-					MovingObjectPosition targetPosition = entityBoundingBox.calculateIntercept(eyePosition,
-							reachTarget);
-					if (entityBoundingBox.isVecInside(eyePosition)) {
-						if (0.0D < adjustedReach || adjustedReach == 0.0D) {
-							target = entity;
-							targetHitVec = targetPosition == null ? eyePosition : targetPosition.hitVec;
-							adjustedReach = 0.0D;
-						}
-					} else if (targetPosition != null) {
-						double distanceToVec = eyePosition.distanceTo(targetPosition.hitVec);
-						if (distanceToVec < adjustedReach || adjustedReach == 0.0D) {
-							if (entity == renderView.ridingEntity) {
-								if (adjustedReach == 0.0D) {
-									target = entity;
-									targetHitVec = targetPosition.hitVec;
-								}
-							} else {
-								target = entity;
-								targetHitVec = targetPosition.hitVec;
-								adjustedReach = distanceToVec;
-							}
-						}
-					}
-				}
-			}
+	        double var13 = var5;
 
-			if (adjustedReach < reach && !(target instanceof EntityLivingBase)
-					&& !(target instanceof EntityItemFrame)) {
-				target = null;
-			}
+	        for (Entity var16 : var12) {
+	            if (var16.canBeCollidedWith()) {
+	                float var17 = var16.getCollisionBorderSize();
+	                AxisAlignedBB var18 = var16.getEntityBoundingBox()
+	                    .expand(var17, var17, var17)
+	                    .expand(expand, expand, expand);
 
-			mc.mcProfiler.endSection();
-			if (target != null && targetHitVec != null) {
-				return new Object[] { target, targetHitVec };
-			} else {
-				return null;
-			}
-		}
+	                MovingObjectPosition var19 = var18.calculateIntercept(var7, var9);
+
+	                if (var18.isVecInside(var7)) {
+	                    if (0.0 < var13 || var13 == 0.0) {
+	                        entity = var16;
+	                        var10 = (var19 == null) ? var7 : var19.hitVec;
+	                        var13 = 0.0;
+	                    }
+	                } else if (var19 != null) {
+	                    double var20 = var7.distanceTo(var19.hitVec);
+	                    if (var20 < var13 || var13 == 0.0) {
+	                        if (var16 == renderViewEntity.ridingEntity) {
+	                            if (var13 == 0.0) {
+	                                entity = var16;
+	                                var10 = var19.hitVec;
+	                            }
+	                        } else {
+	                            entity = var16;
+	                            var10 = var19.hitVec;
+	                            var13 = var20;
+	                        }
+	                    }
+	                }
+	            }
+	        }
+
+	        if (var13 < var5 && !(entity instanceof EntityLivingBase) && !(entity instanceof EntityItemFrame)) {
+	            entity = null;
+	        }
+
+	        mc.mcProfiler.endSection();
+
+	        if (entity == null || var10 == null) {
+	            return null;
+	        }
+
+	        return new Object[]{entity, var10};
+	    }
+
+	    return null;
 	}
 }

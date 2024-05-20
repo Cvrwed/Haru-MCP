@@ -6,7 +6,7 @@ import net.minecraft.command.server.CommandBlockLogic;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.vec.Vec3;
 import net.minecraft.world.World;
@@ -72,7 +72,7 @@ public class TileEntityCommandBlock extends TileEntity
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         this.writeToNBT(nbttagcompound);
-        return new S35PacketUpdateTileEntity(this.pos, 2, nbttagcompound);
+        return new SPacketUpdateTileEntity(this.pos, 2, nbttagcompound);
     }
 
     public boolean func_183000_F()

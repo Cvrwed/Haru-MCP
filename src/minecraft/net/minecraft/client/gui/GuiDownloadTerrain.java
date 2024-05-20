@@ -3,7 +3,7 @@ package net.minecraft.client.gui;
 import java.io.IOException;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.network.play.client.C00PacketKeepAlive;
+import net.minecraft.network.play.client.CPacketKeepAlive;
 import net.optifine.CustomLoadingScreen;
 import net.optifine.CustomLoadingScreens;
 
@@ -44,7 +44,7 @@ public class GuiDownloadTerrain extends GuiScreen
 
         if (this.progress % 20 == 0)
         {
-            this.netHandlerPlayClient.sendQueue(new C00PacketKeepAlive());
+            this.netHandlerPlayClient.sendQueue(new CPacketKeepAlive());
         }
     }
 

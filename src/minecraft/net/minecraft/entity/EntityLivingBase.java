@@ -1,5 +1,12 @@
 package net.minecraft.entity;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
+
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
@@ -7,13 +14,6 @@ import com.google.common.collect.Maps;
 import cc.unknown.Haru;
 import cc.unknown.event.impl.player.JumpEvent;
 import cc.unknown.module.impl.visuals.Fullbright;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -39,9 +39,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagShort;
-import net.minecraft.network.play.server.S04PacketEntityEquipment;
-import net.minecraft.network.play.server.S0BPacketAnimation;
-import net.minecraft.network.play.server.S0DPacketCollectItem;
+import net.minecraft.network.play.server.SPacketAnimation;
+import net.minecraft.network.play.server.SPacketCollectItem;
+import net.minecraft.network.play.server.SPacketEntityEquipment;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionHelper;
@@ -197,7 +197,6 @@ public abstract class EntityLivingBase extends Entity {
 	/** Number of ticks since last jump */
 	public int jumpTicks;
 	private float absorptionAmount;
-
 	/**
 	 * Called by the /kill command.
 	 */
@@ -1193,7 +1192,7 @@ public abstract class EntityLivingBase extends Entity {
 
 			if (this.worldObj instanceof WorldServer) {
 				((WorldServer) this.worldObj).getEntityTracker().sendToAllTrackingEntity(this,
-						new S0BPacketAnimation(this, 0));
+						new SPacketAnimation(this, 0));
 			}
 		}
 	}
@@ -1598,7 +1597,7 @@ public abstract class EntityLivingBase extends Entity {
 
 				if (!ItemStack.areItemStacksEqual(itemstack1, itemstack)) {
 					((WorldServer) this.worldObj).getEntityTracker().sendToAllTrackingEntity(this,
-							new S04PacketEntityEquipment(this.getEntityId(), j, itemstack1));
+							new SPacketEntityEquipment(this.getEntityId(), j, itemstack1));
 
 					if (itemstack != null) {
 						this.attributeMap.removeAttributeModifiers(itemstack.getAttributeModifiers());
@@ -1870,17 +1869,17 @@ public abstract class EntityLivingBase extends Entity {
 
 			if (p_71001_1_ instanceof EntityItem) {
 				entitytracker.sendToAllTrackingEntity(p_71001_1_,
-						new S0DPacketCollectItem(p_71001_1_.getEntityId(), this.getEntityId()));
+						new SPacketCollectItem(p_71001_1_.getEntityId(), this.getEntityId()));
 			}
 
 			if (p_71001_1_ instanceof EntityArrow) {
 				entitytracker.sendToAllTrackingEntity(p_71001_1_,
-						new S0DPacketCollectItem(p_71001_1_.getEntityId(), this.getEntityId()));
+						new SPacketCollectItem(p_71001_1_.getEntityId(), this.getEntityId()));
 			}
 
 			if (p_71001_1_ instanceof EntityXPOrb) {
 				entitytracker.sendToAllTrackingEntity(p_71001_1_,
-						new S0DPacketCollectItem(p_71001_1_.getEntityId(), this.getEntityId()));
+						new SPacketCollectItem(p_71001_1_.getEntityId(), this.getEntityId()));
 			}
 		}
 	}
@@ -1968,7 +1967,7 @@ public abstract class EntityLivingBase extends Entity {
 	public void setRotationYawHead(float rotation) {
 		this.rotationYawHead = rotation;
 	}
-
+	
 	public void func_181013_g(float p_181013_1_) {
 		this.renderYawOffset = p_181013_1_;
 	}

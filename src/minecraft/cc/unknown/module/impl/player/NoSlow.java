@@ -12,9 +12,9 @@ import cc.unknown.utils.network.PacketUtil;
 import net.minecraft.item.ItemBow;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayServer;
-import net.minecraft.network.play.client.C07PacketPlayerDigging;
-import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
-import net.minecraft.network.play.client.C09PacketHeldItemChange;
+import net.minecraft.network.play.client.CPacketPlayerDigging;
+import net.minecraft.network.play.client.CPacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.CPacketHeldItemChange;
 
 @Register(name = "NoSlow", category = Category.Player)
 public class NoSlow extends Module {
@@ -35,8 +35,8 @@ public class NoSlow extends Module {
 		switch (mode.getMode()) {
 		case "Old Grim":
 			int slot = mc.player.inventory.currentItem;
-			mc.getNetHandler().sendSilent(new C09PacketHeldItemChange(slot < 8 ? slot + 1 : 0));
-			mc.getNetHandler().sendSilent(new C09PacketHeldItemChange(slot));
+			mc.getNetHandler().sendSilent(new CPacketHeldItemChange(slot < 8 ? slot + 1 : 0));
+			mc.getNetHandler().sendSilent(new CPacketHeldItemChange(slot));
 			break;
 		case "Vanilla":
 			mc.player.movementInput.moveForward *= vForward.getInputToFloat();
@@ -44,7 +44,7 @@ public class NoSlow extends Module {
 			break;
 		case "C08 Tick":
 			if (mc.player.ticksExisted % 3 == 0) {
-				mc.getNetHandler().sendQueue(new C08PacketPlayerBlockPlacement(mc.player.getHeldItem()));
+				mc.getNetHandler().sendQueue(new CPacketPlayerBlockPlacement(mc.player.getHeldItem()));
 			}
 			break;
 		}
@@ -55,9 +55,9 @@ public class NoSlow extends Module {
 		if (e.isSend()) {
 			final Packet<INetHandlerPlayServer> p = (Packet<INetHandlerPlayServer>) e.getPacket();
 			if (mode.is("No Item Release")) {
-				if (p instanceof C07PacketPlayerDigging) {
-					C07PacketPlayerDigging wrapper = (C07PacketPlayerDigging) p;
-					if (wrapper.getStatus() == C07PacketPlayerDigging.Action.RELEASE_USE_ITEM) {
+				if (p instanceof CPacketPlayerDigging) {
+					CPacketPlayerDigging wrapper = (CPacketPlayerDigging) p;
+					if (wrapper.getStatus() == CPacketPlayerDigging.Action.RELEASE_USE_ITEM) {
 						if (!(mc.player.getHeldItem().getItem() instanceof ItemBow)) {
 							e.setCancelled(true);
 						}

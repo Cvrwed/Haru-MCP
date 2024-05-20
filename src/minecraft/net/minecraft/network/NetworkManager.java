@@ -141,26 +141,6 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 		closeChannel(chat);
 	}
 
-	public void channelRead0(ChannelHandlerContext p_channelRead0_1_, Packet p_channelRead0_2_) throws Exception {
-		if (channel.isOpen())
-			try {
-				PacketEvent e = new PacketEvent(PacketDirection.Inbound, p_channelRead0_2_);
-				e.call();
-				if (!e.isCancelled())
-					p_channelRead0_2_.processPacket(packetListener);
-			} catch (ThreadQuickExitException thread) {
-			}
-	}
-
-	public void receivePacketSilent(final Packet packet) {
-		if (channel.isOpen()) {
-			try {
-				packet.processPacket(packetListener);
-			} catch (final ThreadQuickExitException var4) {
-			}
-		}
-	}
-
 	/**
 	 * Sets the NetHandler for this NetworkManager, no checks are made if this
 	 * handler is suitable for the particular connection state (protocol)
@@ -169,6 +149,27 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 		Validate.notNull(handler, "packetListener", new Object[0]);
 		logger.debug("Set listener of {} to {}", new Object[] { this, handler });
 		packetListener = handler;
+	}
+	
+	public void channelRead0(ChannelHandlerContext p_channelRead0_1_, Packet p_channelRead0_2_) throws Exception {
+		if (channel.isOpen()) {
+			try {
+				PacketEvent e = new PacketEvent(PacketDirection.Inbound, p_channelRead0_2_);
+				Haru.instance.getEventBus().post(e);
+				if (!e.isCancelled())
+					e.getPacket().processPacket(packetListener);
+			} catch (ThreadQuickExitException thread) {
+			}
+		}
+	}
+	
+	public void receivePacketSilent(final Packet packet) {
+		if (channel.isOpen()) {
+			try {
+				packet.processPacket(packetListener);
+			} catch (final ThreadQuickExitException var4) {
+			}
+		}
 	}
 
 	public void sendPacket(Packet packetIn) {
@@ -183,7 +184,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 		} else {
 			readWriteLock.writeLock().lock();
 			try {
-				outboundPacketsQueue.add(new InboundHandlerTuplePacketListener(packetIn, (GenericFutureListener[]) null));
+				outboundPacketsQueue.add(new InboundHandlerTuplePacketListener(e.getPacket(), (GenericFutureListener[]) null));
 			} finally {
 				readWriteLock.writeLock().unlock();
 			}

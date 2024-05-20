@@ -1,7 +1,7 @@
 package net.minecraft.network.handshake;
 
 import net.minecraft.network.INetHandler;
-import net.minecraft.network.handshake.client.C00Handshake;
+import net.minecraft.network.handshake.client.CHandshake;
 
 public interface INetHandlerHandshakeServer extends INetHandler
 {
@@ -10,5 +10,5 @@ public interface INetHandlerHandshakeServer extends INetHandler
      * NetworkManager's protocol will be reconfigured according to the specified intention, although a login-intention
      * must pass a versioncheck or receive a disconnect otherwise
      */
-    void processHandshake(C00Handshake packetIn);
+    void processHandshake(CHandshake packetIn);
 }

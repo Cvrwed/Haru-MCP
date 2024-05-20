@@ -5,7 +5,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.network.play.server.S05PacketSpawnPosition;
+import net.minecraft.network.play.server.SPacketSpawnPosition;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 
@@ -62,7 +62,7 @@ public class CommandSetDefaultSpawnpoint extends CommandBase
         }
 
         sender.getEntityWorld().setSpawnPoint(blockpos);
-        MinecraftServer.getServer().getConfigurationManager().sendPacketToAllPlayers(new S05PacketSpawnPosition(blockpos));
+        MinecraftServer.getServer().getConfigurationManager().sendPacketToAllPlayers(new SPacketSpawnPosition(blockpos));
         notifyOperators(sender, this, "commands.setworldspawn.success", new Object[] {Integer.valueOf(blockpos.getX()), Integer.valueOf(blockpos.getY()), Integer.valueOf(blockpos.getZ())});
     }
 

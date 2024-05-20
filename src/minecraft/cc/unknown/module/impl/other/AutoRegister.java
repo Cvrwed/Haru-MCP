@@ -10,7 +10,7 @@ import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.utils.client.Cold;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S02PacketChat;
+import net.minecraft.network.play.server.SPacketChat;
 
 @Register(name = "AutoRegister", category = Category.Other)
 public class AutoRegister extends Module {
@@ -19,10 +19,10 @@ public class AutoRegister extends Module {
     private final Cold cold = new Cold(0);
 
     @EventLink
-    public void onPacket (PacketEvent event) {
-        final Packet<?> packet = event.getPacket();
-        if (event.isReceive() && packet instanceof S02PacketChat) {
-            final S02PacketChat wrapper = (S02PacketChat)packet;
+    public void onPacket (PacketEvent e) {
+        final Packet<?> packet = e.getPacket();
+        if (e.isReceive() && packet instanceof SPacketChat) {
+            final SPacketChat wrapper = (SPacketChat)packet;
             String text = wrapper.getChatComponent().getUnformattedText();
             if (StringUtils.containsIgnoreCase(text, "/register") || StringUtils.containsIgnoreCase(text, "/register password password") || text.equalsIgnoreCase("/register <password> <password>")) {
                 this.text = "/register DglaMaska13 DglaMaska13";

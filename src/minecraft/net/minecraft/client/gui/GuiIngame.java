@@ -128,20 +128,6 @@ public class GuiIngame extends Gui {
 
 		ItemStack itemstack = this.mc.player.inventory.armorItemInSlot(3);
 
-		if (this.mc.gameSettings.thirdPersonView == 0 && itemstack != null
-				&& itemstack.getItem() == Item.getItemFromBlock(Blocks.pumpkin)) {
-			//this.renderPumpkinOverlay(scaledresolution);
-		}
-
-		if (!this.mc.player.isPotionActive(Potion.confusion)) {
-			float f = this.mc.player.prevTimeInPortal
-					+ (this.mc.player.timeInPortal - this.mc.player.prevTimeInPortal) * partialTicks;
-
-			if (f > 0.0F) {
-				this.func_180474_b(f, scaledresolution);
-			}
-		}
-
 		if (this.mc.playerController.isSpectator()) {
 			this.spectatorGui.renderTooltip(scaledresolution, partialTicks);
 		} else {
@@ -161,7 +147,6 @@ public class GuiIngame extends Gui {
 		GlStateManager.enableAlpha();
 		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 		this.mc.mcProfiler.startSection("bossHealth");
-		//this.renderBossHealth();
 		this.mc.mcProfiler.endSection();
 
 		if (this.mc.playerController.shouldDrawHUD()) {
@@ -438,22 +423,6 @@ public class GuiIngame extends Gui {
 			}
 		}
 
-		this.mc.mcProfiler.endSection();
-	}
-
-	public void renderDemo(ScaledResolution p_175185_1_) {
-		this.mc.mcProfiler.startSection("demo");
-		String s = "";
-
-		if (this.mc.world.getTotalWorldTime() >= 120500L) {
-			s = I18n.format("demo.demoExpired", new Object[0]);
-		} else {
-			s = I18n.format("demo.remainingTime", new Object[] {
-					StringUtils.ticksToElapsedTime((int) (120500L - this.mc.world.getTotalWorldTime())) });
-		}
-
-		int i = this.getFontRenderer().getStringWidth(s);
-		this.getFontRenderer().drawStringWithShadow(s, (float) (p_175185_1_.getScaledWidth() - i - 10), 5.0F, 16777215);
 		this.mc.mcProfiler.endSection();
 	}
 
@@ -773,59 +742,6 @@ public class GuiIngame extends Gui {
 	}
 
 	/**
-	 * Renders dragon's (boss) health on the HUD
-	 */
-	private void renderBossHealth() {
-		if (BossStatus.bossName != null && BossStatus.statusBarTime > 0) {
-			--BossStatus.statusBarTime;
-			FontRenderer fontrenderer = this.mc.fontRendererObj;
-			ScaledResolution scaledresolution = new ScaledResolution(this.mc);
-			int i = scaledresolution.getScaledWidth();
-			int j = 182;
-			int k = i / 2 - j / 2;
-			int l = (int) (BossStatus.healthScale * (float) (j + 1));
-			int i1 = 12;
-			this.drawTexturedModalRect(k, i1, 0, 74, j, 5);
-			this.drawTexturedModalRect(k, i1, 0, 74, j, 5);
-
-			if (l > 0) {
-				this.drawTexturedModalRect(k, i1, 0, 79, l, 5);
-			}
-
-			String s = BossStatus.bossName;
-			this.getFontRenderer().drawStringWithShadow(s,
-					(float) (i / 2 - this.getFontRenderer().getStringWidth(s) / 2), (float) (i1 - 10), 16777215);
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			this.mc.getTextureManager().bindTexture(icons);
-		}
-	}
-
-	private void renderPumpkinOverlay(ScaledResolution p_180476_1_) {
-		GlStateManager.disableDepth();
-		GlStateManager.depthMask(false);
-		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		GlStateManager.disableAlpha();
-		this.mc.getTextureManager().bindTexture(pumpkinBlurTexPath);
-		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-		worldrenderer.func_181668_a(7, DefaultVertexFormats.field_181707_g);
-		worldrenderer.func_181662_b(0.0D, (double) p_180476_1_.getScaledHeight(), -90.0D).func_181673_a(0.0D, 1.0D)
-				.func_181675_d();
-		worldrenderer
-				.func_181662_b((double) p_180476_1_.getScaledWidth(), (double) p_180476_1_.getScaledHeight(), -90.0D)
-				.func_181673_a(1.0D, 1.0D).func_181675_d();
-		worldrenderer.func_181662_b((double) p_180476_1_.getScaledWidth(), 0.0D, -90.0D).func_181673_a(1.0D, 0.0D)
-				.func_181675_d();
-		worldrenderer.func_181662_b(0.0D, 0.0D, -90.0D).func_181673_a(0.0D, 0.0D).func_181675_d();
-		tessellator.draw();
-		GlStateManager.depthMask(true);
-		GlStateManager.enableDepth();
-		GlStateManager.enableAlpha();
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-	}
-
-	/**
 	 * Renders a Vignette arount the entire screen that changes with light level.
 	 */
 	private void renderVignette(float p_180480_1_, ScaledResolution p_180480_2_) {
@@ -877,43 +793,6 @@ public class GuiIngame extends Gui {
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 		}
-	}
-
-	private void func_180474_b(float p_180474_1_, ScaledResolution p_180474_2_) {
-		if (p_180474_1_ < 1.0F) {
-			p_180474_1_ = p_180474_1_ * p_180474_1_;
-			p_180474_1_ = p_180474_1_ * p_180474_1_;
-			p_180474_1_ = p_180474_1_ * 0.8F + 0.2F;
-		}
-
-		GlStateManager.disableAlpha();
-		GlStateManager.disableDepth();
-		GlStateManager.depthMask(false);
-		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, p_180474_1_);
-		this.mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-		TextureAtlasSprite textureatlassprite = this.mc.getBlockRendererDispatcher().getBlockModelShapes()
-				.getTexture(Blocks.portal.getDefaultState());
-		float f = textureatlassprite.getMinU();
-		float f1 = textureatlassprite.getMinV();
-		float f2 = textureatlassprite.getMaxU();
-		float f3 = textureatlassprite.getMaxV();
-		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-		worldrenderer.func_181668_a(7, DefaultVertexFormats.field_181707_g);
-		worldrenderer.func_181662_b(0.0D, (double) p_180474_2_.getScaledHeight(), -90.0D)
-				.func_181673_a((double) f, (double) f3).func_181675_d();
-		worldrenderer
-				.func_181662_b((double) p_180474_2_.getScaledWidth(), (double) p_180474_2_.getScaledHeight(), -90.0D)
-				.func_181673_a((double) f2, (double) f3).func_181675_d();
-		worldrenderer.func_181662_b((double) p_180474_2_.getScaledWidth(), 0.0D, -90.0D)
-				.func_181673_a((double) f2, (double) f1).func_181675_d();
-		worldrenderer.func_181662_b(0.0D, 0.0D, -90.0D).func_181673_a((double) f, (double) f1).func_181675_d();
-		tessellator.draw();
-		GlStateManager.depthMask(true);
-		GlStateManager.enableDepth();
-		GlStateManager.enableAlpha();
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 
 	private void renderHotbarItem(int index, int xPos, int yPos, float partialTicks, EntityPlayer p_175184_5_) {

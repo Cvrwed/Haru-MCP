@@ -3,8 +3,8 @@ package net.minecraft.server.network;
 import net.minecraft.network.ConnectionState;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.handshake.INetHandlerHandshakeServer;
-import net.minecraft.network.handshake.client.C00Handshake;
-import net.minecraft.network.login.server.S00PacketDisconnect;
+import net.minecraft.network.handshake.client.CHandshake;
+import net.minecraft.network.login.server.SPacketServerDisconnect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.chat.ChatComponentText;
@@ -25,7 +25,7 @@ public class NetHandlerHandshakeTCP implements INetHandlerHandshakeServer
      * NetworkManager's protocol will be reconfigured according to the specified intention, although a login-intention
      * must pass a versioncheck or receive a disconnect otherwise
      */
-    public void processHandshake(C00Handshake packetIn)
+    public void processHandshake(CHandshake packetIn)
     {
         switch (packetIn.getRequestedState())
         {
@@ -35,13 +35,13 @@ public class NetHandlerHandshakeTCP implements INetHandlerHandshakeServer
                 if (packetIn.getProtocolVersion() > 47)
                 {
                     ChatComponentText chatcomponenttext = new ChatComponentText("Outdated server! I\'m still on 1.8.9");
-                    this.networkManager.sendPacket(new S00PacketDisconnect(chatcomponenttext));
+                    this.networkManager.sendPacket(new SPacketServerDisconnect(chatcomponenttext));
                     this.networkManager.closeChannel(chatcomponenttext);
                 }
                 else if (packetIn.getProtocolVersion() < 47)
                 {
                     ChatComponentText chatcomponenttext1 = new ChatComponentText("Outdated client! Please use 1.8.9");
-                    this.networkManager.sendPacket(new S00PacketDisconnect(chatcomponenttext1));
+                    this.networkManager.sendPacket(new SPacketServerDisconnect(chatcomponenttext1));
                     this.networkManager.closeChannel(chatcomponenttext1);
                 }
                 else

@@ -7,7 +7,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.network.play.server.S2FPacketSetSlot;
+import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
@@ -141,7 +141,7 @@ public class ItemEditableBook extends Item
                     if (player instanceof EntityPlayerMP && player.getCurrentEquippedItem() == stack)
                     {
                         Slot slot = player.openContainer.getSlotFromInventory(player.inventory, player.inventory.currentItem);
-                        ((EntityPlayerMP)player).playerNetServerHandler.sendPacket(new S2FPacketSetSlot(0, slot.slotNumber, stack));
+                        ((EntityPlayerMP)player).playerNetServerHandler.sendPacket(new SPacketSetSlot(0, slot.slotNumber, stack));
                     }
                 }
             }

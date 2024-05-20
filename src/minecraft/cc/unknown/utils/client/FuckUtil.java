@@ -1,7 +1,7 @@
 package cc.unknown.utils.client;
 
-import static cc.unknown.ui.clickgui.EditHudPositionScreen.arrayListX;
-import static cc.unknown.ui.clickgui.EditHudPositionScreen.arrayListY;
+import static cc.unknown.ui.HudPosition.arrayListX;
+import static cc.unknown.ui.HudPosition.arrayListY;
 
 import cc.unknown.utils.Loona;
 

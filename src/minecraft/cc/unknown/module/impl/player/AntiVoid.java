@@ -2,6 +2,7 @@ package cc.unknown.module.impl.player;
 
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.move.MotionEvent;
+import cc.unknown.event.impl.move.MoveEvent;
 import cc.unknown.event.impl.network.DisconnectionEvent;
 import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
@@ -13,9 +14,9 @@ import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.item.ItemEnderPearl;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.C03PacketPlayer;
-import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
-import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import net.minecraft.network.play.client.CPacketPlayer;
+import net.minecraft.network.play.client.CPacketPlayerBlockPlacement;
+import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.util.vec.Vec3;
 
 @Register(name = "AntiVoid", category = Category.Player)
@@ -54,29 +55,41 @@ public class AntiVoid extends Module {
 	public void onPacket(final PacketEvent e) {
 		Packet<?> p = e.getPacket();
 
-		if (mode.is("Grim")) {
-			if (e.isSend()) {
-				if (!mc.player.onGround && shouldStuck && p instanceof C03PacketPlayer
-						&& !(p instanceof C03PacketPlayer.C05PacketPlayerLook)
-						&& !(p instanceof C03PacketPlayer.C06PacketPlayerPosLook)) {
+		if (e.isSend()) {
+			if (mode.is("Grim")) {
+				if (!mc.player.onGround && shouldStuck && p instanceof CPacketPlayer
+						&& !(p instanceof CPacketPlayer.CPacketPlayerLook)
+						&& !(p instanceof CPacketPlayer.CPacketPlayerPosLook)) {
 					e.setCancelled(true);
 				}
-				if (p instanceof C08PacketPlayerBlockPlacement && wait) {
+				if (p instanceof CPacketPlayerBlockPlacement && wait) {
 					shouldStuck = false;
 					mc.timer.timerSpeed = 0.2f;
 					wait = false;
 				}
 			}
+		}
 
-			if (e.isReceive()) {
-				if (p instanceof S08PacketPlayerPosLook) {
-					final S08PacketPlayerPosLook wrapper = (S08PacketPlayerPosLook) p;
+		if (e.isReceive()) {
+			if (mode.is("Grim")) {
+				if (p instanceof SPacketPlayerPosLook) {
+					final SPacketPlayerPosLook wrapper = (SPacketPlayerPosLook) p;
 					x = wrapper.getX();
 					y = wrapper.getY();
 					z = wrapper.getZ();
 					mc.timer.timerSpeed = 0.2f;
 				}
 			}
+		}
+	}
+
+	@EventLink
+	public void onMove(MoveEvent e) {
+		if (!mc.player.onGround && mc.player.fallDistance > fall.getInput() && mode.is("Polar")) {
+			mc.player.motionY = 0;
+			e.setCancelled(true);
+			shouldStuck = true;
+
 		}
 	}
 
@@ -98,8 +111,7 @@ public class AntiVoid extends Module {
 						mc.player.motionX = 0.0;
 						mc.player.motionY = 0.0;
 						mc.player.motionZ = 0.0;
-						mc.player.setPositionAndRotation(x, y, z, mc.player.rotationYaw,
-								mc.player.rotationPitch);
+						mc.player.setPositionAndRotation(x, y, z, mc.player.rotationYaw, mc.player.rotationPitch);
 					}
 					final boolean overVoid = !mc.player.onGround && !PlayerUtil.isBlockUnder(30);
 					if (!overVoid) {
@@ -142,11 +154,7 @@ public class AntiVoid extends Module {
 					}
 				}
 			}
-			
-			if (mode.is("Polar")) {
-				e.setCancelled(true);
-			}
-			
+
 		} catch (NullPointerException ex) {
 
 		}
@@ -154,6 +162,8 @@ public class AntiVoid extends Module {
 
 	@EventLink
 	public void onDisconnect(final DisconnectionEvent e) {
-		this.disable();
+		if (e.isClient()) {
+			this.disable();
+		}
 	}
 }

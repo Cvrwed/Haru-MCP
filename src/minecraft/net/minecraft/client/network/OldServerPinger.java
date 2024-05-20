@@ -29,12 +29,12 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.ConnectionState;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.ServerStatusResponse;
-import net.minecraft.network.handshake.client.C00Handshake;
+import net.minecraft.network.handshake.client.CHandshake;
 import net.minecraft.network.status.INetHandlerStatusClient;
-import net.minecraft.network.status.client.C00PacketServerQuery;
-import net.minecraft.network.status.client.C01PacketPing;
-import net.minecraft.network.status.server.S00PacketServerInfo;
-import net.minecraft.network.status.server.S01PacketPong;
+import net.minecraft.network.status.client.CPacketServerQuery;
+import net.minecraft.network.status.client.CPacketPing;
+import net.minecraft.network.status.server.SPacketServerInfo;
+import net.minecraft.network.status.server.SPacketPong;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.chat.ChatComponentText;
@@ -63,7 +63,7 @@ public class OldServerPinger
             private boolean field_147403_d = false;
             private boolean field_183009_e = false;
             private long field_175092_e = 0L;
-            public void handleServerInfo(S00PacketServerInfo packetIn)
+            public void handleServerInfo(SPacketServerInfo packetIn)
             {
                 if (this.field_183009_e)
                 {
@@ -149,11 +149,11 @@ public class OldServerPinger
                     }
 
                     this.field_175092_e = Minecraft.getSystemTime();
-                    networkmanager.sendPacket(new C01PacketPing(this.field_175092_e));
+                    networkmanager.sendPacket(new CPacketPing(this.field_175092_e));
                     this.field_147403_d = true;
                 }
             }
-            public void handlePong(S01PacketPong packetIn)
+            public void handlePong(SPacketPong packetIn)
             {
                 long i = this.field_175092_e;
                 long j = Minecraft.getSystemTime();
@@ -174,8 +174,8 @@ public class OldServerPinger
 
         try
         {
-            networkmanager.sendPacket(new C00Handshake(47, serveraddress.getIP(), serveraddress.getPort(), ConnectionState.STATUS));
-            networkmanager.sendPacket(new C00PacketServerQuery());
+            networkmanager.sendPacket(new CHandshake(47, serveraddress.getIP(), serveraddress.getPort(), ConnectionState.STATUS));
+            networkmanager.sendPacket(new CPacketServerQuery());
         }
         catch (Throwable throwable)
         {

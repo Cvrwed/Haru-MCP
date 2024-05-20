@@ -2,6 +2,7 @@ package net.minecraft.client.multiplayer;
 
 import cc.unknown.Haru;
 import cc.unknown.event.impl.player.AttackEvent;
+import cc.unknown.event.impl.player.AttackEvent.Mode;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -15,13 +16,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.network.play.client.C02PacketUseEntity;
-import net.minecraft.network.play.client.C07PacketPlayerDigging;
-import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
-import net.minecraft.network.play.client.C09PacketHeldItemChange;
-import net.minecraft.network.play.client.C0EPacketClickWindow;
-import net.minecraft.network.play.client.C10PacketCreativeInventoryAction;
-import net.minecraft.network.play.client.C11PacketEnchantItem;
+import net.minecraft.network.play.client.CPacketUseEntity;
+import net.minecraft.network.play.client.CPacketPlayerDigging;
+import net.minecraft.network.play.client.CPacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.CPacketHeldItemChange;
+import net.minecraft.network.play.client.CPacketClickWindow;
+import net.minecraft.network.play.client.CPacketCreativeInventoryAction;
+import net.minecraft.network.play.client.CPacketEnchantItem;
 import net.minecraft.stats.StatFileWriter;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
@@ -201,17 +202,17 @@ public class PlayerControllerMP {
 		} else {
 			if (this.currentGameType.isCreative()) {
 				this.netClientHandler.sendQueue(
-						new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.START_DESTROY_BLOCK, loc, face));
+						new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, loc, face));
 				clickBlockCreative(this.mc, this, loc, face);
 				this.blockHitDelay = 5;
 			} else if (!this.isHittingBlock || !this.isHittingPosition(loc)) {
 				if (this.isHittingBlock) {
-					this.netClientHandler.sendQueue(new C07PacketPlayerDigging(
-							C07PacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, this.currentBlock, face));
+					this.netClientHandler.sendQueue(new CPacketPlayerDigging(
+							CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, this.currentBlock, face));
 				}
 
 				this.netClientHandler.sendQueue(
-						new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.START_DESTROY_BLOCK, loc, face));
+						new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, loc, face));
 				Block block1 = this.mc.world.getBlockState(loc).getBlock();
 				boolean flag = block1.getMaterial() != Material.air;
 
@@ -242,8 +243,8 @@ public class PlayerControllerMP {
 	 */
 	public void resetBlockRemoving() {
 		if (this.isHittingBlock) {
-			this.netClientHandler.sendQueue(new C07PacketPlayerDigging(
-					C07PacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, this.currentBlock, EnumFacing.DOWN));
+			this.netClientHandler.sendQueue(new CPacketPlayerDigging(
+					CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, this.currentBlock, EnumFacing.DOWN));
 			this.isHittingBlock = false;
 			this.curBlockDamageMP = 0.0F;
 			this.mc.world.sendBlockBreakProgress(this.mc.player.getEntityId(), this.currentBlock, -1);
@@ -258,8 +259,8 @@ public class PlayerControllerMP {
 			return true;
 		} else if (this.currentGameType.isCreative() && this.mc.world.getWorldBorder().contains(posBlock)) {
 			this.blockHitDelay = 5;
-			this.netClientHandler.sendQueue(new C07PacketPlayerDigging(
-					C07PacketPlayerDigging.Action.START_DESTROY_BLOCK, posBlock, directionFacing));
+			this.netClientHandler.sendQueue(new CPacketPlayerDigging(
+					CPacketPlayerDigging.Action.START_DESTROY_BLOCK, posBlock, directionFacing));
 			clickBlockCreative(this.mc, this, posBlock, directionFacing);
 			return true;
 		} else if (this.isHittingPosition(posBlock)) {
@@ -284,8 +285,8 @@ public class PlayerControllerMP {
 
 				if (this.curBlockDamageMP >= 1.0F) {
 					this.isHittingBlock = false;
-					this.netClientHandler.sendQueue(new C07PacketPlayerDigging(
-							C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, posBlock, directionFacing));
+					this.netClientHandler.sendQueue(new CPacketPlayerDigging(
+							CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, posBlock, directionFacing));
 					this.onPlayerDestroyBlock(posBlock, directionFacing);
 					this.curBlockDamageMP = 0.0F;
 					this.stepSoundTickCounter = 0.0F;
@@ -335,12 +336,12 @@ public class PlayerControllerMP {
 	/**
 	 * Syncs the current player item with the server
 	 */
-	private void syncCurrentPlayItem() {
+	public void syncCurrentPlayItem() {
 		int i = this.mc.player.inventory.currentItem;
 
 		if (i != this.currentPlayerItem) {
 			this.currentPlayerItem = i;
-			this.netClientHandler.sendQueue(new C09PacketHeldItemChange(this.currentPlayerItem));
+			this.netClientHandler.sendQueue(new CPacketHeldItemChange(this.currentPlayerItem));
 		}
 	}
 
@@ -372,7 +373,7 @@ public class PlayerControllerMP {
 				}
 			}
 
-			this.netClientHandler.sendQueue(new C08PacketPlayerBlockPlacement(hitPos, side.getIndex(),
+			this.netClientHandler.sendQueue(new CPacketPlayerBlockPlacement(hitPos, side.getIndex(),
 					player.inventory.getCurrentItem(), f, f1, f2));
 
 			if (!flag && this.currentGameType != WorldSettings.GameType.SPECTATOR) {
@@ -402,7 +403,7 @@ public class PlayerControllerMP {
 			return false;
 		} else {
 			this.syncCurrentPlayItem();
-			this.netClientHandler.sendQueue(new C08PacketPlayerBlockPlacement(playerIn.inventory.getCurrentItem()));
+			this.netClientHandler.sendQueue(new CPacketPlayerBlockPlacement(playerIn.inventory.getCurrentItem()));
 			int i = itemStackIn.stackSize;
 			ItemStack itemstack = itemStackIn.useItemRightClick(worldIn, playerIn);
 
@@ -428,13 +429,16 @@ public class PlayerControllerMP {
 	 * Attacks an entity
 	 */
 	public void attackEntity(EntityPlayer playerIn, Entity targetEntity) {
+		Haru.instance.getEventBus().post(new AttackEvent(Mode.Pre, playerIn, targetEntity));
 		this.syncCurrentPlayItem();
-		Haru.instance.getEventBus().post(new AttackEvent(playerIn, targetEntity));
-		this.netClientHandler.sendQueue(new C02PacketUseEntity(targetEntity, C02PacketUseEntity.Action.ATTACK));
+		
+		this.netClientHandler.sendQueue(new CPacketUseEntity(targetEntity, CPacketUseEntity.Mode.ATTACK));
 
 		if (this.currentGameType != WorldSettings.GameType.SPECTATOR) {
 			playerIn.attackTargetEntityWithCurrentItem(targetEntity);
 		}
+		
+		Haru.instance.getEventBus().post(new AttackEvent(Mode.Post, playerIn, targetEntity));
 	}
 
 	/**
@@ -443,7 +447,7 @@ public class PlayerControllerMP {
 	 */
 	public boolean interactWithEntitySendPacket(EntityPlayer playerIn, Entity targetEntity) {
 		this.syncCurrentPlayItem();
-		this.netClientHandler.sendQueue(new C02PacketUseEntity(targetEntity, C02PacketUseEntity.Action.INTERACT));
+		this.netClientHandler.sendQueue(new CPacketUseEntity(targetEntity, CPacketUseEntity.Mode.INTERACT));
 		return this.currentGameType != WorldSettings.GameType.SPECTATOR && playerIn.interactWith(targetEntity);
 	}
 
@@ -451,7 +455,7 @@ public class PlayerControllerMP {
 		this.syncCurrentPlayItem();
 		Vec3 vec3 = new Vec3(p_178894_3_.hitVec.xCoord - p_178894_2_.posX, p_178894_3_.hitVec.yCoord - p_178894_2_.posY,
 				p_178894_3_.hitVec.zCoord - p_178894_2_.posZ);
-		this.netClientHandler.sendQueue(new C02PacketUseEntity(p_178894_2_, vec3));
+		this.netClientHandler.sendQueue(new CPacketUseEntity(p_178894_2_, vec3));
 		return this.currentGameType != WorldSettings.GameType.SPECTATOR && p_178894_2_.interactAt(p_178894_1_, vec3);
 	}
 
@@ -461,8 +465,7 @@ public class PlayerControllerMP {
 	public ItemStack windowClick(int windowId, int slotId, int mouseButtonClicked, int mode, EntityPlayer playerIn) {
 		short short1 = playerIn.openContainer.getNextTransactionID(playerIn.inventory);
 		ItemStack itemstack = playerIn.openContainer.slotClick(slotId, mouseButtonClicked, mode, playerIn);
-		this.netClientHandler
-				.sendQueue(new C0EPacketClickWindow(windowId, slotId, mouseButtonClicked, mode, itemstack, short1));
+		this.netClientHandler.sendQueue(new CPacketClickWindow(windowId, slotId, mouseButtonClicked, mode, itemstack, short1));
 		return itemstack;
 	}
 
@@ -471,7 +474,7 @@ public class PlayerControllerMP {
 	 * send a packet indicating the enchantment action the player has taken.
 	 */
 	public void sendEnchantPacket(int p_78756_1_, int p_78756_2_) {
-		this.netClientHandler.sendQueue(new C11PacketEnchantItem(p_78756_1_, p_78756_2_));
+		this.netClientHandler.sendQueue(new CPacketEnchantItem(p_78756_1_, p_78756_2_));
 	}
 
 	/**
@@ -479,7 +482,7 @@ public class PlayerControllerMP {
 	 */
 	public void sendSlotPacket(ItemStack itemStackIn, int slotId) {
 		if (this.currentGameType.isCreative()) {
-			this.netClientHandler.sendQueue(new C10PacketCreativeInventoryAction(slotId, itemStackIn));
+			this.netClientHandler.sendQueue(new CPacketCreativeInventoryAction(slotId, itemStackIn));
 		}
 	}
 
@@ -488,13 +491,13 @@ public class PlayerControllerMP {
 	 */
 	public void sendPacketDropItem(ItemStack itemStackIn) {
 		if (this.currentGameType.isCreative() && itemStackIn != null) {
-			this.netClientHandler.sendQueue(new C10PacketCreativeInventoryAction(-1, itemStackIn));
+			this.netClientHandler.sendQueue(new CPacketCreativeInventoryAction(-1, itemStackIn));
 		}
 	}
 
 	public void onStoppedUsingItem(EntityPlayer playerIn) {
 		this.syncCurrentPlayItem();
-		this.netClientHandler.sendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM,
+		this.netClientHandler.sendQueue(new CPacketPlayerDigging(CPacketPlayerDigging.Action.RELEASE_USE_ITEM,
 				BlockPos.ORIGIN, EnumFacing.DOWN));
 		playerIn.stopUsingItem();
 	}

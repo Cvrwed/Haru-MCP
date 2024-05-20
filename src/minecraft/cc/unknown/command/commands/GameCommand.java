@@ -20,11 +20,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayServer;
-import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
-import net.minecraft.network.play.client.C0EPacketClickWindow;
-import net.minecraft.network.play.server.S08PacketPlayerPosLook;
-import net.minecraft.network.play.server.S2DPacketOpenWindow;
-import net.minecraft.network.play.server.S2EPacketCloseWindow;
+import net.minecraft.network.play.client.CPacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.CPacketClickWindow;
+import net.minecraft.network.play.server.SPacketPlayerPosLook;
+import net.minecraft.network.play.server.SPacketOpenWindow;
+import net.minecraft.network.play.server.SPacketCloseWindow;
 
 @Flips(name = "Game", alias = "join", desc = "It automatically enters the selected minigame.", syntax = ".game <mini game> <lobby>")
 public class GameCommand extends Command {
@@ -92,11 +92,11 @@ public class GameCommand extends Command {
     @EventLink
     public void onPacket(PacketEvent e) {
         if (e.isReceive() && PlayerUtil.inGame()) {
-            if (e.getPacket() instanceof S08PacketPlayerPosLook)
+            if (e.getPacket() instanceof SPacketPlayerPosLook)
                 this.joining = false;
-            if (this.stage == 2 && e.getPacket() instanceof S2DPacketOpenWindow)
+            if (this.stage == 2 && e.getPacket() instanceof SPacketOpenWindow)
                 this.stage = 3;
-            if (this.stage >= 3 && e.getPacket() instanceof S2EPacketCloseWindow)
+            if (this.stage >= 3 && e.getPacket() instanceof SPacketCloseWindow)
                 this.stage = 0;
         }
     }
@@ -119,7 +119,7 @@ public class GameCommand extends Command {
 
                 case 0:
                     if (!this.foundItem && player.inventoryContainer.getSlot(36).getHasStack()) {
-                        mc.getNetHandler().sendQueue((Packet<INetHandlerPlayServer>) new C08PacketPlayerBlockPlacement(player.getHeldItem()));
+                        mc.getNetHandler().sendQueue((Packet<INetHandlerPlayServer>) new CPacketPlayerBlockPlacement(player.getHeldItem()));
                         this.stage++;
                     }
                     break;
@@ -131,7 +131,7 @@ public class GameCommand extends Command {
                             ItemStack slot = inventory.get(i);
                             if (slot != null)
                                 if (slot.getItem() == this.item) {
-                                    mc.getNetHandler().sendQueue((Packet<INetHandlerPlayServer>) new C0EPacketClickWindow(container.inventorySlots.windowId, i, 0, 0, slot, (short) 1));
+                                    mc.getNetHandler().sendQueue((Packet<INetHandlerPlayServer>) new CPacketClickWindow(container.inventorySlots.windowId, i, 0, 0, slot, (short) 1));
                                     this.stage++;
                                     break;
                                 }
@@ -146,7 +146,7 @@ public class GameCommand extends Command {
                             ItemStack slot = inventory.get(i);
                             if (slot != null)
                                 if (slot.stackSize == this.number) {
-                                    mc.getNetHandler().sendQueue((Packet<INetHandlerPlayServer>) new C0EPacketClickWindow(container.inventorySlots.windowId, i, 0, 0, slot, (short) 1));
+                                    mc.getNetHandler().sendQueue((Packet<INetHandlerPlayServer>) new CPacketClickWindow(container.inventorySlots.windowId, i, 0, 0, slot, (short) 1));
                                     this.stage++;
                                     break;
                                 }

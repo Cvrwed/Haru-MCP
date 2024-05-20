@@ -3,7 +3,7 @@ package net.minecraft.tileentity;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
@@ -64,7 +64,7 @@ public class TileEntityMobSpawner extends TileEntity implements ITickable
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         this.writeToNBT(nbttagcompound);
         nbttagcompound.removeTag("SpawnPotentials");
-        return new S35PacketUpdateTileEntity(this.pos, 1, nbttagcompound);
+        return new SPacketUpdateTileEntity(this.pos, 1, nbttagcompound);
     }
 
     public boolean receiveClientEvent(int id, int type)

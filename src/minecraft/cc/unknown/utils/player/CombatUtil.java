@@ -148,9 +148,9 @@ public enum CombatUtil implements Loona {
 		return new Vec3(origin[0], origin[1], origin[2]);
 	}
 
-	public int getPing(EntityPlayer e) {
-		return mc.getNetHandler().getPlayerInfo(e.getUniqueID()) != null
-				? mc.getNetHandler().getPlayerInfo(e.getUniqueID()).getResponseTime()
+	public int getPing() {
+		return mc.getNetHandler().getPlayerInfo(mc.player.getUniqueID()) != null
+				? mc.getNetHandler().getPlayerInfo(mc.player.getUniqueID()).getResponseTime()
 				: 0;
 	}
 

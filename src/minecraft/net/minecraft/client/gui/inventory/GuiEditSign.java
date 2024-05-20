@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
-import net.minecraft.network.play.client.C12PacketUpdateSign;
+import net.minecraft.network.play.client.CPacketUpdateSign;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.chat.ChatAllowedCharacters;
 import net.minecraft.util.chat.ChatComponentText;
@@ -57,7 +57,7 @@ public class GuiEditSign extends GuiScreen
 
         if (nethandlerplayclient != null)
         {
-            nethandlerplayclient.sendQueue(new C12PacketUpdateSign(this.tileSign.getPos(), this.tileSign.signText));
+            nethandlerplayclient.sendQueue(new CPacketUpdateSign(this.tileSign.getPos(), this.tileSign.signText));
         }
 
         this.tileSign.setEditable(true);

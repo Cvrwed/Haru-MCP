@@ -14,7 +14,7 @@ import cc.unknown.utils.client.Cold;
 import cc.unknown.utils.player.PlayerUtil;
 import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.network.play.client.CPacketUseEntity;
 
 @Register(name = "BlockHit", category = Category.Combat)
 public class BlockHit extends Module {
@@ -50,9 +50,9 @@ public class BlockHit extends Module {
     
 	@EventLink
 	public void onPacket(PacketEvent e) {
-		if (e.isSend() && e.getPacket() instanceof C02PacketUseEntity) {
-			C02PacketUseEntity wrapper = (C02PacketUseEntity) e.getPacket();
-			if (wrapper.getAction() == C02PacketUseEntity.Action.ATTACK) {
+		if (e.isSend() && e.getPacket() instanceof CPacketUseEntity) {
+			CPacketUseEntity wrapper = (CPacketUseEntity) e.getPacket();
+			if (wrapper.getAction() == CPacketUseEntity.Mode.ATTACK) {
 	            if (block) return;
 	            
 	            hits++;

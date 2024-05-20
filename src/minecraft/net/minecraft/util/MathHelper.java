@@ -101,6 +101,22 @@ public class MathHelper {
 	public static float randomFloat(float x, float v) {
 		return (float) (Math.random() * (x - v) + v);
 	}
+
+    public static float interpolate(float newValue, float oldValue, float partialTicks) {
+        return oldValue + (newValue - oldValue) * partialTicks;
+    }
+
+    public static double interpolate(double newValue, double oldValue, float partialTicks) {
+        return oldValue + (newValue - oldValue) * partialTicks;
+    }
+
+    public static double interpolate(double newValue, double oldValue, double partialTicks) {
+        return oldValue + (newValue - oldValue) * partialTicks;
+    }
+    
+    public static long randomClickDelay(int minCPS, int maxCPS) {
+        return (long) (Math.random() * (1000 / minCPS - 1000 / maxCPS + 1) + 1000 / maxCPS);
+    }
 	
 	public static int randomInt(double x, double v) {
 		return (int) (Math.random() * (x - v) + v);

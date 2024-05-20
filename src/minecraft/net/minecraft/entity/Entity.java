@@ -8,6 +8,7 @@ import java.util.concurrent.Callable;
 import cc.unknown.Haru;
 import cc.unknown.event.impl.move.MoveEvent;
 import cc.unknown.event.impl.player.StrafeEvent;
+import cc.unknown.utils.Loona;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;
@@ -18,6 +19,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockPattern;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.command.CommandResultStats;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.crash.CrashReport;
@@ -1340,32 +1342,33 @@ public abstract class Entity implements ICommandSender {
 		}
 	}
 
-	/**
-	 * interpolated look vector
-	 */
-	public Vec3 getLook(float partialTicks) {
-		if (partialTicks == 1.0F) {
-			return this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
-		} else {
-			float f = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * partialTicks;
-			float f1 = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * partialTicks;
-			return this.getVectorForRotation(f, f1);
-		}
-	}
-	
-	/**
-	 * Creates a Vec3 using the pitch and yaw of the entities rotation.
-	 * 
-	 * @param pitch The rotational pitch of the entity.
-	 * @param yaw   The rotational yaw of the entity.
-	 */
-	public final Vec3 getVectorForRotation(float pitch, float yaw) {
-		float f = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
-		float f1 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
-		float f2 = -MathHelper.cos(-pitch * 0.017453292F);
-		float f3 = MathHelper.sin(-pitch * 0.017453292F);
-		return new Vec3((double) (f1 * f2), (double) f3, (double) (f * f2));
-	}
+    /**
+     * interpolated look vector
+     */
+    public Vec3 getLook(float partialTicks) {
+        if (partialTicks == 1.0F) {
+            return this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
+        } else {
+            float f = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * partialTicks;
+            float f1 = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * partialTicks;
+            return this.getVectorForRotation(f, f1);
+        }
+    }
+
+    public Vec3 getLook(float yaw, float pitch) {
+        return this.getVectorForRotation(pitch, yaw);
+    }
+
+    /**
+     * Creates a Vec3 using the pitch and yaw of the entities rotation.
+     */
+    protected final Vec3 getVectorForRotation(float pitch, float yaw) {
+        float f = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
+        float f1 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
+        float f2 = -MathHelper.cos(-pitch * 0.017453292F);
+        float f3 = MathHelper.sin(-pitch * 0.017453292F);
+        return new Vec3(f1 * f2, f3, f * f2);
+    }
 
 	public Vec3 getPositionEyes(float partialTicks) {
 		if (partialTicks == 1.0F) {
@@ -1379,13 +1382,13 @@ public abstract class Entity implements ICommandSender {
 		}
 	}
 
-	public MovingObjectPosition rayTrace(double blockReachDistance, float partialTicks) {
-		Vec3 vec3 = this.getPositionEyes(partialTicks);
-		Vec3 vec31 = this.getLook(partialTicks);
-		Vec3 vec32 = vec3.addVector(vec31.xCoord * blockReachDistance, vec31.yCoord * blockReachDistance,
-				vec31.zCoord * blockReachDistance);
-		return this.worldObj.rayTraceBlocks(vec3, vec32, false, false, true);
-	}
+    public MovingObjectPosition rayTrace(double blockReachDistance, float partialTicks) {
+        Vec3 vec3 = this.getPositionEyes(partialTicks);
+        Vec3 vec31 = this.getLook(partialTicks);
+        Vec3 vec32 = vec3.addVector(vec31.xCoord * blockReachDistance, vec31.yCoord * blockReachDistance, vec31.zCoord * blockReachDistance);
+        return this.worldObj.rayTraceBlocks(vec3, vec32, false, false, true);
+    }
+
 
 	/**
 	 * Returns true if other Entities should be prevented from moving through this

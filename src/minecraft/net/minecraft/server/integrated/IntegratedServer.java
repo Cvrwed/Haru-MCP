@@ -21,7 +21,7 @@ import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketThreadUtil;
-import net.minecraft.network.play.server.S2BPacketChangeGameState;
+import net.minecraft.network.play.server.SPacketChangeGameState;
 import net.minecraft.profiler.PlayerUsageSnooper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.Config;
@@ -519,9 +519,9 @@ public class IntegratedServer extends MinecraftServer {
 			worldinfo.setThunderTime(0);
 			worldinfo.setThundering(false);
 			p_fixWorldWeather_1_.setThunderStrength(0.0F);
-			this.getConfigurationManager().sendPacketToAllPlayers(new S2BPacketChangeGameState(2, 0.0F));
-			this.getConfigurationManager().sendPacketToAllPlayers(new S2BPacketChangeGameState(7, 0.0F));
-			this.getConfigurationManager().sendPacketToAllPlayers(new S2BPacketChangeGameState(8, 0.0F));
+			this.getConfigurationManager().sendPacketToAllPlayers(new SPacketChangeGameState(2, 0.0F));
+			this.getConfigurationManager().sendPacketToAllPlayers(new SPacketChangeGameState(7, 0.0F));
+			this.getConfigurationManager().sendPacketToAllPlayers(new SPacketChangeGameState(8, 0.0F));
 		}
 	}
 

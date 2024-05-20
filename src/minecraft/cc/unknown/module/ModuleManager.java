@@ -11,7 +11,6 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.combat.*;
 import cc.unknown.module.impl.exploit.*;
-import cc.unknown.module.impl.move.*;
 import cc.unknown.module.impl.other.*;
 import cc.unknown.module.impl.player.*;
 import cc.unknown.module.impl.visuals.*;
@@ -31,33 +30,30 @@ public class ModuleManager implements Loona {
 				new AutoClick(),
 				new AimAssist(),
 				new AutoBlock(),
-				new AutoRefill(),
-				new JumpReset(),
-				new KeepSprint(),
 				new Criticals(),
 				new BlockHit(),
-				new Reach(),
+				new KeepSprint(),
+				new JumpReset(),
 				new SprintReset(),
 				new Velocity(),
+				new Reach(),
 				
 				// exploit
 				new ChatBypass(),
 				new PingSpoof(),
 				new TimerRange(),
-				new Timer(),
 				new FakeLag(),
-				new LagRange(),
+				new TickBase(),
 				new BackTrack(),
 				new Ping(),
-				
-				// Move
-				new Speed(),
 				
 				// other
 				new Autoplay(),
 				new AutoLeave(),
+				new AutoRefill(),
 				new AutoTool(),
 				new AutoRegister(),
+				new BedWarsHelper(),
 				new SelfDestruct(),
 				new MidClick(),
 				new Inventory(),
@@ -68,17 +64,18 @@ public class ModuleManager implements Loona {
 				new InvManager(),
 				new Stealer(),
 				new FastPlace(),
-				new LegitScaffold(),
 				new BridgeAssist(),
+				new LegitScaffold(),
+				new Speed(),
 				new Sprint(),
 				new Blink(),
+				new Timer(),
 				new NoSlow(),
 				new NoFall(),
 				
 				// visuals
 				new Ambience(),
 				new Fullbright(),
-				new FreeLook(),
 				new Keystrokes(),
 				new ClickGuiModule(),
 				new HUD(),
@@ -92,6 +89,7 @@ public class ModuleManager implements Loona {
 				new Tweaks()
 				
 				);
+
 		initialized = true;
 	}
 	

@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S33PacketUpdateSign;
+import net.minecraft.network.play.server.SPacketUpdateSign;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.IChatComponent;
@@ -125,7 +125,7 @@ public class TileEntitySign extends TileEntity
     {
         IChatComponent[] aichatcomponent = new IChatComponent[4];
         System.arraycopy(this.signText, 0, aichatcomponent, 0, 4);
-        return new S33PacketUpdateSign(this.worldObj, this.pos, aichatcomponent);
+        return new SPacketUpdateSign(this.worldObj, this.pos, aichatcomponent);
     }
 
     public boolean func_183000_F()

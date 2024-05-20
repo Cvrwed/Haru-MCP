@@ -62,11 +62,12 @@ import cc.unknown.event.impl.other.MouseEvent;
 import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.event.impl.world.ChangeWorldEvent;
 import cc.unknown.module.impl.Module;
-import cc.unknown.ui.clickgui.raven.HaruGui;
+import cc.unknown.module.impl.exploit.TickBase;
+import cc.unknown.ui.clickgui.HaruGui;
 import cc.unknown.utils.Loona;
 import cc.unknown.utils.helpers.CPSHelper;
 import cc.unknown.utils.player.PlayerUtil;
-import cc.unknown.utils.player.RotationUtils;
+import cc.unknown.utils.player.rotation.RotationManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.audio.MusicTicker;
@@ -158,9 +159,9 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.ConnectionState;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.handshake.client.C00Handshake;
-import net.minecraft.network.login.client.C00PacketLoginStart;
-import net.minecraft.network.play.client.C16PacketClientStatus;
+import net.minecraft.network.handshake.client.CHandshake;
+import net.minecraft.network.login.client.CPacketLoginStart;
+import net.minecraft.network.play.client.CPacketClientStatus;
 import net.minecraft.profiler.IPlayerUsage;
 import net.minecraft.profiler.PlayerUsageSnooper;
 import net.minecraft.profiler.Profiler;
@@ -1375,7 +1376,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		}
 	}
 
-	public void clickMouse() {
+	public void leftClickMouse() {
 		if (this.leftClickCounter <= 0) {
 			new MouseEvent(0).call();
 			CPSHelper.registerClick(CPSHelper.MouseButton.LEFT);
@@ -1555,8 +1556,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	/**
 	 * Runs the current tick.
 	 */
-	public void runTick() throws IOException {
-		new TickEvent.Pre().call();
+	public void runTick() throws IOException {		
+		boolean pause = TickBase.publicFreeze && Haru.instance.getModuleManager().getModule(TickBase.class).isEnabled();
 
 		if (this.rightClickDelayTimer > 0) {
 			--this.rightClickDelayTimer;
@@ -1569,6 +1570,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		}
 
 		this.mcProfiler.endSection();
+		new TickEvent.Pre().call();
 		this.entityRenderer.getMouseOver(1.0F);
 		this.mcProfiler.startSection("gameMode");
 
@@ -1677,6 +1679,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 				--this.leftClickCounter;
 			}
 
+			new TickEvent.Input().call();
 			this.mcProfiler.endStartSection("keyboard");
 
 			while (Keyboard.next()) {
@@ -1708,7 +1711,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
 					if (this.currentScreen != null) {
 						this.currentScreen.handleKeyboardInput();
-					} else {
+					} else {						
 						if (k == 1) {
 							this.displayInGameMenu();
 						}
@@ -1830,7 +1833,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 					this.player.sendHorseInventory();
 				} else {
 					this.getNetHandler().sendQueue(
-							new C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
+							new CPacketClientStatus(CPacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
 					this.displayGuiScreen(new GuiInventory(this.player));
 				}
 			}
@@ -1867,7 +1870,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 				}
 			} else {
 				while (this.gameSettings.keyBindAttack.isPressed()) {
-					this.clickMouse();
+					this.leftClickMouse();
 				}
 
 				while (this.gameSettings.keyBindUseItem.isPressed()) {
@@ -1888,32 +1891,31 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 					this.currentScreen == null && this.gameSettings.keyBindAttack.isKeyDown() && this.inGameHasFocus);
 		}
 
-		if (this.world != null) {
-			if (this.player != null) {
-				new TickEvent().call();
-				++this.joinPlayerCounter;
+		if (this.world != null && this.player != null) {
 
-				if (this.joinPlayerCounter == 30) {
-					this.joinPlayerCounter = 0;
-					this.world.joinEntityInSurroundings(this.player);
-				}
+			new TickEvent().call();
+			++this.joinPlayerCounter;
+			
+			if (this.joinPlayerCounter == 30) {
+				this.joinPlayerCounter = 0;
+				this.world.joinEntityInSurroundings(this.player);
 			}
 
 			this.mcProfiler.endStartSection("gameRenderer");
-
-			if (!this.isGamePaused) {
+						
+			if (!this.isGamePaused && !pause) {
 				this.entityRenderer.updateRenderer();
 			}
 
 			this.mcProfiler.endStartSection("levelRenderer");
 
-			if (!this.isGamePaused) {
+			if (!this.isGamePaused && !pause) {
 				this.renderGlobal.updateClouds();
 			}
 
 			this.mcProfiler.endStartSection("level");
 
-			if (!this.isGamePaused) {
+			if (!this.isGamePaused && !pause) {
 				if (this.world.getLastLightningBolt() > 0) {
 					this.world.setLastLightningBolt(this.world.getLastLightningBolt() - 1);
 				}
@@ -1951,7 +1953,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
 			this.mcProfiler.endStartSection("animateTick");
 
-			if (!this.isGamePaused && this.world != null) {
+			if (!this.isGamePaused && !pause && this.world != null) {
 				this.world.doVoidFogParticles(MathHelper.floor_double(this.player.posX),
 						MathHelper.floor_double(this.player.posY), MathHelper.floor_double(this.player.posZ));
 			}
@@ -2037,8 +2039,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		SocketAddress socketaddress = this.theIntegratedServer.getNetworkSystem().addLocalEndpoint();
 		NetworkManager networkmanager = NetworkManager.provideLocalClient(socketaddress);
 		networkmanager.setNetHandler(new NetHandlerLoginClient(networkmanager, this, (GuiScreen) null));
-		networkmanager.sendPacket(new C00Handshake(47, socketaddress.toString(), 0, ConnectionState.LOGIN));
-		networkmanager.sendPacket(new C00PacketLoginStart(this.getSession().getProfile()));
+		networkmanager.sendPacket(new CHandshake(47, socketaddress.toString(), 0, ConnectionState.LOGIN));
+		networkmanager.sendPacket(new CPacketLoginStart(this.getSession().getProfile()));
 		this.networkManager = networkmanager;
 	}
 
@@ -2830,8 +2832,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	}
 
 	public Entity getRenderViewEntity() {
-		if (RotationUtils.targetRotation != null && Loona.mc.player != null) {
-			final float yaw = RotationUtils.targetRotation.getYaw();
+		if (RotationManager.targetRotation != null && Loona.mc.player != null) {
+			final float yaw = RotationManager.targetRotation.getYaw();
 			Loona.mc.player.rotationYawHead = yaw;
 			Loona.mc.player.renderYawOffset = yaw;
 
