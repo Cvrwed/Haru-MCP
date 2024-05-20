@@ -40,7 +40,7 @@ public class AimAssist extends Module {
 	private BooleanValue horizontalRandomization = new BooleanValue("Horizontal Randomization", false);
 	private SliderValue horizontalRandomizationAmount = new SliderValue("Horizontal Randomization", 1.2, 0.1, 5, 0.01);
 	private SliderValue fieldOfView = new SliderValue("Field of View", 90.0, 15.0, 360.0, 1.0);
-	public SliderValue enemyDetectionRange = new SliderValue("Enemy Detection Range", 4.5, 1.0, 10.0, 0.5);
+	private SliderValue enemyDetectionRange = new SliderValue("Enemy Detection Range", 4.5, 1.0, 10.0, 0.5);
 	private BooleanValue verticalAlignmentCheck = new BooleanValue("Vertical Alignment Check", false);
 	private BooleanValue verticalRandomization = new BooleanValue("Vertical Randomization", false);
 	private SliderValue verticalRandomizationAmount = new SliderValue("Vertical Randomization", 1.2, 0.1, 5, 0.01);
