@@ -56,7 +56,7 @@ public class KeyStrokesCommand extends Command {
 	@EventLink
 	public void onTick(TickEvent.Input e) {
 		if (showGui.get()) {
-			showOutline.set(showOutline.get());
+			showGui.set(showGui.get());
 			mc.displayGuiScreen(new ConfigGui());
 		}
 	}
@@ -107,7 +107,7 @@ public class KeyStrokesCommand extends Command {
 		this.drawMovementKeys(xPosition, yPosition, textColor);
 		
 		if (showButtons.get()) {
-			showOutline.set(showOutline.get()); // false
+			showButtons.set(showButtons.get()); // false
 			this.drawMouseButtons(xPosition, yPosition, textColor);
 		}
 	}
