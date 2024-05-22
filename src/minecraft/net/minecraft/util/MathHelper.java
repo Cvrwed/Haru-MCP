@@ -114,8 +114,8 @@ public class MathHelper {
         return oldValue + (newValue - oldValue) * partialTicks;
     }
     
-    public static long randomClickDelay(int minCPS, int maxCPS) {
-        return (long) (Math.random() * (1000 / minCPS - 1000 / maxCPS + 1) + 1000 / maxCPS);
+    public static int randomClickDelay(int minCPS, int maxCPS) {
+        return (int) (Math.random() * (1000 / minCPS - 1000 / maxCPS + 1) + 1000 / maxCPS);
     }
 	
 	public static int randomInt(double x, double v) {

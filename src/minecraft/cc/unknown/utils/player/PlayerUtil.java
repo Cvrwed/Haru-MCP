@@ -100,10 +100,10 @@ public class PlayerUtil implements Loona {
 			return false;
 		} else {
 			Item item = mc.player.getCurrentEquippedItem().getItem();
-			return item instanceof ItemSword || item instanceof ItemAxe;
+			return item instanceof ItemSword;
 		}
 	}
-
+	
 	public static double getDirection() {
 		float moveYaw = mc.player.rotationYaw;
 		if (mc.player.moveForward != 0f && mc.player.moveStrafing == 0f) {

@@ -2,81 +2,81 @@ package net.minecraft.block;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
+
+import cc.unknown.event.impl.world.AirCollideEvent;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.vec.AxisAlignedBB;
 import net.minecraft.world.World;
 
-public class BlockAir extends Block
-{
-    private static Map mapOriginalOpacity = new IdentityHashMap();
+public class BlockAir extends Block {
+	private static Map mapOriginalOpacity = new IdentityHashMap();
 
-    protected BlockAir()
-    {
-        super(Material.air);
-    }
+	protected BlockAir() {
+		super(Material.air);
+	}
 
-    /**
-     * The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
-     */
-    public int getRenderType()
-    {
-        return -1;
-    }
+	/**
+	 * The type of render function called. 3 for standard block models, 2 for
+	 * TESR's, 1 for liquids, -1 is no render
+	 */
+	public int getRenderType() {
+		return -1;
+	}
 
-    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
-    {
-        return null;
-    }
+	public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
 
-    /**
-     * Used to determine ambient occlusion and culling when rebuilding chunks for render
-     */
-    public boolean isOpaqueCube()
-    {
-        return false;
-    }
+		AirCollideEvent airCollideEvent = new AirCollideEvent(worldIn, pos, state, minX, minY, minZ, maxX, maxY, maxZ);
+		airCollideEvent.call();
+		if (airCollideEvent.isCancelled())
+			return null;
 
-    public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid)
-    {
-        return false;
-    }
+		return airCollideEvent.getReturnValue();
+	}
 
-    /**
-     * Spawns this Block's drops into the World as EntityItems.
-     *  
-     * @param chance The chance that each Item is actually spawned (1.0 = always, 0.0 = never)
-     * @param fortune The player's fortune level
-     */
-    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
-    {
-    }
+	/**
+	 * Used to determine ambient occlusion and culling when rebuilding chunks for
+	 * render
+	 */
+	public boolean isOpaqueCube() {
+		return false;
+	}
 
-    /**
-     * Whether this Block can be replaced directly by other blocks (true for e.g. tall grass)
-     */
-    public boolean isReplaceable(World worldIn, BlockPos pos)
-    {
-        return true;
-    }
+	public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid) {
+		return false;
+	}
 
-    public static void setLightOpacity(Block p_setLightOpacity_0_, int p_setLightOpacity_1_)
-    {
-        if (!mapOriginalOpacity.containsKey(p_setLightOpacity_0_))
-        {
-            mapOriginalOpacity.put(p_setLightOpacity_0_, Integer.valueOf(p_setLightOpacity_0_.lightOpacity));
-        }
+	/**
+	 * Spawns this Block's drops into the World as EntityItems.
+	 * 
+	 * @param chance  The chance that each Item is actually spawned (1.0 = always,
+	 *                0.0 = never)
+	 * @param fortune The player's fortune level
+	 */
+	public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
+	}
 
-        p_setLightOpacity_0_.lightOpacity = p_setLightOpacity_1_;
-    }
+	/**
+	 * Whether this Block can be replaced directly by other blocks (true for e.g.
+	 * tall grass)
+	 */
+	public boolean isReplaceable(World worldIn, BlockPos pos) {
+		return true;
+	}
 
-    public static void restoreLightOpacity(Block p_restoreLightOpacity_0_)
-    {
-        if (mapOriginalOpacity.containsKey(p_restoreLightOpacity_0_))
-        {
-            int i = ((Integer)mapOriginalOpacity.get(p_restoreLightOpacity_0_)).intValue();
-            setLightOpacity(p_restoreLightOpacity_0_, i);
-        }
-    }
+	public static void setLightOpacity(Block p_setLightOpacity_0_, int p_setLightOpacity_1_) {
+		if (!mapOriginalOpacity.containsKey(p_setLightOpacity_0_)) {
+			mapOriginalOpacity.put(p_setLightOpacity_0_, Integer.valueOf(p_setLightOpacity_0_.lightOpacity));
+		}
+
+		p_setLightOpacity_0_.lightOpacity = p_setLightOpacity_1_;
+	}
+
+	public static void restoreLightOpacity(Block p_restoreLightOpacity_0_) {
+		if (mapOriginalOpacity.containsKey(p_restoreLightOpacity_0_)) {
+			int i = ((Integer) mapOriginalOpacity.get(p_restoreLightOpacity_0_)).intValue();
+			setLightOpacity(p_restoreLightOpacity_0_, i);
+		}
+	}
 }

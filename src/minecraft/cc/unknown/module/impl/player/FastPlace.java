@@ -26,10 +26,10 @@ public class FastPlace extends Module {
 	public FastPlace() {
 		this.registerSetting(delaySlider, blockOnly, projSeparate, pitchCheck, projSlider);
 	}
-	
+
 	@EventLink
 	public void onGui(ClickGuiEvent e) {
-	    this.setSuffix("- [" + delaySlider.getInput() + " ticks]");
+		this.setSuffix("- [" + delaySlider.getInput() + " ticks]");
 	}
 
 	@Override
@@ -39,28 +39,30 @@ public class FastPlace extends Module {
 
 	@EventLink
 	public void onTick(TickEvent e) {
-		try {
-			if (PlayerUtil.inGame() && mc.inGameHasFocus) {
-				ItemStack item = mc.player.getHeldItem();
-				if (item.getItem() instanceof ItemFishingRod && item != null) {
-					return;
-				}
+		if (!PlayerUtil.inGame() && !mc.inGameHasFocus)
+			return;
 
-				if (!pitchCheck.isToggled() || !(mc.player.rotationPitch < 70.0F)) {
-					if (blockOnly.isToggled() && item != null) {
-						if (item.getItem() instanceof ItemBlock) {
-							rightDelay(delaySlider.getInputToInt());
-						} else if ((item.getItem() instanceof ItemSnowball || item.getItem() instanceof ItemEgg)
-								&& projSeparate.isToggled()) {
-							rightDelay(projSlider.getInputToInt());
-						}
-					} else {
+		ItemStack item = mc.player.getHeldItem();
+		if (item.getItem() instanceof ItemFishingRod) {
+			return;
+		}
+
+		if (item != null) {
+
+			if (!pitchCheck.isToggled() || !(mc.player.rotationPitch < 70.0F)) {
+				if (blockOnly.isToggled()) {
+					if (item.getItem() instanceof ItemBlock) {
 						rightDelay(delaySlider.getInputToInt());
+					} else if ((item.getItem() instanceof ItemSnowball || item.getItem() instanceof ItemEgg)
+							&& projSeparate.isToggled()) {
+						rightDelay(projSlider.getInputToInt());
 					}
+				} else {
+					rightDelay(delaySlider.getInputToInt());
 				}
 			}
-		} catch (NullPointerException ignore) {
 		}
+
 	}
 
 	private void rightDelay(int x) {

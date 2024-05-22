@@ -103,6 +103,10 @@ public class Cold {
     public boolean getCum(long hentai) {
     	return getTime() - lastMs >= hentai;
     }
+    
+    public boolean getCum(long hentai, long furry) {
+    	return lastMs + hentai <= furry;
+    }
 
     /**
      * Checks if a specified time has elapsed.

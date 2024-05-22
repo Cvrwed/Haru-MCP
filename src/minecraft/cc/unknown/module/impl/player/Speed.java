@@ -21,9 +21,12 @@ public class Speed extends Module {
 	@EventLink
 	public void onMotion(MotionEvent e) {
 		if (e.isPre()) {
-			if (PlayerUtil.isMoving())
-				MoveUtil.strafe(0.32F);
-			mc.gameSettings.keyBindJump.pressed = true;
+			switch (mode.getMode()) {
+			case "Verus":
+				MoveUtil.strafeY(0.32F);
+				mc.gameSettings.keyBindJump.pressed = true;
+				break;
+			}
 		}
 	}
 }
