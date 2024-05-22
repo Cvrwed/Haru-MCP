@@ -19,7 +19,7 @@ public class Tweaks extends Module {
 	private BooleanValue cancelC15 = new BooleanValue("Cancel C15", true);
 
 	public Tweaks() {
-		this.registerSetting(noClickDelay, noJumpDelay, noHurtCam);
+		this.registerSetting(noClickDelay, noJumpDelay, noHurtCam, noScoreboard, cancelC15);
 	}
 
 	@EventLink

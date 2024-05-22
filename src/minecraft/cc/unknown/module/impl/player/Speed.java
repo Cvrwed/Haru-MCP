@@ -23,8 +23,9 @@ public class Speed extends Module {
 		if (e.isPre()) {
 			switch (mode.getMode()) {
 			case "Verus":
-				MoveUtil.strafeY(0.32F);
-				mc.gameSettings.keyBindJump.pressed = true;
+				mc.player.movementInput.jump = true;
+				if (PlayerUtil.isMoving())
+					MoveUtil.strafeY(0.32F);
 				break;
 			}
 		}

@@ -4,6 +4,7 @@ import org.lwjgl.input.Keyboard;
 
 import cc.unknown.Haru;
 import cc.unknown.event.impl.EventLink;
+import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
@@ -15,6 +16,8 @@ import cc.unknown.ui.clickgui.HaruGui;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.network.play.server.SPacketChat;
+import net.minecraft.network.play.server.SPacketTimeUpdate;
 
 @Register(name = "ClickGui", category = Category.Visuals, key = Keyboard.KEY_RSHIFT)
 public class ClickGuiModule extends Module {

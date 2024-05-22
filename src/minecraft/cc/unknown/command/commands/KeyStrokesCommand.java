@@ -17,7 +17,7 @@ import cc.unknown.utils.keystrokes.render.RenderMouse;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 
-@Flips(name = "Key", alias = "key", desc = "Show the all commands", syntax = ".help")
+@Flips(name = "Key", alias = "key", desc = "Show the classic keystrokes", syntax = ".key")
 public class KeyStrokesCommand extends Command {
 
 	private final RenderKeys[] keyRenderers = { new RenderKeys(mc.gameSettings.keyBindForward, 26, 2),
@@ -29,11 +29,13 @@ public class KeyStrokesCommand extends Command {
 	private final AtomicBoolean toggle = new AtomicBoolean(false);
 	private final AtomicBoolean showOutline = new AtomicBoolean(false);
 	private final AtomicBoolean showButtons = new AtomicBoolean(false);
-	private boolean isConfigGui = false;
+	private final AtomicBoolean showGui = new AtomicBoolean(false);
 
 	public KeyStrokesCommand() {
 		Haru.instance.getEventBus().register(this);
 	}
+	
+	// Recordatorio: Falta mostrar todos los sub comandos [.help key]
 
 	@Override
 	public void onExecute(String[] args) {
@@ -42,7 +44,7 @@ public class KeyStrokesCommand extends Command {
 		} else if (args.length == 1) {
 			String command = args[0].toLowerCase();
 			if (command.equals("edit")) {
-				isConfigGui = true;
+				showGui.set(!showGui.get());
 			} else if (command.equals("buttons")) {
 				showButtons.set(!showButtons.get()); // true
 			} else if (command.equals("outline")) {
@@ -53,8 +55,8 @@ public class KeyStrokesCommand extends Command {
 
 	@EventLink
 	public void onTick(TickEvent.Input e) {
-		if (isConfigGui) {
-			isConfigGui = false;
+		if (showGui.get()) {
+			showOutline.set(showOutline.get());
 			mc.displayGuiScreen(new ConfigGui());
 		}
 	}
