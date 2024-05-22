@@ -3,8 +3,11 @@ package cc.unknown.config;
 import static cc.unknown.ui.HudPosition.ArrayListX;
 import static cc.unknown.ui.HudPosition.ArrayListY;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -18,6 +21,7 @@ import cc.unknown.Haru;
 import cc.unknown.ui.clickgui.impl.CategoryComp;
 import cc.unknown.utils.Loona;
 import cc.unknown.utils.client.FuckUtil;
+import cc.unknown.utils.keystrokes.KeyStroke;
 import net.minecraft.util.MathHelper;
 
 public class HudConfig implements Loona {
@@ -28,69 +32,127 @@ public class HudConfig implements Loona {
 
 	public HudConfig() {
 		configDir = new File(mc.mcDataDir, "Haru");
-		if(!configDir.exists()) {
+		if (!configDir.exists()) {
 			configDir.mkdir();
 		}
-		
+
 		configFile = new File(configDir, fileName);
-		if(!configFile.exists()) {
+		if (!configFile.exists()) {
 			try {
 				configFile.createNewFile();
 			} catch (IOException e) {
-				e.printStackTrace();	
+				e.printStackTrace();
 			}
 		}
 	}
-	
+
+	public void saveKeyStrokes() {
+		try {
+			File file = new File(mc.mcDataDir + File.separator + "Haru", "config");
+			if (!file.exists()) {
+				file.getParentFile().mkdirs();
+				file.createNewFile();
+			}
+
+			FileWriter writer = new FileWriter(file, false);
+			writer.write(KeyStroke.instance.getXPosition() + "\n" + KeyStroke.instance.getYPosition() + "\n" + KeyStroke.instance.isIsEnabled() + "\n" + KeyStroke.instance.isDisplayMouseButtons()
+					+ "\n" + KeyStroke.instance.getColorIndex() + "\n" + KeyStroke.instance.isDisplayOutline());
+			writer.close();
+		} catch (Throwable var2) {
+			var2.printStackTrace();
+		}
+	}
+
+	public static void applyKeyStrokes() {
+		try {
+			File file = new File(mc.mcDataDir + File.separator + "Haru", "config");
+			if (!file.exists()) {
+				return;
+			}
+
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			int i = 0;
+
+			String line;
+			while ((line = reader.readLine()) != null) {
+				switch (i) {
+				case 0:
+					KeyStroke.instance.setXPosition(Integer.parseInt(line));
+					break;
+				case 1:
+					KeyStroke.instance.setYPosition(Integer.parseInt(line));
+					break;
+				case 2:
+					KeyStroke.instance.setIsEnabled(Boolean.parseBoolean(line));
+					break;
+				case 3:
+					KeyStroke.instance.setDisplayMouseButtons(Boolean.parseBoolean(line));
+					break;
+				case 4:
+					KeyStroke.instance.setColorIndex(Integer.parseInt(line));
+					break;
+				case 5:
+					KeyStroke.instance.setDisplayOutline(Boolean.parseBoolean(line));
+				}
+				++i;
+			}
+
+			reader.close();
+		} catch (Throwable var4) {
+			var4.printStackTrace();
+		}
+
+	}
+
 	public void saveHud() {
 		List<String> config = new ArrayList<>();
-		config.add(clickGuiPos + getClickGuiPos());		
+		config.add(clickGuiPos + getClickGuiPos());
 		config.add(ArrayListX + FuckUtil.instance.getArrayListX());
 		config.add(ArrayListY + FuckUtil.instance.getArrayListY());
-		
+
 		config.add(FuckUtil.instance.WaifuX + FuckUtil.instance.getWaifuX());
 		config.add(FuckUtil.instance.WaifuY + FuckUtil.instance.getWaifuY());
 
-	    try (PrintWriter writer = new PrintWriter(configFile)) {
-	        for (String line : config) {
-	            writer.println(line);
-	        }
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
+		try (PrintWriter writer = new PrintWriter(configFile)) {
+			for (String line : config) {
+				writer.println(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	public void applyHud() {
-	    List<String> config = parseConfigFile();
-	    Map<String, Action> cfg = new HashMap<>();
-	    cfg.put(clickGuiPos, this::loadClickGuiCoords);
-	    cfg.put(ArrayListX, hudX -> FuckUtil.instance.setArrayListX(Integer.parseInt(hudX)));
-	    cfg.put(ArrayListY, hudY -> FuckUtil.instance.setArrayListY(Integer.parseInt(hudY)));
-	    cfg.put(FuckUtil.instance.WaifuX, waifuX -> FuckUtil.instance.setWaifuX(Integer.parseInt(waifuX)));
-	    cfg.put(FuckUtil.instance.WaifuY, waifuY -> FuckUtil.instance.setWaifuY(Integer.parseInt(waifuY)));
+		List<String> config = parseConfigFile();
+		Map<String, Action> cfg = new HashMap<>();
+		cfg.put(clickGuiPos, this::loadClickGuiCoords);
+		cfg.put(ArrayListX, hudX -> FuckUtil.instance.setArrayListX(Integer.parseInt(hudX)));
+		cfg.put(ArrayListY, hudY -> FuckUtil.instance.setArrayListY(Integer.parseInt(hudY)));
+		cfg.put(FuckUtil.instance.WaifuX, waifuX -> FuckUtil.instance.setWaifuX(Integer.parseInt(waifuX)));
+		cfg.put(FuckUtil.instance.WaifuY, waifuY -> FuckUtil.instance.setWaifuY(Integer.parseInt(waifuY)));
 
-	    for (String line : config) {
-	        for (Map.Entry<String, Action> entry : cfg.entrySet()) {
-	            if (line.startsWith(entry.getKey())) {
-	                entry.getValue().apply(line.replace(entry.getKey(), ""));
-	                break;
-	            }
-	        }
-	    }
+		for (String line : config) {
+			for (Map.Entry<String, Action> entry : cfg.entrySet()) {
+				if (line.startsWith(entry.getKey())) {
+					entry.getValue().apply(line.replace(entry.getKey(), ""));
+					break;
+				}
+			}
+		}
 	}
-	
+
 	private List<String> parseConfigFile() {
-	    List<String> configFileContents = new ArrayList<>();
+		List<String> configFileContents = new ArrayList<>();
 
-	    try (Scanner reader = new Scanner(configFile)) {
-	        while (reader.hasNextLine()) {
-	            configFileContents.add(reader.nextLine());
-	        }
-	    } catch (FileNotFoundException e) {
-	        e.printStackTrace();
-	    }
+		try (Scanner reader = new Scanner(configFile)) {
+			while (reader.hasNextLine()) {
+				configFileContents.add(reader.nextLine());
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 
-	    return configFileContents;
+		return configFileContents;
 	}
 
 	private void loadClickGuiCoords(String decryptedString) {
@@ -112,24 +174,26 @@ public class HudConfig implements Loona {
 							cat.setY(Integer.parseInt(cfg.get(2)));
 							cat.setOpened(Boolean.parseBoolean(cfg.get(3)));
 						}
-					} catch (IndexOutOfBoundsException | IllegalArgumentException e) { }
+					} catch (IndexOutOfBoundsException | IllegalArgumentException e) {
+					}
 				}
 			}
 		}
 	}
-	
+
 	private String getClickGuiPos() {
-	    StringJoiner posConfig = new StringJoiner("/");
-	    
-	    for (CategoryComp cat : Haru.instance.getHaruGui().getCategoryList()) {
-	        posConfig.add(String.join("~", cat.getCategory().getName(), String.valueOf(cat.getX()), String.valueOf(cat.getY()), String.valueOf(cat.isOpen())));
-	    }
-	    return posConfig.toString();
+		StringJoiner posConfig = new StringJoiner("/");
+
+		for (CategoryComp cat : Haru.instance.getHaruGui().getCategoryList()) {
+			posConfig.add(String.join("~", cat.getCategory().getName(), String.valueOf(cat.getX()),
+					String.valueOf(cat.getY()), String.valueOf(cat.isOpen())));
+		}
+		return posConfig.toString();
 	}
-	
+
 	@FunctionalInterface
 	public interface Action {
-	    void apply(String value);
+		void apply(String value);
 	}
 
 }

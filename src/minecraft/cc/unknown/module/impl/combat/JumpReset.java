@@ -29,7 +29,7 @@ import net.minecraft.util.MathHelper;
 
 @Register(name = "JumpReset", category = Category.Combat)
 public class JumpReset extends Module {
-	private ModeValue mode = new ModeValue("Mode", "Legit", "Hit", "Tick", "Legit");
+	private ModeValue mode = new ModeValue("Mode", "Legit", "Hit", "Tick", "Legit", "Jump");
 	private BooleanValue onlyCombat = new BooleanValue("Enable only during combat", true);
 	private BooleanValue antiCombo = new BooleanValue("Anti Combo", false);
 	private SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
@@ -43,10 +43,20 @@ public class JumpReset extends Module {
 	private int hitCombo = 0;
 	private int enabledticks = 0;
 	private ConcurrentLinkedQueue<TimedPacket> inboundPacketsQueue = new ConcurrentLinkedQueue<TimedPacket>();
-	private int counter;
+	private int counter = 0;
 
 	public JumpReset() {
 		registerSetting(mode, onlyCombat, antiCombo, chance, comboTicks, tickTicks, hitHits);
+	}
+	
+	@Override
+	public void onEnable() {
+		stop();
+	}
+	
+	@Override
+	public void onDisable() {
+		stop();
 	}
 
 	@EventLink
@@ -67,6 +77,19 @@ public class JumpReset extends Module {
 				boolean inRange = angle >= 180 - threshold / 2 && angle <= 180 + threshold / 2;
 				if (inRange) {
 					reset = true;
+				}
+			}
+
+			if (mode.is("Jump")) {
+				float yaw = mc.player.rotationYaw * 0.017453292F;
+				if (mc.player.onGround) {
+					if (mc.player.hurtTime > 0) {
+						mc.player.motionY = 0.3;
+						if (reset) {
+							mc.player.motionX -= Math.sin(yaw) * 0.2;
+							mc.player.motionZ += Math.cos(yaw) * 0.2;
+						}
+					}
 				}
 			}
 		}
@@ -107,7 +130,9 @@ public class JumpReset extends Module {
 	@EventLink
 	public void onKnockBack(KnockBackEvent e) {
 		if (mode.is("Legit")) {
-			if (!mc.player.onGround || !(e.getY() > 0.0) || mc.currentScreen != null) return;;
+			if (!mc.player.onGround || !(e.getY() > 0.0) || mc.currentScreen != null)
+				return;
+			;
 			double velocityDist = Math.hypot(e.getX(), e.getZ());
 			if (counter >= 4 && (velocityDist < 0.6 || counter >= 7)) {
 				counter = 0;
@@ -117,28 +142,35 @@ public class JumpReset extends Module {
 			++counter;
 			return;
 		}
+		
+		if (mode.is("Jump")) {
+			reset = true;
+		}
 
 		if (antiCombo.isToggled()) {
 			++hitCombo;
 		}
 	}
-	
+
 	@EventLink
 	public void onInput(TickEvent.Input e) {
 		if (mode.is("Legit")) {
-            if (!reset) return;
-            mc.gameSettings.keyBindJump.pressed = true;
-            mc.gameSettings.keyBindForward.pressed = true;
-            mc.gameSettings.keyBindSprint.pressed = true;
+			if (!reset)
+				return;
+			mc.gameSettings.keyBindJump.pressed = true;
+			mc.gameSettings.keyBindForward.pressed = true;
+			mc.gameSettings.keyBindSprint.pressed = true;
 		}
 	}
 
 	@EventLink
 	public void onMotion(MotionEvent e) {
 		if (mode.is("Legit") && e.isPre()) {
-            if (!reset) return;
-            KeybindUtil.instance.resetKeybindings(mc.gameSettings.keyBindJump, mc.gameSettings.keyBindForward, mc.gameSettings.keyBindSprint);
-            reset = false;
+			if (!reset)
+				return;
+			KeybindUtil.instance.resetKeybindings(mc.gameSettings.keyBindJump, mc.gameSettings.keyBindForward,
+					mc.gameSettings.keyBindSprint);
+			reset = false;
 		}
 	}
 
@@ -198,9 +230,12 @@ public class JumpReset extends Module {
 	}
 
 	private void stop() {
+		limit = 0;
+		reset = false;
 		shouldspoof = false;
 		hitCombo = 0;
 		enabledticks = 0;
+		counter = 0;
 	}
 
 	private void clearInboundQueue() {

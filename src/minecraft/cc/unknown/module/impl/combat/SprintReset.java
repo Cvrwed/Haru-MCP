@@ -11,8 +11,10 @@ import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.client.Cold;
 import cc.unknown.utils.network.PacketUtil;
+import cc.unknown.utils.player.CombatUtil;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.network.play.client.CPacketEntityAction;
@@ -27,7 +29,8 @@ public class SprintReset extends Module {
 	private SliderValue chance = new SliderValue("Tap Chance", 100, 0, 100, 1);
 	private final Cold timer = new Cold(0);
 	private int tap;
-    private int hitsCount = 0;
+	private int hitsCount = 0;
+	private EntityPlayer target = null;
 
 	public SprintReset() {
 		this.registerSetting(mode, packets, onceEvery, tapRange, chance);
@@ -40,31 +43,33 @@ public class SprintReset extends Module {
 
 	@EventLink
 	public void onPacket(PacketEvent e) {
-		if (chance.getInput() != 100.0D) {
-			if (Math.random() >= chance.getInput() / 100.0D) {
-				return;
-			}
+		if (target == null) return;
+		
+		if (chance.getInput() != 100.0D && Math.random() >= chance.getInput() / 100.0D) {
+			return;
 		}
 
 		Packet<?> p = e.getPacket();
 		if (e.isSend() && p instanceof CPacketUseEntity) {
 			CPacketUseEntity wrapper = (CPacketUseEntity) p;
 			if (wrapper.getAction() == CPacketUseEntity.Mode.ATTACK) {
-                double distanceToTarget = mc.player.getDistanceToEntity(wrapper.getEntityFromWorld(mc.world));
-                if (distanceToTarget <= tapRange.getInputToInt()) {
-                	hitsCount++;
-                    if (hitsCount >= onceEvery.getInputToInt()) {
+				double entityDistance = CombatUtil.instance.getDistanceToEntityBox(target);
+				if (entityDistance <= tapRange.getInputToInt()) {
+					hitsCount++;
+					if (hitsCount >= onceEvery.getInputToInt()) {
 						switch (mode.getMode()) {
 						case "Packet":
-							if (mc.player.isSprinting()) mc.getNetHandler().sendQueue(new CPacketEntityAction(mc.player, CPacketEntityAction.Mode.STOP_SPRINTING));
+							if (mc.player.isSprinting()) setSprinting(false);
+							
 							for (int i = 0; i < (packets.getInputToInt() - 2.0); i++) {
 								if (i % 2 == 0) {
-									mc.getNetHandler().sendQueue(new CPacketEntityAction(mc.player, CPacketEntityAction.Mode.START_SPRINTING));
+									setSprinting(true);
 								} else {
-									mc.getNetHandler().sendQueue(new CPacketEntityAction(mc.player, CPacketEntityAction.Mode.STOP_SPRINTING));
+									setSprinting(false);
 								}
 							}
-							if (mc.player.isSprinting()) mc.getNetHandler().sendQueue(new CPacketEntityAction(mc.player, CPacketEntityAction.Mode.START_SPRINTING));
+							if (mc.player.isSprinting()) setSprinting(true);
+
 							break;
 						case "STap":
 						case "WTap":
@@ -75,9 +80,19 @@ public class SprintReset extends Module {
 							break;
 						}
 						hitsCount = 0;
-                    }
-                }
+					}
+				}
 			}
+		}
+	}
+	
+	private void setSprinting(boolean pacman) {
+		if (pacman) {
+			mc.getNetHandler().sendQueue(
+					new CPacketEntityAction(mc.player, CPacketEntityAction.Mode.START_SPRINTING));
+		} else {
+			mc.getNetHandler().sendQueue(
+					new CPacketEntityAction(mc.player, CPacketEntityAction.Mode.STOP_SPRINTING));
 		}
 	}
 
@@ -98,7 +113,7 @@ public class SprintReset extends Module {
 					break;
 				}
 			}
-	
+
 			if (mode.is("WTap")) {
 				switch (tap) {
 				case 2:

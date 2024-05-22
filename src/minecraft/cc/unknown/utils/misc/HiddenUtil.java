@@ -32,7 +32,6 @@ public class HiddenUtil {
 	        		AutoLeave.class,
 	        		Autoplay.class,
 	        		Inventory.class,
-	        		Keystrokes.class,
 	        		MidClick.class
 
 	        );

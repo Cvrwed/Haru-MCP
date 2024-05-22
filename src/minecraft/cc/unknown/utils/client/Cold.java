@@ -89,6 +89,11 @@ public class Cold {
     public boolean reached(long currentTime) {
         return isElapsed(time, () -> Math.max(0L, System.currentTimeMillis() - currentTime));
     }
+    
+    public boolean hasPassed(long MS) {
+    	reset();
+        return time >= lastMs + MS;
+    }
 
     // Resets the timer to the current time
     public void reset() {
@@ -133,6 +138,10 @@ public class Cold {
         }
         return false;
     }
+    
+	public long getMillis() {
+		return lastMs;
+	}
 
     // Private method to check if a specified time has elapsed
     private boolean isElapsed(long targetTime, LongSupplier currentTimeSupplier) {

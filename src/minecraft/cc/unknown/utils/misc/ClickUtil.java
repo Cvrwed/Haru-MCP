@@ -186,7 +186,6 @@ public enum ClickUtil implements Loona {
 		AutoClick right = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
 
 		ItemStack item = mc.player.getHeldItem();
-		TileEntity te = (TileEntity) mc.world.loadedTileEntityList;
 		
 		if (item != null) {
 
@@ -196,9 +195,7 @@ public enum ClickUtil implements Loona {
 				return false;
 			} else if (item.getItem() instanceof ItemBow) {
 				return false;
-			} else if (te instanceof TileEntityChest || te instanceof TileEntityEnderChest) {
-				return false;
-            }
+			}
 
 			if (right.getAllowEat().isToggled()) {
 				if ((item.getItem() instanceof ItemFood) || item.getItem() instanceof ItemPotion
