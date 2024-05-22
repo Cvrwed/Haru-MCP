@@ -1,4 +1,4 @@
-package cc.unknown.utils.keystrokes;
+package cc.unknown.utils.keystrokes.render;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -9,10 +9,11 @@ import org.lwjgl.opengl.GL11;
 
 import cc.unknown.utils.helpers.CPSHelper;
 import cc.unknown.utils.helpers.CPSHelper.MouseButton;
+import cc.unknown.utils.keystrokes.KeyStroke;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
-public class KeyStrokeMouse {
+public class RenderMouse {
 	private static final String[] buttons = new String[] { "LMB", "RMB" };
 	private final Minecraft b = Minecraft.getMinecraft();
 	private final int c;
@@ -22,13 +23,13 @@ public class KeyStrokeMouse {
 	private boolean g = true;
 	private long h = 0L;
 
-	public KeyStrokeMouse(int k, int l, int m) {
+	public RenderMouse(int k, int l, int m) {
 		this.c = k;
 		this.d = l;
 		this.e = m;
 	}
 
-	public void render(int o, int p, int color) {
+	public void render(int o, int p, int color, boolean outline) {
 		boolean r = Mouse.isButtonDown(this.c);
 		String s = buttons[this.c];
 		if (r != this.g) {
@@ -55,7 +56,7 @@ public class KeyStrokeMouse {
 		int c = (new Color(t, u, v)).getRGB();
 		Gui.drawRect(o + this.d, p + this.e, o + this.d + 34, p + this.e + 22,
 				2013265920 + (i << 16) + (i << 8) + i);
-		if (KeyStroke.instance.isDisplayOutline()) {
+		if (outline) {
 			Gui.drawRect(o + this.d, p + this.e, o + this.d + 34, p + this.e + 1, c);
 			Gui.drawRect(o + this.d, p + this.e + 21, o + this.d + 34, p + this.e + 22, c);
 			Gui.drawRect(o + this.d, p + this.e, o + this.d + 1, p + this.e + 22, c);

@@ -1312,6 +1312,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	 */
 	public void shutdown() {
 		new GameEvent.ShutdownEvent().call();
+		Haru.instance.stopClient();
 		this.running = false;
 	}
 

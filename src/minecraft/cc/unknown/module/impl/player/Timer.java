@@ -27,11 +27,9 @@ public class Timer extends Module {
 	private SliderValue offGroundTicksPerSecond = new SliderValue("Off Ground Speed", 1.5, 0.05, 20, 0.05);
 
 	private BooleanValue weaponOnly = new BooleanValue("Only Use Weapons", false);
-	private BooleanValue leftClickOnly = new BooleanValue("Only While Clicking", false);
 
 	public Timer() {
-		this.registerSetting(mode, spid, variation, onGroundTicksPerSecond, offGroundTicksPerSecond, weaponOnly,
-				leftClickOnly);
+		this.registerSetting(mode, spid, variation, onGroundTicksPerSecond, offGroundTicksPerSecond, weaponOnly);
 	}
 
 	@Override
@@ -53,11 +51,6 @@ public class Timer extends Module {
 			return;
 		}
 		
-		if (leftClickOnly.isToggled() && (!clicker.isEnabled() || !Mouse.isButtonDown(0)) || ClickUtil.instance.isClicking()) {
-			this.resetTimer();
-			return;
-		}
-
 		switch (mode.getMode()) {
 		case "Constant":
 			timerSpeed = calculateConstantTimer();

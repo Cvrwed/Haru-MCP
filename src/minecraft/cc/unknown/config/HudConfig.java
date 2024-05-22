@@ -1,13 +1,9 @@
 package cc.unknown.config;
 
-import static cc.unknown.ui.HudPosition.ArrayListX;
-import static cc.unknown.ui.HudPosition.ArrayListY;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -27,8 +23,6 @@ import net.minecraft.util.MathHelper;
 public class HudConfig implements Loona {
 	private final File configFile;
 	private final File configDir;
-	private final String fileName = "config";
-	private final String clickGuiPos = "clickgui:pos:";
 
 	public HudConfig() {
 		configDir = new File(mc.mcDataDir, "Haru");
@@ -36,7 +30,7 @@ public class HudConfig implements Loona {
 			configDir.mkdir();
 		}
 
-		configFile = new File(configDir, fileName);
+		configFile = new File(configDir, "config");
 		if (!configFile.exists()) {
 			try {
 				configFile.createNewFile();
@@ -46,72 +40,18 @@ public class HudConfig implements Loona {
 		}
 	}
 
-	public void saveKeyStrokes() {
-		try {
-			File file = new File(mc.mcDataDir + File.separator + "Haru", "config");
-			if (!file.exists()) {
-				file.getParentFile().mkdirs();
-				file.createNewFile();
-			}
-
-			FileWriter writer = new FileWriter(file, false);
-			writer.write(KeyStroke.instance.getXPosition() + "\n" + KeyStroke.instance.getYPosition() + "\n" + KeyStroke.instance.isIsEnabled() + "\n" + KeyStroke.instance.isDisplayMouseButtons()
-					+ "\n" + KeyStroke.instance.getColorIndex() + "\n" + KeyStroke.instance.isDisplayOutline());
-			writer.close();
-		} catch (Throwable var2) {
-			var2.printStackTrace();
-		}
-	}
-
-	public static void applyKeyStrokes() {
-		try {
-			File file = new File(mc.mcDataDir + File.separator + "Haru", "config");
-			if (!file.exists()) {
-				return;
-			}
-
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-			int i = 0;
-
-			String line;
-			while ((line = reader.readLine()) != null) {
-				switch (i) {
-				case 0:
-					KeyStroke.instance.setXPosition(Integer.parseInt(line));
-					break;
-				case 1:
-					KeyStroke.instance.setYPosition(Integer.parseInt(line));
-					break;
-				case 2:
-					KeyStroke.instance.setIsEnabled(Boolean.parseBoolean(line));
-					break;
-				case 3:
-					KeyStroke.instance.setDisplayMouseButtons(Boolean.parseBoolean(line));
-					break;
-				case 4:
-					KeyStroke.instance.setColorIndex(Integer.parseInt(line));
-					break;
-				case 5:
-					KeyStroke.instance.setDisplayOutline(Boolean.parseBoolean(line));
-				}
-				++i;
-			}
-
-			reader.close();
-		} catch (Throwable var4) {
-			var4.printStackTrace();
-		}
-
-	}
-
 	public void saveHud() {
 		List<String> config = new ArrayList<>();
-		config.add(clickGuiPos + getClickGuiPos());
-		config.add(ArrayListX + FuckUtil.instance.getArrayListX());
-		config.add(ArrayListY + FuckUtil.instance.getArrayListY());
+		config.add("ClickGuiPos:" + getClickGuiPos());
+		
+		config.add("ArrayListX:" + FuckUtil.instance.getArrayListX());
+		config.add("ArrayListY:" + FuckUtil.instance.getArrayListY());
 
-		config.add(FuckUtil.instance.WaifuX + FuckUtil.instance.getWaifuX());
-		config.add(FuckUtil.instance.WaifuY + FuckUtil.instance.getWaifuY());
+		config.add("WaifuX:" + FuckUtil.instance.getWaifuX());
+		config.add("WaifuY:" + FuckUtil.instance.getWaifuY());
+		
+		config.add("KeystrokesX:" + KeyStroke.instance.getXPosition());
+		config.add("KeystrokesY:" + KeyStroke.instance.getYPosition());
 
 		try (PrintWriter writer = new PrintWriter(configFile)) {
 			for (String line : config) {
@@ -125,11 +65,16 @@ public class HudConfig implements Loona {
 	public void applyHud() {
 		List<String> config = parseConfigFile();
 		Map<String, Action> cfg = new HashMap<>();
-		cfg.put(clickGuiPos, this::loadClickGuiCoords);
-		cfg.put(ArrayListX, hudX -> FuckUtil.instance.setArrayListX(Integer.parseInt(hudX)));
-		cfg.put(ArrayListY, hudY -> FuckUtil.instance.setArrayListY(Integer.parseInt(hudY)));
-		cfg.put(FuckUtil.instance.WaifuX, waifuX -> FuckUtil.instance.setWaifuX(Integer.parseInt(waifuX)));
-		cfg.put(FuckUtil.instance.WaifuY, waifuY -> FuckUtil.instance.setWaifuY(Integer.parseInt(waifuY)));
+		cfg.put("ClickGuiPos:", this::loadClickGuiCoords);
+		
+		cfg.put("ArrayListX:", hudX -> FuckUtil.instance.setArrayListX(Integer.parseInt(hudX)));
+		cfg.put("ArrayListY:", hudY -> FuckUtil.instance.setArrayListY(Integer.parseInt(hudY)));
+		
+		cfg.put("WaifuX:", waifuX -> FuckUtil.instance.setWaifuX(Integer.parseInt(waifuX)));
+		cfg.put("WaifuY:", waifuY -> FuckUtil.instance.setWaifuY(Integer.parseInt(waifuY)));
+		
+		cfg.put("KeystrokesX:", key -> KeyStroke.instance.setXPosition(Integer.parseInt(key)));
+		cfg.put("KeystrokesY:", key -> KeyStroke.instance.setYPosition(Integer.parseInt(key)));
 
 		for (String line : config) {
 			for (Map.Entry<String, Action> entry : cfg.entrySet()) {

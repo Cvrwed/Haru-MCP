@@ -11,8 +11,6 @@ public enum FuckUtil implements Loona {
 	private PositionMode positionMode;
 	private int waifuX = 340;
 	private int waifuY = 135;
-	public final String WaifuX = "WaifuX:";
-	public final String WaifuY = "WaifuY:";
 
 	public PositionMode getPostitionMode(int marginX, int marginY, double height, double width) {
 		int halfHeight = (int) (height / 4);

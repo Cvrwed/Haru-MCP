@@ -16,7 +16,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.MathHelper;
 
 public class HudPosition extends GuiScreen {
-    final String hudTextExample = "This is an-Example-HUD";
     GuiButton resetPosButton;
     boolean mouseDown = false;
     int textBoxStartX = 0;
@@ -33,9 +32,6 @@ public class HudPosition extends GuiScreen {
     
 	public static AtomicInteger arrayListX = new AtomicInteger(5);
 	public static AtomicInteger arrayListY = new AtomicInteger(70);
-
-	public static final String ArrayListX = "HUDX:";
-	public static final String ArrayListY = "HUDY:";
 
     @Override
     public void initGui() {
@@ -56,7 +52,7 @@ public class HudPosition extends GuiScreen {
         AtomicInteger textBoxStartY = new AtomicInteger(marginY);
         int textBoxEndX = textBoxStartX.get() + 50;
         int textBoxEndY = textBoxStartY.get() + 32;
-        this.drawArrayList(this.mc.fontRendererObj, this.hudTextExample);
+        this.drawArrayList(this.mc.fontRendererObj, "This is an-Example-HUD");
         this.textBoxStartX = textBoxStartX.get();
         this.textBoxStartY = textBoxStartY.get();
         this.textBoxEndX = textBoxEndX;
