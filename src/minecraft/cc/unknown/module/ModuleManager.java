@@ -20,6 +20,7 @@ import net.minecraft.client.gui.FontRenderer;
 public class ModuleManager implements Loona {
 	
 	private final List<Module> modules = new ArrayList<>();
+	private final List<Module> draggable = new ArrayList<>();
 	private boolean initialized = false;
 	
 	public ModuleManager() {
@@ -86,7 +87,11 @@ public class ModuleManager implements Loona {
 				//
 				new Tweaks()
 				
-				);
+		);
+		
+   		for(Module m : modules) {
+			draggable.addAll(Arrays.asList(m));
+		}
 
 		initialized = true;
 	}
@@ -105,6 +110,10 @@ public class ModuleManager implements Loona {
 
     public List<Module> getModule() {
         return modules;
+    }
+    
+    public List<Module> getDraggable() {
+    	return draggable;
     }
 
     public List<Module> getModule(Class<?>[] classes) {

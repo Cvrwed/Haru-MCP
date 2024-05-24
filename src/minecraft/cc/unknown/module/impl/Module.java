@@ -9,11 +9,11 @@ import org.lwjgl.input.Keyboard;
 import com.google.gson.JsonObject;
 
 import cc.unknown.Haru;
-import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.Setting;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.utils.Loona;
+import cc.unknown.utils.misc.DragUtil;
 
 public class Module implements Loona {
 	private List<Setting> settings = new ArrayList<>();
@@ -130,6 +130,9 @@ public class Module implements Loona {
 
 	public void guiButtonToggled(BooleanValue b) {
 	}
+	
+	public void setXYPosition(double x, double y) { 
+	}
 
 	public void toggle() {
 		if (this.enabled) {
@@ -146,6 +149,10 @@ public class Module implements Loona {
 		for (Setting setting : this.settings) {
 			setting.resetToDefaults();
 		}
+	}
+	
+	public DragUtil getPosition(){
+		return null;
 	}
 
 	public String getBindAsString() {

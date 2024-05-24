@@ -11,6 +11,9 @@ import org.lwjgl.input.Mouse;
 
 import com.google.common.collect.Lists;
 
+import cc.unknown.Haru;
+import cc.unknown.module.impl.Module;
+import cc.unknown.utils.misc.DragUtil;
 import net.minecraft.network.play.client.CPacketTabComplete;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.IChatComponent;
@@ -42,6 +45,10 @@ public class GuiChat extends GuiScreen {
 	private String defaultInputFieldText = "";
 	private int lastMouseY;
 	private int lastMouseX;
+	
+	private Module draggingModule;
+	private boolean dragging;
+	private double dragX, dragY;
 
 	public GuiChat() {
 	}
@@ -148,9 +155,8 @@ public class GuiChat extends GuiScreen {
 	 * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
 	 */
 	public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		if (mouseButton == 0) {
-			ScaledResolution sr = new ScaledResolution(mc);
 
+		if (mouseButton == 0) {
 			IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
 
 			if (this.handleComponentClick(ichatcomponent)) {
@@ -160,7 +166,25 @@ public class GuiChat extends GuiScreen {
 
 		this.inputField.mouseClicked(mouseX, mouseY, mouseButton);
 
+		for (Module module : Haru.instance.getModuleManager().getDraggable()) {
+			if (!module.isEnabled() || module.getPosition() == null)
+				continue;
+			if (module.getPosition().isInside(mouseX, mouseY)) {
+				draggingModule = module;
+				dragging = true;
+				double[] pos = DragUtil.setPosition(module.getPosition().getX(), module.getPosition().getY());
+				dragX = mouseX - pos[0];
+				dragY = mouseY - pos[1];
+				return;
+			}
+		}
 		super.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+	
+	@Override
+	protected void mouseReleased(int mouseX, int mouseY, int state) {
+		dragging = false;
+		super.mouseReleased(mouseX, mouseY, state);
 	}
 
 	/**
@@ -266,19 +290,23 @@ public class GuiChat extends GuiScreen {
 	 * Draws the screen and all the components in it. Args : mouseX, mouseY,
 	 * renderPartialTicks
 	 */
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {
-        drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
-        this.inputField.drawTextBox();
-        IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
+		this.inputField.drawTextBox();
+		IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
 
-        if (ichatcomponent != null && ichatcomponent.getChatStyle().getChatHoverEvent() != null)
-        {
-            this.handleComponentHover(ichatcomponent, mouseX, mouseY);
-        }
+		if (ichatcomponent != null && ichatcomponent.getChatStyle().getChatHoverEvent() != null) {
+			this.handleComponentHover(ichatcomponent, mouseX, mouseY);
+		}
 
-        super.drawScreen(mouseX, mouseY, partialTicks);
-    }
+		if (dragging) {
+			double x = mouseX - dragX;
+			double y = mouseY - dragY;
+			double[] pos = DragUtil.setPosition(x, y);
+			draggingModule.setXYPosition(x, y);
+		}
+		super.drawScreen(mouseX, mouseY, partialTicks);
+	}
 
 	public void onAutocompleteResponse(String[] p_146406_1_) {
 		if (this.waitingOnAutocomplete) {

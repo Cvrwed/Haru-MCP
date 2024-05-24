@@ -11,8 +11,10 @@ import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.ui.clickgui.impl.api.Theme;
+import cc.unknown.utils.misc.DragUtil;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,8 +23,8 @@ import net.minecraft.network.play.client.CPacketUseEntity;
 @Register(name = "TargetHUD", category = Category.Visuals)
 public class TargetHUD extends Module {
 
-	private final SliderValue posX = new SliderValue("Position X", 100, 10, 2000, 10);
-	private final SliderValue posY = new SliderValue("Position Y", 0, 10, 2000, 10);
+	private final SliderValue posX = new SliderValue("Position X", 100, -1000, 1000, 0.1);
+	private final SliderValue posY = new SliderValue("Position Y", 0, -1000, 1000, 0.1);
 
 	private EntityPlayer player;
 	private int ticksSinceAttack;
@@ -43,6 +45,11 @@ public class TargetHUD extends Module {
 
 		if (ticksSinceAttack > 20) {
 			player = null;
+		}
+
+		if (mc.currentScreen instanceof GuiChat) {
+			player = mc.player;
+			ticksSinceAttack = 15;
 		}
 	}
 
@@ -87,6 +94,22 @@ public class TargetHUD extends Module {
 			mc.fontRendererObj.drawString(s, x + 45 + (70 / 2) - (mc.fontRendererObj.getStringWidth(s) / 2),
 					y + 20 + (15 / 2) - (mc.fontRendererObj.FONT_HEIGHT / 2) + 1, -1);
 		}
+	}
+	
+	@Override
+	public DragUtil getPosition() {
+		if (player == null)
+			return null;
+		
+		ScaledResolution sr = new ScaledResolution(mc);
+		double[] pos = DragUtil.setScaledPosition(posX.getInput(), posY.getInput());
+		return new DragUtil(pos[0], pos[1], sr.getScaledWidth(), sr.getScaledHeight(), 1);
+	}
+	
+	@Override
+	public void setXYPosition(double x, double y) {
+		this.posX.setValue(x);
+		this.posY.setValue(y);
 	}
 
 	private void drawRect(int x, int y, int width, int height, int color) {
