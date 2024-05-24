@@ -79,14 +79,7 @@ public class HaruGui extends GuiScreen {
 	@Override
 	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		ScaledResolution sr = new ScaledResolution(mc);
-
-		if (mouseButton == 0 && isBound(mouseX, mouseY, sr)) {
-			isDragging = true;
-			lastMouseX.set(mouseX);
-			lastMouseY.set(mouseY);
-			return;
-		}
-
+		
 		categoryList.forEach(c -> {
 			if (c.isInside(mouseX, mouseY)) {
 				switch (mouseButton) {
@@ -98,6 +91,16 @@ public class HaruGui extends GuiScreen {
 				case 1:
 					c.setOpen(!c.isOpen());
 					break;
+				}
+			}
+			
+			if (isBound(mouseX, mouseY, sr)) {
+				switch (mouseButton) {
+				case 0:
+					isDragging = true;
+					lastMouseX.set(mouseX);
+					lastMouseY.set(mouseY);
+					return;
 				}
 			}
 
@@ -113,16 +116,19 @@ public class HaruGui extends GuiScreen {
 	public void mouseReleased(int mouseX, int mouseY, int state) {
 		ScaledResolution sr = new ScaledResolution(mc);
 
-		if (state == 0 && isBound(mouseX, mouseY, sr)) {
-			isDragging = false;
-			return;
-		}
-
 		categoryList.forEach(c -> {
 			c.setDragging(false);
 			if (c.isOpen()) {
 				if (!c.getModules().isEmpty()) {
 					c.getModules().forEach(component -> component.mouseReleased(mouseX, mouseY, state));
+				}
+			}
+			
+			if (isBound(mouseX, mouseY, sr)) {
+				switch (state) {
+				case 0:
+					isDragging = false;
+					return;
 				}
 			}
 		});

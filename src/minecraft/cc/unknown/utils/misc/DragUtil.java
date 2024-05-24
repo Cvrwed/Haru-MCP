@@ -1,13 +1,14 @@
 package cc.unknown.utils.misc;
 
 import cc.unknown.utils.Loona;
+import cc.unknown.utils.client.FuckUtil;
 import net.minecraft.client.gui.ScaledResolution;
 
 public class DragUtil implements Loona {
-	
+
 	private double x, y, width, height;
 	private float scale;
-	
+
 	public DragUtil(double x, double y, double width, double height, float scale) {
 		this.x = x;
 		this.y = y;
@@ -57,7 +58,7 @@ public class DragUtil implements Loona {
 	}
 
 	public boolean isInside(int x, int y) {
-		return x > getX() && y > getY() && x < getX() + getWidth() && y < getY() + getHeight();
+		return x >= getX() && y >= getY() && x <= getX() + getWidth() && y <= getY() + getHeight();
 	}
 
 	public static double[] setScaledPosition(double x, double y) {

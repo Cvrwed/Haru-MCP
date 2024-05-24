@@ -4,9 +4,7 @@ import java.awt.Color;
 
 import org.lwjgl.input.Keyboard;
 
-import cc.unknown.ui.clickgui.impl.api.Theme;
 import cc.unknown.utils.Loona;
-import cc.unknown.utils.keystrokes.KeyStroke;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.settings.KeyBinding;
 

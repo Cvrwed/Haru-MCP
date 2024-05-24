@@ -52,7 +52,7 @@ public class SprintReset extends Module {
 		Packet<?> p = e.getPacket();
 		if (e.isSend() && p instanceof CPacketUseEntity) {
 			CPacketUseEntity wrapper = (CPacketUseEntity) p;
-			if (wrapper.getAction() == CPacketUseEntity.Mode.ATTACK) {
+			if (wrapper.getEntityFromWorld(mc.world) instanceof EntityPlayer && wrapper.getAction() == CPacketUseEntity.Mode.ATTACK) {
 				double entityDistance = CombatUtil.instance.getDistanceToEntityBox(target);
 				if (entityDistance <= tapRange.getInputToInt()) {
 					hitsCount++;

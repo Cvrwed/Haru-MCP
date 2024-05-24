@@ -17,7 +17,6 @@ import cc.unknown.Haru;
 import cc.unknown.ui.clickgui.impl.CategoryComp;
 import cc.unknown.utils.Loona;
 import cc.unknown.utils.client.FuckUtil;
-import cc.unknown.utils.keystrokes.KeyStroke;
 import net.minecraft.util.MathHelper;
 
 public class HudConfig implements Loona {
@@ -49,9 +48,6 @@ public class HudConfig implements Loona {
 
 		config.add("WaifuX:" + FuckUtil.instance.getWaifuX());
 		config.add("WaifuY:" + FuckUtil.instance.getWaifuY());
-		
-		config.add("KeystrokesX:" + KeyStroke.instance.getXPosition());
-		config.add("KeystrokesY:" + KeyStroke.instance.getYPosition());
 
 		try (PrintWriter writer = new PrintWriter(configFile)) {
 			for (String line : config) {
@@ -72,9 +68,6 @@ public class HudConfig implements Loona {
 		
 		cfg.put("WaifuX:", waifuX -> FuckUtil.instance.setWaifuX(Integer.parseInt(waifuX)));
 		cfg.put("WaifuY:", waifuY -> FuckUtil.instance.setWaifuY(Integer.parseInt(waifuY)));
-		
-		cfg.put("KeystrokesX:", key -> KeyStroke.instance.setXPosition(Integer.parseInt(key)));
-		cfg.put("KeystrokesY:", key -> KeyStroke.instance.setYPosition(Integer.parseInt(key)));
 
 		for (String line : config) {
 			for (Map.Entry<String, Action> entry : cfg.entrySet()) {

@@ -79,6 +79,7 @@ public class ModuleManager implements Loona {
 				new ClickGuiModule(),
 				new HUD(),
 				new CpsDisplay(),
+				new KeyStrokes(),
 				new TargetHUD(),
 				new Trajectories(),
 				new Nametags(),

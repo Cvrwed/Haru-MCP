@@ -182,49 +182,6 @@ public class RotationManager implements Loona {
 		float pitch = (float) (-Math.atan2(yDiff, dist) * 180.0 / Math.PI);
 		return new Rotation(yaw, pitch);
 	}
-	
-    public static VecRotation faceBlock(final BlockPos blockPos) {
-        if (blockPos == null)
-            return null;
-
-        VecRotation vecRotation = null;
-
-        for(double xSearch = 0.1D; xSearch < 0.9D; xSearch += 0.1D) {
-            for(double ySearch = 0.1D; ySearch < 0.9D; ySearch += 0.1D) {
-                for (double zSearch = 0.1D; zSearch < 0.9D; zSearch += 0.1D) {
-                    final Vec3 eyesPos = new Vec3(mc.player.posX, mc.player.getEntityBoundingBox().minY + mc.player.getEyeHeight(), mc.player.posZ);
-                    final Vec3 posVec = new Vec3(blockPos).addVector(xSearch, ySearch, zSearch);
-                    final double dist = eyesPos.distanceTo(posVec);
-
-                    final double diffX = posVec.xCoord - eyesPos.xCoord;
-                    final double diffY = posVec.yCoord - eyesPos.yCoord;
-                    final double diffZ = posVec.zCoord - eyesPos.zCoord;
-
-                    final double diffXZ = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
-
-                    final Rotation rotation = new Rotation(
-                            MathHelper.wrapAngle180((float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90F).floatValue(),
-                            MathHelper.wrapAngle180((float) -Math.toDegrees(Math.atan2(diffY, diffXZ))).floatValue()
-                    );
-
-                    final Vec3 rotationVector = getVectorForRotation(rotation);
-                    final Vec3 vector = eyesPos.addVector(rotationVector.xCoord * dist, rotationVector.yCoord * dist,
-                            rotationVector.zCoord * dist);
-                    final MovingObjectPosition obj = mc.world.rayTraceBlocks(eyesPos, vector, false,
-                            false, true);
-
-                    if (obj.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                        final VecRotation currentVec = new VecRotation(posVec, rotation);
-
-                        if (vecRotation == null || getRotationDifference(currentVec.getRotation()) < getRotationDifference(vecRotation.getRotation()))
-                            vecRotation = currentVec;
-                    }
-                }
-            }
-        }
-
-        return vecRotation;
-    }
     
     public static Vec3 getVectorForRotation(final Rotation rotation) {
         float yawCos = MathHelper.cos(-rotation.getYaw() * 0.017453292F - (float) Math.PI);

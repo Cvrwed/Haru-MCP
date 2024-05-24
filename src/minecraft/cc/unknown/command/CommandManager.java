@@ -31,8 +31,7 @@ public class CommandManager {
 			new TransactionCommand(),
 			new ClearCommand(),
 			new GameCommand(),
-			new PingCommand(),
-			new KeyStrokesCommand()
+			new PingCommand()
 			);
 	}
 
