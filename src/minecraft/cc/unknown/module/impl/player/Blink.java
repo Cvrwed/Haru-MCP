@@ -18,7 +18,7 @@ import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
-import cc.unknown.ui.clickgui.impl.api.Theme;
+import cc.unknown.ui.clickgui.impl.theme.Theme;
 import cc.unknown.utils.client.Cold;
 import cc.unknown.utils.network.PacketUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -157,10 +157,10 @@ public class Blink extends Module {
 					GL11.glDisable(GL11.GL_DEPTH_TEST);
 					mc.entityRenderer.disableLightmap();
 					GL11.glBegin(GL11.GL_LINE_STRIP);
-					GL11.glColor4f(Theme.instance.getMainColor().getRed() / 255.0f,
-							Theme.instance.getMainColor().getGreen() / 255.0f,
-							Theme.instance.getMainColor().getBlue() / 255.0f,
-							Theme.instance.getMainColor().getAlpha() / 255.0f);
+					GL11.glColor4f(getTheme().getSecondColor().getRed() / 255.0f,
+							getTheme().getSecondColor().getGreen() / 255.0f,
+							getTheme().getSecondColor().getBlue() / 255.0f,
+							getTheme().getSecondColor().getAlpha() / 255.0f);
 
 					double renderPosX = mc.getRenderManager().viewerPosX;
 					double renderPosY = mc.getRenderManager().viewerPosY;

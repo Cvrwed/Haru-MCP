@@ -3,8 +3,7 @@ package cc.unknown.ui.clickgui.impl;
 import org.lwjgl.opengl.GL11;
 
 import cc.unknown.module.setting.impl.DescValue;
-import cc.unknown.ui.clickgui.impl.api.Component;
-import cc.unknown.ui.clickgui.impl.api.Theme;
+import cc.unknown.ui.clickgui.impl.theme.Theme;
 
 public class DescComp extends Component {
 	private final DescValue desc;
@@ -21,7 +20,7 @@ public class DescComp extends Component {
 	public void renderComponent() {
 		GL11.glPushMatrix();
 		GL11.glScaled(0.5D, 0.5D, 0.5D);
-		mc.fontRendererObj.drawStringWithShadow(this.desc.getDesc(), (float)((this.p.category.getX() + 4) * 2), (float)((this.p.category.getY() + this.o + 4) * 2), Theme.instance.getMainColor().getRGB());
+		mc.fontRendererObj.drawStringWithShadow(this.desc.getDesc(), (float)((this.p.category.getX() + 4) * 2), (float)((this.p.category.getY() + this.o + 4) * 2), getTheme().getMainColor().getRGB());
 		GL11.glPopMatrix();
 	}
 

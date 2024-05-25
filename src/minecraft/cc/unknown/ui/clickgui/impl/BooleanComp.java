@@ -4,8 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.setting.impl.BooleanValue;
-import cc.unknown.ui.clickgui.impl.api.Component;
-import cc.unknown.ui.clickgui.impl.api.Theme;
+import cc.unknown.ui.clickgui.impl.theme.Theme;
 
 public class BooleanComp extends Component {
 	private final Module mod;
@@ -43,7 +42,7 @@ public class BooleanComp extends Component {
 						: "[-]  " + this.cl1ckbUtt0n.getName(),
 				(float) ((this.module.category.getX() + 4) * 2),
 				(float) ((this.module.category.getY() + this.o + 5) * 2),
-				this.cl1ckbUtt0n.isToggled() ? Theme.instance.getMainColor().getRGB() : -1);
+				this.cl1ckbUtt0n.isToggled() ? getTheme().getMainColor().getRGB() : -1);
 		GL11.glPopMatrix();
 	}
 

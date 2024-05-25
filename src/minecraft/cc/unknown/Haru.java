@@ -6,6 +6,7 @@ import cc.unknown.config.HudConfig;
 import cc.unknown.event.impl.api.EventBus;
 import cc.unknown.module.ModuleManager;
 import cc.unknown.ui.clickgui.HaruGui;
+import cc.unknown.ui.clickgui.impl.theme.ThemeManager;
 import cc.unknown.utils.player.rotation.RotationManager;
 
 public enum Haru {
@@ -16,6 +17,7 @@ public enum Haru {
 	private HudConfig hudConfig;
 	private RotationManager rotationManager;
 	private ModuleManager moduleManager;
+	private ThemeManager themeManager;
 
 	private HaruGui haruGui;
 	private EventBus eventBus = new EventBus();
@@ -26,6 +28,7 @@ public enum Haru {
 		rotationManager = new RotationManager();
 		haruGui = new HaruGui();
 		configManager = new ConfigManager();
+		themeManager = new ThemeManager();
 		hudConfig = new HudConfig();
 		hudConfig.applyHud();
 	}
@@ -56,5 +59,9 @@ public enum Haru {
 
 	public EventBus getEventBus() {
 		return eventBus;
+	}
+
+	public ThemeManager getThemeManager() {
+		return themeManager;
 	}
 }

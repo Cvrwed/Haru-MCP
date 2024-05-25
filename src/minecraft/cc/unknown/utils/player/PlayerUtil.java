@@ -60,7 +60,7 @@ public class PlayerUtil implements Loona {
     public static float pitchToEntity(Entity ent, float f) {
         double x = mc.player.getDistanceToEntity(ent);
         double y = mc.player.posY - (ent.posY + f);
-        double pitch = (((Math.atan2(x, y) * 180.0D) / 3.141592653589793D));
+        double pitch = (((Math.atan2(x, y) * 180.0D) / Math.PI));
         return (float) (90 - pitch);
     }
 

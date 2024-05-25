@@ -13,8 +13,7 @@ import cc.unknown.module.setting.impl.DescValue;
 import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
-import cc.unknown.ui.clickgui.impl.api.Component;
-import cc.unknown.ui.clickgui.impl.api.Theme;
+import cc.unknown.ui.clickgui.impl.theme.Theme;
 import net.minecraft.client.Minecraft;
 
 public class ModuleComp extends Component {
@@ -105,12 +104,12 @@ public class ModuleComp extends Component {
 	public void renderComponent() {
 		v((float) this.category.getX(), (float) (this.category.getY() + this.o),
 				(float) (this.category.getX() + this.category.getWidth()), (float) (this.category.getY() + 15 + this.o),
-				this.mod.isEnabled() ? Theme.instance.getMainColor().getRGB() : -12829381,
-				this.mod.isEnabled() ? Theme.instance.getMainColor().getRGB() : -12302777);
+				this.mod.isEnabled() ? getTheme().getMainColor().getRGB() : -12829381,
+				this.mod.isEnabled() ? getTheme().getMainColor().getRGB() : -12302777);
 		GL11.glPushMatrix();
 		int button_rgb;
 		if (this.mod.isEnabled()) {
-			button_rgb = Theme.instance.getMainColor().getRGB();
+			button_rgb = getTheme().getMainColor().getRGB();
 		} else if (this.mod.canBeEnabled()) {
 			button_rgb = Color.lightGray.getRGB();
 		} else {

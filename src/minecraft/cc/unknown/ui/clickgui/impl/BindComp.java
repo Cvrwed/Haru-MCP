@@ -6,8 +6,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import cc.unknown.module.impl.visuals.ClickGuiModule;
-import cc.unknown.ui.clickgui.impl.api.Component;
-import cc.unknown.ui.clickgui.impl.api.Theme;
+import cc.unknown.ui.clickgui.impl.theme.Theme;
 
 public class BindComp extends Component {
     private boolean isBinding;
@@ -71,6 +70,6 @@ public class BindComp extends Component {
     }
 
     private void dr(String s) {
-        mc.fontRendererObj.drawStringWithShadow(s, (float)((this.p.category.getX() + 4) * 2), (float)((this.p.category.getY() + this.o.get() + 3) * 2), Theme.instance.getMainColor().getRGB());
+        mc.fontRendererObj.drawStringWithShadow(s, (float)((this.p.category.getX() + 4) * 2), (float)((this.p.category.getY() + this.o.get() + 3) * 2), getTheme().getMainColor().getRGB());
     }
 }

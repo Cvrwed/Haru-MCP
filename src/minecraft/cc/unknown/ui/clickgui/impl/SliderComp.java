@@ -6,8 +6,7 @@ import java.math.RoundingMode;
 import org.lwjgl.opengl.GL11;
 
 import cc.unknown.module.setting.impl.SliderValue;
-import cc.unknown.ui.clickgui.impl.api.Component;
-import cc.unknown.ui.clickgui.impl.api.Theme;
+import cc.unknown.ui.clickgui.impl.theme.Theme;
 import net.minecraft.client.gui.Gui;
 
 public class SliderComp extends Component {
@@ -39,7 +38,7 @@ public class SliderComp extends Component {
 		}
 
 		Gui.drawRect(l, p.category.getY() + offset + 11, r, p.category.getY() + offset + 15,
-				Theme.instance.getMainColor().getRGB());
+				getTheme().getMainColor().getRGB());
 		GL11.glPushMatrix();
 		GL11.glScaled(0.5D, 0.5D, 0.5D);
 		mc.fontRendererObj.drawStringWithShadow(v.getName() + ": " + v.getInput(),

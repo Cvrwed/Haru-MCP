@@ -90,6 +90,10 @@ public class MathHelper {
 	public static Random rand() {
 		return random;
 	}
+	
+    public static double clamp(double min, double max, double n) {
+        return Math.max(min, Math.min(max, n));
+    }
 
 	public static ArrayList<String> toArrayList(String[] x) {
 		return new ArrayList<>(Arrays.asList(x));

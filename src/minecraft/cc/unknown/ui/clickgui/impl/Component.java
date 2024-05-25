@@ -1,4 +1,4 @@
-package cc.unknown.ui.clickgui.impl.api;
+package cc.unknown.ui.clickgui.impl;
 
 import cc.unknown.utils.Loona;
 

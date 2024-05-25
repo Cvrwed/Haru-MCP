@@ -1,7 +1,6 @@
 package cc.unknown.module.impl.visuals;
 
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.render.RenderEvent;
@@ -9,12 +8,10 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.BooleanValue;
-import cc.unknown.module.setting.impl.SliderValue;
-import cc.unknown.ui.clickgui.impl.api.Theme;
+import cc.unknown.utils.keystrokes.KeyStroke;
 import cc.unknown.utils.keystrokes.RenderKeys;
 import cc.unknown.utils.keystrokes.RenderMouse;
-import cc.unknown.utils.misc.DragUtil;
-import net.minecraft.client.gui.Gui;
+import cc.unknown.utils.keystrokes.gui.ConfigGui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 
@@ -25,21 +22,27 @@ public class KeyStrokes extends Module {
 			new RenderKeys(mc.gameSettings.keyBindRight, 50, 26) };
 
 	private final RenderMouse[] mouseButtons = { new RenderMouse(0, 2, 50), new RenderMouse(1, 38, 50) };
-	
-	private final SliderValue posX = new SliderValue("Position X", 100, -1000, 1000, 0.1);
-	private final SliderValue posY = new SliderValue("Position Y", 0, -1000, 1000, 0.1);
+	private BooleanValue editPosition = new BooleanValue("Edit Position", false);
 	private BooleanValue showButtons = new BooleanValue("Mouse Buttons", false);
 	private BooleanValue showOutline = new BooleanValue("Outline", false);
 
 	public KeyStrokes() {
-		this.registerSetting(posX, posY, showButtons, showOutline);
+		this.registerSetting(editPosition, showButtons, showOutline);
+	}
+	
+	@Override
+	public void guiButtonToggled(BooleanValue b) {
+		if (b == editPosition) {
+			editPosition.disable();
+			mc.displayGuiScreen(new ConfigGui());
+		}
 	}
 
 	@EventLink
 	public void onRender(RenderEvent event) {
 		if (event.is2D()) {
 			if (mc.currentScreen != null) {
-				if (mc.currentScreen instanceof GuiChat) {
+				if (mc.currentScreen instanceof GuiChat || mc.currentScreen instanceof ConfigGui) {
 					try {
 						mc.currentScreen.handleInput();
 					} catch (IOException e) {
@@ -54,30 +57,34 @@ public class KeyStrokes extends Module {
 	}
 	
 	public void showKeystrokes() {
-	    double[] pos = DragUtil.setScaledPosition(posX.getInput(), posY.getInput());
-	    
-	    int textColor = Theme.instance.getMainColor().getRGB();
-	    ScaledResolution resolution = new ScaledResolution(mc);
-	    int width = 74;
-	    int height = showButtons.isToggled() ? 74 : 50;
+		int xPosition = KeyStroke.instance.getXPosition();
+		int yPosition = KeyStroke.instance.getYPosition();
+		int textColor = getTheme().getMainColor().getRGB();
+		ScaledResolution resolution = new ScaledResolution(mc);
+		int width = 74;
+		int height = showButtons.isToggled() ? 74 : 50;
 
-	    if (pos[0] < 0) {
-	        pos[0] = 0;
-	    } else if (pos[0] > resolution.getScaledWidth() - width) {
-	        pos[0] = resolution.getScaledWidth() - width;
-	    }
+		if (xPosition < 0) {
+			KeyStroke.instance.setXPosition(0);
+			xPosition = KeyStroke.instance.getXPosition();
+		} else if (xPosition > resolution.getScaledWidth() - width) {
+			KeyStroke.instance.setXPosition(resolution.getScaledWidth() - width);
+			xPosition = KeyStroke.instance.getXPosition();
+		}
 
-	    if (pos[1] < 0) {
-	        pos[1] = 0;
-	    } else if (pos[1] > resolution.getScaledHeight() - height) {
-	        pos[1] = resolution.getScaledHeight() - height;
-	    }
+		if (yPosition < 0) {
+			KeyStroke.instance.setYPosition(0);
+			yPosition = KeyStroke.instance.getYPosition();
+		} else if (yPosition > resolution.getScaledHeight() - height) {
+			KeyStroke.instance.setYPosition(resolution.getScaledHeight() - height);
+			yPosition = KeyStroke.instance.getYPosition();
+		}
 
-	    this.drawMovementKeys((int)pos[0], (int)pos[1], textColor);
-	    
-	    if (showButtons.isToggled()) {
-	        this.drawMouseButtons((int)pos[0], (int)pos[1], textColor);
-	    }
+		this.drawMovementKeys(xPosition, yPosition, textColor);
+		
+		if (showButtons.isToggled()) {
+			this.drawMouseButtons(xPosition, yPosition, textColor);
+		}
 	}
 
 	private void drawMovementKeys(int x, int y, int textColor) {
@@ -92,15 +99,4 @@ public class KeyStrokes extends Module {
 	    }
 	}
 
-	@Override
-	public DragUtil getPosition() {
-	    double[] pos = DragUtil.setScaledPosition(posX.getInput(), posY.getInput());
-	    return new DragUtil(pos[0], pos[1], 60, 60, 1);
-	}
-
-	@Override
-	public void setXYPosition(double x, double y) {
-	    this.posX.setValue(x);
-	    this.posY.setValue(y);
-	}
 }

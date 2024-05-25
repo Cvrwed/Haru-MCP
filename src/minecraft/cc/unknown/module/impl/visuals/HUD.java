@@ -20,7 +20,7 @@ import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.ui.HudPosition;
 import cc.unknown.ui.clickgui.HaruGui;
-import cc.unknown.ui.clickgui.impl.api.Theme;
+import cc.unknown.ui.clickgui.impl.theme.Theme;
 import cc.unknown.utils.client.ColorUtil;
 import cc.unknown.utils.client.FuckUtil;
 import cc.unknown.utils.client.FuckUtil.PositionMode;
@@ -30,8 +30,7 @@ import net.minecraft.client.gui.Gui;
 @Register(name = "HUD", category = Category.Visuals)
 public class HUD extends Module {
 
-	private ModeValue colorMode = new ModeValue("ArrayList Theme", "Static", "Static", "Slinky", "Astolfo", "Primavera",
-			"Ocean", "Theme");
+	private ModeValue colorMode = new ModeValue("ArrayList Theme", "Static", "Static", "Aubergine", "Aqua", "Banana", "Blend", "Blossom", "Bubblegum", "Candy Cane", "Cherry", "Christmas", "Coral", "Digital Horizon", "Express", "Lime Water", "Lush", "Halogen", "Hyper", "Magic", "May", "Orange Juice", "Pastel", "Pumpkin", "Satin", "Snowy Sky", "Steel Fade", "Sundae", "Sunkist", "Water", "Winter", "Theme");
 	private SliderValue arrayColor = new SliderValue("Array Color [H/S/B]", 0, 0, 350, 10);
 	private SliderValue saturation = new SliderValue("Saturation [H/S/B]", 1.0, 0.0, 1.0, 0.1);
 	private SliderValue brightness = new SliderValue("Brightness [H/S/B]", 1.0, 0.0, 1.0, 0.1);
@@ -120,28 +119,116 @@ public class HUD extends Module {
 							saturation.getInputToFloat(), brightness.getInputToFloat()).getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
 					break;
-				case "Slinky":
-					color.set(ColorUtil.reverseGradientDraw(new Color(255, 165, 128), new Color(255, 0, 255), y.get())
-							.getRGB());
+				case "Aubergine":
+					color.set(getTheme().AUBERGINE.getAccentColor().getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
 					break;
-				case "Astolfo":
-					color.set(ColorUtil.reverseGradientDraw(new Color(243, 145, 216), new Color(152, 165, 243),
-							new Color(64, 224, 208), y.get()).getRGB());
+				case "Aqua":
+					color.set(getTheme().AQUA.getAccentColor().getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
 					break;
-				case "Primavera":
-					color.set(ColorUtil.reverseGradientDraw(new Color(0, 206, 209), new Color(255, 255, 224),
-							new Color(211, 211, 211), y.get()).getRGB());
+				case "Banana":
+					color.set(getTheme().BANANA.getAccentColor().getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
 					break;
-				case "Ocean":
-					color.set(ColorUtil.reverseGradientDraw(new Color(0, 0, 128), new Color(0, 255, 255),
-							new Color(173, 216, 230), y.get()).getRGB());
+				case "Blend":
+					color.set(getTheme().BLEND.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Blossom":
+					color.set(getTheme().BLOSSOM.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Candy Cane":
+					color.set(getTheme().CANDY_CANE.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Cherry":
+					color.set(getTheme().CHERRY.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Christmas":
+					color.set(getTheme().CHRISTMAS.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Coral":
+					color.set(getTheme().CORAL.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Digital Horizon":
+					color.set(getTheme().DIGITAL_HORIZON.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Express":
+					color.set(getTheme().EXPRESS.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Lime Water":
+					color.set(getTheme().LIME_WATER.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Lush":
+					color.set(getTheme().LUSH.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Halogen":
+					color.set(getTheme().HALOGEN.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Hyper":
+					color.set(getTheme().HYPER.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Magic":
+					color.set(getTheme().MAGIC.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "May":
+					color.set(getTheme().MAY.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Orange Juice":
+					color.set(getTheme().ORANGE_JUICE.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Pastel":
+					color.set(getTheme().PASTEL.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Pumpkin":
+					color.set(getTheme().PUMPKIN.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Satin":
+					color.set(getTheme().SATIN.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Snowy Sky":
+					color.set(getTheme().SNOWY_SKY.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Steel Fade":
+					color.set(getTheme().STEEL_FADE.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Sundae":
+					color.set(getTheme().SUNDAE.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Sunkist":
+					color.set(getTheme().SUNKIST.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Water":
+					color.set(getTheme().WATER.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
+				case "Winter":
+					color.set(getTheme().WINTER.getAccentColor().getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
 					break;
 				case "Theme":
-					color.set(Theme.instance.getMainColor().getRGB());
+					color.set(getTheme().getMainColor().getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
 					break;
 				}

@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 
 import cc.unknown.module.setting.Setting;
 import cc.unknown.module.setting.impl.ModeValue;
-import cc.unknown.ui.clickgui.impl.api.Component;
 
 public class ModeComp extends Component {
 	private final int c = (new Color(30, 144, 255)).getRGB();

@@ -6,8 +6,7 @@ import java.math.RoundingMode;
 import org.lwjgl.opengl.GL11;
 
 import cc.unknown.module.setting.impl.DoubleSliderValue;
-import cc.unknown.ui.clickgui.impl.api.Component;
-import cc.unknown.ui.clickgui.impl.api.Theme;
+import cc.unknown.ui.clickgui.impl.theme.Theme;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.MathHelper;
 
@@ -45,7 +44,7 @@ public class DoubleSliderComp extends Component {
 				+ (int) this.blankWidth + boxMargin - 1;
 
 		Gui.drawRect(startToDrawFrom, this.module.category.getY() + this.moduleStartY + textSize, finishDrawingAt,
-				this.module.category.getY() + this.moduleStartY + textSize + boxHeight, Theme.instance.getMainColor().getRGB());
+				this.module.category.getY() + this.moduleStartY + textSize + boxHeight, getTheme().getMainColor().getRGB());
 		Gui.drawRect(middleThing, this.module.category.getY() + this.moduleStartY + textSize - 1,
 				middleThing + (middleThing % 2 == 0 ? 2 : 1),
 				this.module.category.getY() + this.moduleStartY + textSize + boxHeight + 1, 0xff1D1D1F);

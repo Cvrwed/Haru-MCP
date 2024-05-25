@@ -306,8 +306,8 @@ public class GuiChat extends GuiScreen {
 		}
 
 		if (dragging) {
-			double x = mouseX - dragX + lastMouseX;
-			double y = mouseY - dragY + lastMouseY;
+			double x = mouseX - dragX;
+			double y = mouseY - dragY;
 			double[] pos = DragUtil.setPosition(x, y);
 			draggingModule.setXYPosition(x, y);
 		}

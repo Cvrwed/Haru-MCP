@@ -23,7 +23,7 @@ import net.minecraft.network.play.server.SPacketTimeUpdate;
 public class ClickGuiModule extends Module {
 	
     private DescValue a = new DescValue("Color Modes");
-    public ModeValue clientTheme = new ModeValue("Color", "Static", "Rainbow", "Pastel", "Memories", "Lilith", "Static", "Cantina");
+    public ModeValue clientTheme = new ModeValue("Color", "Static", "Static", "Aubergine", "Aqua", "Banana", "Blend", "Blossom", "Bubblegum", "Candy Cane", "Cherry", "Christmas", "Coral", "Digital Horizon", "Express", "Lime Water", "Lush", "Halogen", "Hyper", "Magic", "May", "Orange Juice", "Pastel", "Pumpkin", "Satin", "Snowy Sky", "Steel Fade", "Sundae", "Sunkist", "Water", "Winter");
     private DescValue b = new DescValue("Choose ur perfect waifu");
     public ModeValue waifuMode = new ModeValue("Waifu", "Uzaki", "Uzaki", "Megumin", "Ai", "Mai", "Kiwi", "Astolfo", "Ryo", "Hitori", "None");
     private DescValue c = new DescValue("BackGround Modes");

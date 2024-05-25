@@ -10,7 +10,7 @@ import cc.unknown.Haru;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.visuals.ClickGuiModule;
 import cc.unknown.ui.clickgui.impl.CategoryComp;
-import cc.unknown.ui.clickgui.impl.api.Theme;
+import cc.unknown.ui.clickgui.impl.theme.Theme;
 import cc.unknown.utils.client.FuckUtil;
 import cc.unknown.utils.client.RenderUtil;
 import net.minecraft.client.gui.GuiScreen;
@@ -52,7 +52,7 @@ public class HaruGui extends GuiScreen {
 
 		if (cg.backGroundMode.is("Gradient")) {
 			this.drawGradientRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(),
-					Theme.instance.getMainColor().getRGB(), Theme.instance.getMainColor().getAlpha());
+					getTheme().getAccentColor().getRGB(), getTheme().getAccentColor().getAlpha());
 		} else if (cg.backGroundMode.is("Normal")) {
 			this.drawGradientRect(0, 0, this.width, this.height, -1072689136, -804253680);
 		}

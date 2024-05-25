@@ -10,7 +10,7 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.SliderValue;
-import cc.unknown.ui.clickgui.impl.api.Theme;
+import cc.unknown.ui.clickgui.impl.theme.Theme;
 import cc.unknown.utils.misc.DragUtil;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
@@ -88,7 +88,7 @@ public class TargetHUD extends Module {
 			drawRect(x + 45, y + 20, 70, 15, new Color(255, 255, 255, 120).getRGB());
 
 			drawRect(x + 45, y + 20, (int) (70 * (player.getHealth() / player.getMaxHealth())), 15,
-					Theme.instance.getMainColor().darker().getRGB());
+					getTheme().getMainColor().darker().getRGB());
 
 			String s = (int) ((player.getHealth() / player.getMaxHealth()) * 100) + "%";
 			mc.fontRendererObj.drawString(s, x + 45 + (70 / 2) - (mc.fontRendererObj.getStringWidth(s) / 2),
