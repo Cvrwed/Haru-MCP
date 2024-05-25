@@ -79,6 +79,7 @@ public class GuiChat extends GuiScreen {
 	public void onGuiClosed() {
 		Keyboard.enableRepeatEvents(false);
 		this.mc.ingameGUI.getChatGUI().resetScroll();
+		dragging = false;
 	}
 
 	/**
@@ -157,6 +158,22 @@ public class GuiChat extends GuiScreen {
 	public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 
 		if (mouseButton == 0) {
+			
+            ScaledResolution sr = new ScaledResolution(mc);
+
+    		for (Module module : Haru.instance.getModuleManager().getDraggable()) {
+    			if (!module.isEnabled() || module.getPosition() == null)
+    				continue;
+    			if (module.getPosition().isInside(mouseX, mouseY)) {
+    				draggingModule = module;
+    				dragging = true;
+    				double[] pos = DragUtil.setPosition(module.getPosition().getX(), module.getPosition().getY());
+    				dragX = mouseX - pos[0];
+    				dragY = mouseY - pos[1];
+    				return;
+    			}
+    		}
+            
 			IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
 
 			if (this.handleComponentClick(ichatcomponent)) {
@@ -165,25 +182,14 @@ public class GuiChat extends GuiScreen {
 		}
 
 		this.inputField.mouseClicked(mouseX, mouseY, mouseButton);
-
-		for (Module module : Haru.instance.getModuleManager().getDraggable()) {
-			if (!module.isEnabled() || module.getPosition() == null)
-				continue;
-			if (module.getPosition().isInside(mouseX, mouseY)) {
-				draggingModule = module;
-				dragging = true;
-				double[] pos = DragUtil.setPosition(module.getPosition().getX(), module.getPosition().getY());
-				dragX = mouseX - pos[0];
-				dragY = mouseY - pos[1];
-				return;
-			}
-		}
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 	
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		dragging = false;
+        if(state == 0) {
+        	dragging = false;
+        }
 		super.mouseReleased(mouseX, mouseY, state);
 	}
 
@@ -300,11 +306,15 @@ public class GuiChat extends GuiScreen {
 		}
 
 		if (dragging) {
-			double x = mouseX - dragX;
-			double y = mouseY - dragY;
+			double x = mouseX - dragX + lastMouseX;
+			double y = mouseY - dragY + lastMouseY;
 			double[] pos = DragUtil.setPosition(x, y);
 			draggingModule.setXYPosition(x, y);
 		}
+		
+        lastMouseX = mouseX;
+        lastMouseY = mouseY;
+        
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 

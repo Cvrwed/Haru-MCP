@@ -25,74 +25,69 @@ import net.minecraft.util.enums.EnumChatFormatting;
 @Register(name = "Midclick", category = Category.Other)
 public class MidClick extends Module {
 
-    private AtomicBoolean x = new AtomicBoolean(false);
-    private AtomicInteger prevSlot = new AtomicInteger(0);
-    private AtomicInteger pearlEvent = new AtomicInteger(4);
-    private ModeValue mode = new ModeValue("Mode", "Add/Remove friend", "Add/Remove friend", "Throw pearl");
+	private AtomicBoolean x = new AtomicBoolean(false);
+	private AtomicInteger prevSlot = new AtomicInteger(0);
+	private AtomicInteger pearlEvent = new AtomicInteger(4);
+	private ModeValue mode = new ModeValue("Mode", "Add/Remove friend", "Add/Remove friend", "Throw pearl");
 
-    public MidClick() {
-        this.registerSetting(mode);
-    }
+	public MidClick() {
+		this.registerSetting(mode);
+	}
 
-    @EventLink
-    public void onMouse(MouseEvent e) {
-        if (mc.currentScreen != null)
-            return;
+	@EventLink
+	public void onMouse(MouseEvent e) {
+		if (mc.currentScreen != null)
+			return;
 
-        if (pearlEvent.get() < 4) {
-            if (pearlEvent.get() == 3) {
-                mc.player.inventory.currentItem = prevSlot.get();
-            }
-            pearlEvent.incrementAndGet();
-        }
+		if (pearlEvent.get() < 4) {
+			if (pearlEvent.get() == 3) {
+				mc.player.inventory.currentItem = prevSlot.get();
+			}
+			pearlEvent.incrementAndGet();
+		}
 
-        if (!x.get() && e.getButton() == 2) {
-            if (mode.is("Add/Remove friend") && mc.objectMouseOver.entityHit instanceof EntityPlayer) {
-                handleFriendEvent((EntityPlayer) mc.objectMouseOver.entityHit);
-            }
+		if (!x.get() && e.getButton() == 2) {
+			if (mode.is("Add/Remove friend") && mc.objectMouseOver.entityHit instanceof EntityPlayer) {
+				handleFriendEvent((EntityPlayer) mc.objectMouseOver.entityHit);
+			} else {
 
-            if (mode.is("Throw pearl")) {
-                throwPearl();
-            }
-        }
+			}
 
-        x.set(e.getButton() == 2);
-    }
-    
-    private void handleFriendEvent(EntityPlayer player) {
-        if (!FriendUtil.instance.isAFriend(player)) {
-            FriendUtil.instance.addFriend(player);
-            if (Haru.instance.getHudConfig() != null) {
-                Haru.instance.getHudConfig().saveHud();
-            }
-            PlayerUtil.send(EnumChatFormatting.GRAY + player.getName() + " was added to your friends.");
-        } else {
-            FriendUtil.instance.removeFriend(player);
-            if (Haru.instance.getHudConfig() != null) {
-                Haru.instance.getHudConfig().saveHud();
-            }
-            PlayerUtil.send(EnumChatFormatting.GRAY + player.getName() + " was removed from your friends.");
-        }
-    }
+			if (mode.is("Throw pearl")) {
+				throwPearl();
+			}
+		}
 
-    private void throwPearl() {
-        for (int s = 0; s <= 8; s++) {
-            ItemStack item = mc.player.inventory.getStackInSlot(s);
-            if (item != null && item.getItem() instanceof ItemEnderPearl) {
-                prevSlot.set(mc.player.inventory.currentItem);
-                mc.player.inventory.currentItem = s;
-                sendEnderPearlPacket();
-                pearlEvent.set(0);
-                x.set(true);
-                return;
-            }
-        }
-    }
-    
-    private void sendEnderPearlPacket() {
-        ItemStack pearlStack = mc.player.inventoryContainer.getSlot(pearlEvent.get() + 36).getStack();
-        Packet<?> packet = new CPacketPlayerBlockPlacement(
-            new BlockPos(-1, -1, -1), 255, pearlStack, 0, 0, 0);
-        mc.getNetHandler().sendQueue(packet);
-    }
+		x.set(e.getButton() == 2);
+	}
+
+	private void handleFriendEvent(EntityPlayer player) {
+	    if (FriendUtil.instance.friends.contains(player.getName())) {
+	        FriendUtil.instance.friends.remove(player.getName());
+	        PlayerUtil.send(EnumChatFormatting.GRAY + "Removed friend " + player.getName());
+	    } else {
+	        FriendUtil.instance.friends.add(player.getName());
+	        PlayerUtil.send(EnumChatFormatting.GREEN + "Added friend " + player.getName());
+	    }
+	}
+
+	private void throwPearl() {
+		for (int s = 0; s <= 8; s++) {
+			ItemStack item = mc.player.inventory.getStackInSlot(s);
+			if (item != null && item.getItem() instanceof ItemEnderPearl) {
+				prevSlot.set(mc.player.inventory.currentItem);
+				mc.player.inventory.currentItem = s;
+				sendEnderPearlPacket();
+				pearlEvent.set(0);
+				x.set(true);
+				return;
+			}
+		}
+	}
+
+	private void sendEnderPearlPacket() {
+		ItemStack pearlStack = mc.player.inventoryContainer.getSlot(pearlEvent.get() + 36).getStack();
+		Packet<?> packet = new CPacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, pearlStack, 0, 0, 0);
+		mc.getNetHandler().sendQueue(packet);
+	}
 }

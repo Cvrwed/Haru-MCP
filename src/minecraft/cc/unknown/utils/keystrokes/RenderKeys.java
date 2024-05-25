@@ -1,4 +1,4 @@
-package cc.unknown.utils.keystrokes.render;
+package cc.unknown.utils.keystrokes;
 
 import java.awt.Color;
 

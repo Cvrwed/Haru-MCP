@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.DoubleSupplier;
 
 import net.minecraft.util.vec.Vec3i;
 import net.optifine.util.MathUtils;
@@ -46,30 +47,41 @@ public class MathHelper {
 	private static final double[] field_181164_e;
 	private static final double[] field_181165_f;
 
-	public static int simpleRandom(final int min, final int max) {
-		int x = min;
-		int y = max;
+    public static <T extends Number> T simpleRandom(final T min, final T max) {
+        if (min.equals(max)) {
+            return min;
+        }
 
-		if (min == max) {
-			return min;
-		} else if (min > max) {
-			x = max;
-			y = min;
-		}
+        Number lower, upper;
+        
+        if (min.doubleValue() > max.doubleValue()) {
+            lower = max;
+            upper = min;
+        } else {
+            lower = min;
+            upper = max;
+        }
 
-		return (int) ThreadLocalRandom.current().nextInt(x, y);
-	}
-
-	public static double simpleRandom(double min, double max) {
-		if (min == max) {
-			return min;
-		} else if (min > max) {
-			final double d = min;
-			min = max;
-			max = d;
-		}
-		return ThreadLocalRandom.current().nextDouble(min, max);
-	}
+        if (min instanceof Integer) {
+            return (T) Integer.valueOf(ThreadLocalRandom.current().nextInt(lower.intValue(), upper.intValue() + 1));
+        } else if (min instanceof Float) {
+            return (T) Float.valueOf((float) ThreadLocalRandom.current().nextDouble(lower.floatValue(), upper.floatValue()));
+        } else if (min instanceof Double) {
+            return (T) Double.valueOf(ThreadLocalRandom.current().nextDouble(lower.doubleValue(), upper.doubleValue()));
+        } else {
+            throw new IllegalArgumentException("Unsupported number type");
+        }
+    }
+    
+    public static int randomClickDelay(int minCPS, int maxCPS) {
+        return (int) (Math.random() * (1000 / minCPS - 1000 / maxCPS + 1) + 1000 / maxCPS);
+    }
+    
+    public static double randomInRange(DoubleSupplier minSupplier, DoubleSupplier maxSupplier) {
+        double min = minSupplier.getAsDouble();
+        double max = maxSupplier.getAsDouble();
+        return ThreadLocalRandom.current().nextDouble(min, max);
+    }
 
 	public static long nextLong(long origin, long bound) {
 		return origin == bound ? origin : ThreadLocalRandom.current().nextLong(origin, bound);
@@ -113,18 +125,19 @@ public class MathHelper {
     public static double interpolate(double newValue, double oldValue, double partialTicks) {
         return oldValue + (newValue - oldValue) * partialTicks;
     }
-    
-    public static int randomClickDelay(int minCPS, int maxCPS) {
-        return (int) (Math.random() * (1000 / minCPS - 1000 / maxCPS + 1) + 1000 / maxCPS);
+	
+    public static <T extends Number> T randomValue(T x, T v) {
+        double min = Math.min(x.doubleValue(), v.doubleValue());
+        double max = Math.max(x.doubleValue(), v.doubleValue());
+        
+        if (x instanceof Integer || x instanceof Long) {
+            return (T) Integer.valueOf((int) (ThreadLocalRandom.current().nextDouble(min, max)));
+        } else if (x instanceof Double || x instanceof Float) {
+            return (T) Double.valueOf(ThreadLocalRandom.current().nextDouble(min, max));
+        } else {
+            throw new IllegalArgumentException("Unsupported number type");
+        }
     }
-	
-	public static int randomInt(double x, double v) {
-		return (int) (Math.random() * (x - v) + v);
-	}
-	
-	public static double randomDouble(double x, double v) {
-		return Math.random() * (x - v) + v;
-	}
 	
     public static String str(String s) {
         char[] n = StringUtils.stripControlCodes(s).toCharArray();

@@ -84,7 +84,6 @@ public class JumpReset extends Module {
 				float yaw = mc.player.rotationYaw * 0.017453292F;
 				if (mc.player.onGround) {
 					if (mc.player.hurtTime > 0) {
-						mc.player.motionY = 0.3;
 						if (reset) {
 							mc.player.motionX -= Math.sin(yaw) * 0.2;
 							mc.player.motionZ += Math.cos(yaw) * 0.2;
@@ -211,10 +210,12 @@ public class JumpReset extends Module {
 	private boolean shouldJump() {
 		switch (mode.getMode()) {
 		case "Ticks": {
-			return limit >= MathHelper.randomInt(tickTicks.getInputMinToInt(), tickTicks.getInputMaxToInt() + 0.1);
+            double random = MathHelper.randomValue(tickTicks.getInputMin(), tickTicks.getInputMax() + 0.1);
+            return limit >= random;
 		}
 		case "Hits": {
-			return limit >= MathHelper.randomInt(hitHits.getInputMinToInt(), hitHits.getInputMaxToInt() + 0.1);
+			double random = MathHelper.randomValue(hitHits.getInputMin(), hitHits.getInputMax() + 0.1);
+            return limit >= random;
 		}
 		default:
 			return false;

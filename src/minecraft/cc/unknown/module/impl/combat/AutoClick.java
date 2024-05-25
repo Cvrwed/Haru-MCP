@@ -1,18 +1,13 @@
 package cc.unknown.module.impl.combat;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.move.MotionEvent;
+import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
-import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.event.impl.render.RenderEvent;
+import cc.unknown.event.impl.render.RenderItemEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
@@ -21,7 +16,14 @@ import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.misc.ClickUtil;
-import net.minecraft.client.gui.GuiScreen;
+import cc.unknown.utils.player.PlayerUtil;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
+import net.minecraft.network.play.client.CPacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.CPacketPlayerDigging;
 
 @Register(name = "AutoClick", category = Category.Combat)
 public class AutoClick extends Module {
@@ -29,7 +31,7 @@ public class AutoClick extends Module {
 	private final ModeValue clickMode = new ModeValue("Click Mode", "Left", "Left", "Right", "Both");
 	private final ModeValue clickStyle = new ModeValue("Click Style", "Normal", "Normal", "Double Click");
 
-	private final DoubleSliderValue leftCPS = new DoubleSliderValue("Left Click Speed", 16, 19, 1, 40, 1);
+	private final DoubleSliderValue leftCPS = new DoubleSliderValue("Left Click Speed", 16, 19, 1, 35, 1);
 	private final BooleanValue weaponOnly = new BooleanValue("Only Use Weapons", false);
 	private final BooleanValue breakBlocks = new BooleanValue("Break Blocks", false);
 	private final BooleanValue hitSelect = new BooleanValue("Precise Hit Selection", false);
@@ -38,16 +40,28 @@ public class AutoClick extends Module {
 	private ModeValue invMode = new ModeValue("Inventory Click Mode", "Pre", "Pre", "Post");
 	private final SliderValue invDelay = new SliderValue("Click Tick Delay", 5, 0, 10, 1);
 	
-	private BooleanValue autoBlock = new BooleanValue("AutoBlock", false);
-
 	private final DoubleSliderValue rightCPS = new DoubleSliderValue("Right Click Speed", 12, 16, 1, 40, 1);
 	private final BooleanValue onlyBlocks = new BooleanValue("Only Use Blocks", false);
 	private final BooleanValue allowEat = new BooleanValue("Allow Eating & Drinking", true);
 	private final BooleanValue allowBow = new BooleanValue("Allow Using Bow", true);
 	
+	private EntityPlayer target = null;
+	
 	public AutoClick() {
 		this.registerSetting(clickMode, clickStyle, leftCPS, weaponOnly, breakBlocks, hitSelect, hitSelectDistance,
-				invClicker, invMode, invDelay, autoBlock, rightCPS, onlyBlocks, allowEat, allowBow);
+				invClicker, invMode, invDelay, rightCPS, onlyBlocks, allowEat, allowBow);
+	}
+	
+	@Override
+	public void onEnable() {
+		ClickUtil.instance.setLeftLastSwing(0L);
+		ClickUtil.instance.setLeftDelay(50L);
+	}
+	
+	@Override
+	public void onDisable() {
+		ClickUtil.instance.setLeftLastSwing(0L);
+		ClickUtil.instance.setLeftDelay(50L);
 	}
 
 	@EventLink
@@ -96,12 +110,12 @@ public class AutoClick extends Module {
 				ClickUtil.instance.getRightClick();
 				break;
 			}
-			
-			if (autoBlock.isToggled() && mc.gameSettings.keyBindAttack.isKeyDown()) {
-				mc.gameSettings.keyBindUseItem.pressTime = 0;
-			}
 		}
 	}
+    
+    private ItemStack getItemStack() {
+        return (mc.player == null || mc.player.inventoryContainer == null ? null : mc.player.inventoryContainer.getSlot(mc.player.inventory.currentItem + 36).getStack());
+    }
 
 	public ModeValue getClickMode() {
 		return clickMode;
@@ -150,9 +164,4 @@ public class AutoClick extends Module {
 	public BooleanValue getAllowBow() {
 		return allowBow;
 	}
-
-	public BooleanValue getAutoBlock() {
-		return autoBlock;
-	}
-
 }

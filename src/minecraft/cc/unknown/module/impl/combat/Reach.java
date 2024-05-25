@@ -29,7 +29,7 @@ import net.minecraft.util.vec.Vec3;
 
 @Register(name = "Reach", category = Category.Combat)
 public class Reach extends Module {
-	private DoubleSliderValue rangeCombat = new DoubleSliderValue("Range", 3, 3, 2.9, 6, 0.01);
+	private DoubleSliderValue rangeCombat = new DoubleSliderValue("Range", 3, 3, 3.0, 6, 0.01);
 	private SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
 	private BooleanValue weapon_only = new BooleanValue("Only Weapon", false);
 	private BooleanValue moving_only = new BooleanValue("Only Move", false);

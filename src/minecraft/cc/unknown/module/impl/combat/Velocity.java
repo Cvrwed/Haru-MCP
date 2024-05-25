@@ -30,13 +30,11 @@ public class Velocity extends Module {
 	public SliderValue horizontal = new SliderValue("Horizontal", 90, -100, 100, 1);
 	public SliderValue vertical = new SliderValue("Vertical", 100, -100, 100, 1);
 	public SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
-	private BooleanValue onlyCombat = new BooleanValue("Only During Combat", false);
-	private BooleanValue onlyGround = new BooleanValue("Only While on Ground", false);
 	private boolean reset;
 	private int timerTicks = 0, intaveTick = 0, ticks = 0;
 
 	public Velocity() {
-		this.registerSetting(mode, horizontal, vertical, chance, onlyCombat, onlyGround);
+		this.registerSetting(mode, horizontal, vertical, chance);
 	}
 
 	@EventLink
@@ -55,12 +53,8 @@ public class Velocity extends Module {
 
 	@EventLink
 	public void onKnockBack(KnockBackEvent e) {
-		if (chance.getInput() != 100.0D) {
-			if (Math.random() >= chance.getInput() / 100.0D) {
-				return;
-			}
-		}
-
+		if (chance.getInput() != 100.0D && Math.random() >= chance.getInput() / 100.0D) return;
+		
 		switch (mode.getMode()) {
 		case "Packet":
 			e.setX(e.getX() * horizontal.getInput() / 100.0);
@@ -71,11 +65,6 @@ public class Velocity extends Module {
 			if (PlayerUtil.isMoving() && mc.player.onGround) {
 				e.setCancelled(true);
 				reset = true;
-			}
-			break;
-		case "Polar":
-			if (mc.player.onGround && e.getY() > 0) {
-				mc.player.jump();
 			}
 			break;
 		case "Intave":
@@ -118,7 +107,7 @@ public class Velocity extends Module {
 		if (PlayerUtil.inGame() && e.isPre()) {
 			switch (mode.getMode()) {
 			case "Verus":
-				if (mc.player.hurtTime == 10 - MathHelper.randomInt(3, 4)) {
+				if (mc.player.hurtTime == 10 - MathHelper.randomValue(3, 4)) {
 					mc.player.motionX = 0.0D;
 					mc.player.motionY = 0.0D;
 					mc.player.motionZ = 0.0D;
@@ -133,6 +122,15 @@ public class Velocity extends Module {
 					}
 					reset = false;
 				}
+				break;
+			case "Polar":
+	            if(mc.player.hurtTime >= 1 && mc.player.hurtTime < 6) {
+	                double multi = 1.2224324, min = 0.1, max = 0.5;
+	                if (PlayerUtil.isMoving() && mc.player.onGround && (Math.abs(mc.player.motionX) > min && Math.abs(mc.player.motionZ) > min) && (Math.abs(mc.player.motionX) < max && Math.abs(mc.player.motionZ) < max)) {
+	                    mc.player.motionX -= Math.sin(multi) * min;
+	                    mc.player.motionZ += Math.cos(multi) * max;
+	                }
+	            }
 				break;
 			}
 		}

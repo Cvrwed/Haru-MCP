@@ -2,7 +2,6 @@ package net.minecraft.client.multiplayer;
 
 import cc.unknown.Haru;
 import cc.unknown.event.impl.player.AttackEvent;
-import cc.unknown.event.impl.player.AttackEvent.Mode;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -429,7 +428,7 @@ public class PlayerControllerMP {
 	 * Attacks an entity
 	 */
 	public void attackEntity(EntityPlayer playerIn, Entity targetEntity) {
-		Haru.instance.getEventBus().post(new AttackEvent(Mode.Pre, playerIn, targetEntity));
+		Haru.instance.getEventBus().post(new AttackEvent(targetEntity));
 		this.syncCurrentPlayItem();
 		
 		this.netClientHandler.sendQueue(new CPacketUseEntity(targetEntity, CPacketUseEntity.Mode.ATTACK));
@@ -437,8 +436,6 @@ public class PlayerControllerMP {
 		if (this.currentGameType != WorldSettings.GameType.SPECTATOR) {
 			playerIn.attackTargetEntityWithCurrentItem(targetEntity);
 		}
-		
-		Haru.instance.getEventBus().post(new AttackEvent(Mode.Post, playerIn, targetEntity));
 	}
 
 	/**

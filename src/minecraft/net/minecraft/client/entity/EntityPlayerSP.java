@@ -7,7 +7,6 @@ import cc.unknown.event.impl.move.MotionEvent.MotionType;
 import cc.unknown.event.impl.move.UpdateEvent;
 import cc.unknown.event.impl.move.UpdateEvent.Mode;
 import cc.unknown.event.impl.network.ChatSendEvent;
-import cc.unknown.event.impl.player.EntityActionEvent;
 import cc.unknown.module.impl.player.NoSlow;
 import cc.unknown.module.impl.player.Sprint;
 import cc.unknown.utils.player.PlayerUtil;
@@ -195,9 +194,6 @@ public class EntityPlayerSP extends AbstractClientPlayer {
     
     public void onUpdateWalkingPlayer() {
         boolean flag = this.isSprinting();
-        EntityActionEvent entityActionEvent = new EntityActionEvent(this.isSprinting(), this.isSneaking());
-        Haru.instance.getEventBus().post(entityActionEvent);
-
         if (flag != this.serverSprintState) {
             if (flag) {
                 this.sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.START_SPRINTING));

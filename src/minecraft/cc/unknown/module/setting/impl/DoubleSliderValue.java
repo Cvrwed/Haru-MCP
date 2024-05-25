@@ -56,34 +56,35 @@ public class DoubleSliderValue extends Setting {
     }
 
     public double getInputMin() {
-        return round(this.valMin, 2);
+        return getInputValue(valMin, Double.class);
     }
+
     public double getInputMax() {
-        return round(this.valMax, 2);
+        return getInputValue(valMax, Double.class);
     }
-    
+
     public long getInputMinToLong() {
-        return (long) round(this.valMin, 2);
+        return getInputValue(valMin, Long.class);
     }
 
     public long getInputMaxToLong() {
-        return (long) round(this.valMax, 2);
+        return getInputValue(valMax, Long.class);
     }
-    
+
     public int getInputMinToInt() {
-        return (int) round(this.valMin, 2);
+        return getInputValue(valMin, Integer.class);
     }
 
     public int getInputMaxToInt() {
-        return (int) round(this.valMax, 2);
+        return getInputValue(valMax, Integer.class);
     }
-    
+
     public float getInputMinToFloat() {
-    	return (float) round(this.valMin, 2);
+        return getInputValue(valMin, Float.class);
     }
-    
+
     public float getInputMaxToFloat() {
-    	return (float) round(this.valMax, 2);
+        return getInputValue(valMax, Float.class);
     }
 
     public double getMin() {
@@ -119,6 +120,21 @@ public class DoubleSliderValue extends Setting {
             BigDecimal bd = new BigDecimal(val);
             bd = bd.setScale(p, RoundingMode.HALF_UP);
             return bd.doubleValue();
+        }
+    }
+    
+    private <T extends Number> T getInputValue(double value, Class<T> returnType) {
+        double roundedValue = round(value, 2);
+        if (returnType == Double.class) {
+            return (T) Double.valueOf(roundedValue);
+        } else if (returnType == Long.class) {
+            return (T) Long.valueOf((long) roundedValue);
+        } else if (returnType == Integer.class) {
+            return (T) Integer.valueOf((int) roundedValue);
+        } else if (returnType == Float.class) {
+            return (T) Float.valueOf((float) roundedValue);
+        } else {
+            throw new IllegalArgumentException("Unsupported return type");
         }
     }
 }

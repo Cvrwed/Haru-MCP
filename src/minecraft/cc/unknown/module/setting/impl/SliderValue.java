@@ -52,21 +52,21 @@ public class SliderValue extends Setting {
 		setValue(data.get("value").getAsDouble());
 	}
 
-	public double getInput() {
-		return r(this.value, 2);
-	}
+    public double getInput() {
+        return getInputValue(Double.class);
+    }
 
-	public float getInputToFloat() {
-		return (float) getInput();
-	}
+    public float getInputToFloat() {
+        return getInputValue(Float.class);
+    }
 
-	public int getInputToInt() {
-		return (int) getInput();
-	}
+    public int getInputToInt() {
+        return getInputValue(Integer.class);
+    }
 
-	public long getInputToLong() {
-		return (long) getInput();
-	}
+    public long getInputToLong() {
+        return getInputValue(Long.class);
+    }
 
 	public double getMin() {
 		return this.min;
@@ -88,7 +88,7 @@ public class SliderValue extends Setting {
 		return v;
 	}
 
-	public static double r(double v, int p) {
+	public static double round(double v, int p) {
 		if (p < 0) {
 			return 0.0D;
 		} else {
@@ -97,4 +97,19 @@ public class SliderValue extends Setting {
 			return bd.doubleValue();
 		}
 	}
+	
+    private <T extends Number> T getInputValue(Class<T> returnType) {
+        double roundedValue = round(this.value, 2);
+        if (returnType == Double.class) {
+            return (T) Double.valueOf(roundedValue);
+        } else if (returnType == Float.class) {
+            return (T) Float.valueOf((float) roundedValue);
+        } else if (returnType == Integer.class) {
+            return (T) Integer.valueOf((int) roundedValue);
+        } else if (returnType == Long.class) {
+            return (T) Long.valueOf((long) roundedValue);
+        } else {
+            throw new IllegalArgumentException("Unsupported return type");
+        }
+    }
 }

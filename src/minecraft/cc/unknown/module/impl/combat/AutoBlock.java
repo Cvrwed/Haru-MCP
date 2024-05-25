@@ -4,6 +4,7 @@ import org.lwjgl.input.Mouse;
 
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.render.RenderEvent;
+import cc.unknown.event.impl.render.RenderItemEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
@@ -12,6 +13,8 @@ import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.client.Cold;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 
 @Register(name = "AutoBlock", category = Category.Combat)
 public class AutoBlock extends Module {
@@ -20,6 +23,7 @@ public class AutoBlock extends Module {
 	public static SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
 	private boolean block;
 	private final Cold blockTime = new Cold(0);
+	private EntityPlayer target = null;
 
 	public AutoBlock() {
 		this.registerSetting(duration, distance, chance);
@@ -50,8 +54,15 @@ public class AutoBlock extends Module {
 				press();
 			}
 		}
-
 	}
+	
+    @EventLink
+    public void onRenderItem(RenderItemEvent e) {
+        if (PlayerUtil.isHoldingWeapon()) {
+            e.setEnumAction(EnumAction.BLOCK);
+            e.setUseItem(true);
+        }
+    }
 
 	private void release() {
 		KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);

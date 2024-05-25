@@ -40,10 +40,9 @@ public class AntiFireBall extends Module {
 
 					if (mc.objectMouseOver.entityHit == entity) {
 						if (System.currentTimeMillis() - leftLastSwing >= leftDelay) {
-							KeyBinding.onTick(mc.gameSettings.keyBindAttack.getKeyCode());
-
 							leftLastSwing = System.currentTimeMillis();
-							leftDelay = MathHelper.randomClickDelay(12, 12);
+							leftDelay = MathHelper.simpleRandom(12, 12);
+							KeyBinding.onTick(mc.gameSettings.keyBindAttack.getKeyCode());
 						}
 					}
 				}

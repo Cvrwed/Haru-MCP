@@ -3,6 +3,7 @@ package net.minecraft.client.renderer;
 import org.lwjgl.opengl.GL11;
 
 import cc.unknown.Haru;
+import cc.unknown.event.impl.render.RenderItemEvent;
 import cc.unknown.module.impl.visuals.Fullbright;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -317,7 +318,7 @@ public class ItemRenderer {
 	 * @param partialTicks The amount of time passed during the current tick,
 	 *                     ranging from 0 to 1.
 	 */
-	public void renderItemInFirstPerson(float partialTicks) {
+	/*public void renderItemInFirstPerson(float partialTicks) {
 		if (!Config.isShaders() || !Shaders.isSkipRenderHand()) {
 			float f = 1.0F - (this.prevEquippedProgress + (this.equippedProgress - this.prevEquippedProgress) * partialTicks);
 			EntityPlayerSP player = this.mc.player;
@@ -370,7 +371,76 @@ public class ItemRenderer {
 			RenderHelper.disableStandardItemLighting();
 
 		}
-	}
+	}*/
+	
+    public void renderItemInFirstPerson(final float partialTicks) {
+        if (!Config.isShaders() || !Shaders.isSkipRenderHand()) {
+            float animationProgression = 1.0F - (this.prevEquippedProgress + (this.equippedProgress - this.prevEquippedProgress) * partialTicks);
+            final AbstractClientPlayer abstractclientplayer = this.mc.player;
+            float swingProgress = abstractclientplayer.getSwingProgress(partialTicks);
+            final float f2 = abstractclientplayer.prevRotationPitch + (abstractclientplayer.rotationPitch - abstractclientplayer.prevRotationPitch) * partialTicks;
+            final float f3 = abstractclientplayer.prevRotationYaw + (abstractclientplayer.rotationYaw - abstractclientplayer.prevRotationYaw) * partialTicks;
+            this.func_178101_a(f2, f3);
+            this.func_178109_a(abstractclientplayer);
+            this.func_178110_a((EntityPlayerSP) abstractclientplayer, partialTicks);
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.pushMatrix();
+
+            if (this.itemToRender != null) {
+                EnumAction enumaction = this.itemToRender.getItemUseAction();
+                final int itemInUseCount = abstractclientplayer.getItemInUseCount();
+                boolean useItem = itemInUseCount > 0;
+
+                final RenderItemEvent event = new RenderItemEvent(enumaction, useItem, animationProgression, partialTicks, swingProgress, itemToRender);
+                Haru.instance.getEventBus().post(event);
+                enumaction = event.getEnumAction();
+                useItem = event.isUseItem();
+                animationProgression = event.getAnimationProgression();
+                swingProgress = event.getSwingProgress();
+
+                if (this.itemToRender.getItem() instanceof ItemMap) {
+                    this.renderItemMap(abstractclientplayer, f2, animationProgression, swingProgress);
+                } else if (useItem) {
+                    if (!event.isCancelled()) {
+                        switch (enumaction) {
+                            case NONE:
+                                this.transformFirstPersonItem(animationProgression, swingProgress);
+                                break;
+
+                            case EAT:
+                            case DRINK:
+                                this.func_178104_a(abstractclientplayer, partialTicks);
+                                this.transformFirstPersonItem(animationProgression, swingProgress);
+                                break;
+
+                            case BLOCK:
+                                this.transformFirstPersonItem(animationProgression, swingProgress);
+                                this.func_178103_d();
+                                break;
+
+                            case BOW:
+                                this.transformFirstPersonItem(animationProgression, swingProgress);
+                                this.func_178098_a(partialTicks, abstractclientplayer);
+                        }
+                    }
+                } else if (!event.isCancelled()) {
+                    this.func_178105_d(swingProgress);
+					if (this.itemToRender.getItem() instanceof ItemFishingRod) {
+						GlStateManager.translate(0.0F, 0.0F, -0.35F);
+					}
+                    this.transformFirstPersonItem(animationProgression, swingProgress);
+                }
+
+                this.renderItem(abstractclientplayer, this.itemToRender, ItemCameraTransforms.TransformType.FIRST_PERSON);
+            } else if (!abstractclientplayer.isInvisible()) {
+                this.func_178095_a(abstractclientplayer, animationProgression, swingProgress);
+            }
+
+            GlStateManager.popMatrix();
+            GlStateManager.disableRescaleNormal();
+            RenderHelper.disableStandardItemLighting();
+        }
+    }
 
 	/**
 	 * Renders all the overlays that are in first person mode. Args: partialTickTime

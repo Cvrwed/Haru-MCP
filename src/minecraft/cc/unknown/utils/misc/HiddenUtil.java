@@ -7,6 +7,7 @@ import cc.unknown.Haru;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.other.*;
 import cc.unknown.module.impl.player.Sprint;
+import cc.unknown.module.impl.settings.Tweaks;
 import cc.unknown.module.impl.visuals.*;
 
 public class HiddenUtil {

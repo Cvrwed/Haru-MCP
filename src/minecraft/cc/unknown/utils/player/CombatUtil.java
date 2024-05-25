@@ -41,6 +41,13 @@ public enum CombatUtil implements Loona {
 		}
 		return true;
 	}
+	
+    public boolean isOnSameTeam(EntityPlayer entity) {
+        if (entity.getTeam() != null && mc.player.getTeam() != null)
+            return entity.getDisplayName().getFormattedText().charAt(1) == mc.player.getDisplayName().getFormattedText().charAt(1);
+        else
+            return false;
+    }
 
 	public float rotsToFloat(final float[] rots, final int m) {
 		if (m == 1) {
@@ -120,16 +127,6 @@ public enum CombatUtil implements Loona {
 		return pow * 0.15D;
 	}
 	
-	public double getDistanceToEntityBox(Entity entity) {
-        Vec3 eyes = mc.player.getPositionEyes(1);
-		float size = entity.getCollisionBorderSize();
-        AxisAlignedBB bb = entity.getEntityBoundingBox().expand(size, size, size);
-        double xDist = eyes.xCoord - Math.max(bb.minX, Math.min(eyes.xCoord, bb.maxX));
-        double yDist = eyes.yCoord - Math.max(bb.minY, Math.min(eyes.yCoord, bb.maxY));
-        double zDist = eyes.zCoord - Math.max(bb.minZ, Math.min(eyes.zCoord, bb.maxZ));
-        return Math.sqrt(xDist * xDist + yDist * yDist + zDist * zDist);
-    }
-
 	public int getPing() {
 		return mc.getNetHandler().getPlayerInfo(mc.player.getUniqueID()) != null
 				? mc.getNetHandler().getPlayerInfo(mc.player.getUniqueID()).getResponseTime()

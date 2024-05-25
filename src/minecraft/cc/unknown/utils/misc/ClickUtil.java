@@ -254,4 +254,12 @@ public enum ClickUtil implements Loona {
 		clickDelay = MathHelper.randomClickDelay(min, max);
 	}
 
+	public void setLeftDelay(long leftDelay) {
+		this.leftDelay = leftDelay;
+	}
+
+	public void setLeftLastSwing(long leftLastSwing) {
+		this.leftLastSwing = leftLastSwing;
+	}
+
 }

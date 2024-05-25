@@ -64,4 +64,16 @@ public class ScaledResolution
     {
         return this.scaleFactor;
     }
+
+	public void setScaledWidth(int scaledWidth) {
+		this.scaledWidth = scaledWidth;
+	}
+
+	public void setScaledHeight(int scaledHeight) {
+		this.scaledHeight = scaledHeight;
+	}
+
+	public void setScaleFactor(int scaleFactor) {
+		this.scaleFactor = scaleFactor;
+	}
 }

@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 import cc.unknown.Haru;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.event.impl.render.RenderEvent.RenderType;
-import cc.unknown.module.impl.other.Tweaks;
+import cc.unknown.module.impl.settings.Tweaks;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

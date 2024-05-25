@@ -9,17 +9,22 @@ import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.move.MotionEvent;
 import cc.unknown.event.impl.network.DisconnectionEvent;
 import cc.unknown.event.impl.network.PacketEvent;
+import cc.unknown.event.impl.player.AttackEvent;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.event.impl.world.ChangeWorldEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.BooleanValue;
+import cc.unknown.module.setting.impl.ModeValue;
+import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.ui.clickgui.impl.api.Theme;
+import cc.unknown.utils.client.Cold;
 import cc.unknown.utils.network.PacketUtil;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.network.play.client.CPacketPlayer;
+import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.util.vec.Vec3;
 
 @Register(name = "Blink", category = Category.Player)
@@ -29,12 +34,19 @@ public class Blink extends Module {
 	private final List<Packet<?>> packetsReceived = new ArrayList<>();
 	private final List<Packet<?>> queuedPackets = new ArrayList<>();
 	private final List<Vec3> positions = new ArrayList<>();
-	private BooleanValue renderPosition = new BooleanValue("Render actual position", true);
-	private BooleanValue disableDisconnect = new BooleanValue("Disable on disconnect", true);
-	private BooleanValue disableAttack = new BooleanValue("Disable when attacking", true);
+
+	private ModeValue renderPosition = new ModeValue("Render Position", "None", "None", "Fake Player", "Line");
+
+	private BooleanValue pulse = new BooleanValue("Pulse", false);
+	private SliderValue pulseDelay = new SliderValue("Pulse Delay", 500, 100, 3500, 50);
+
+	private BooleanValue disableDisconnect = new BooleanValue("Release on disconnect", true);
+	private BooleanValue disableAttack = new BooleanValue("Release when attacking", true);
+	private BooleanValue disableDmg = new BooleanValue("Release when receive dmg", true);
+	private Cold timer = new Cold();
 
 	public Blink() {
-		this.registerSetting(renderPosition, disableDisconnect, disableAttack);
+		this.registerSetting(renderPosition, pulse, pulseDelay, disableDisconnect, disableAttack, disableDmg);
 	}
 
 	@Override
@@ -53,7 +65,22 @@ public class Blink extends Module {
 
 		if (mc.player == null)
 			return;
-		blink();
+		releasePackets();
+	}
+
+	@EventLink
+	public void onAttack(AttackEvent e) {
+		if (mc.objectMouseOver.entityHit != null) {
+			if (disableAttack.isToggled()) {
+				if (mc.objectMouseOver.entityHit instanceof EntityPlayer) {
+					EntityPlayer player = (EntityPlayer) mc.objectMouseOver.entityHit;
+
+					if (player.hurtTime <= 1) {
+						releasePackets();
+					}
+				}
+			}
+		}
 	}
 
 	@EventLink
@@ -89,21 +116,26 @@ public class Blink extends Module {
 
 				}
 			}
-
-			if (p instanceof CPacketUseEntity) {
-				CPacketUseEntity wrapper = (CPacketUseEntity) p;
-				if (disableAttack.isToggled() && wrapper.getAction() == CPacketUseEntity.Mode.ATTACK)
-					blink();
-				return;
-			}
 		}
 	}
 
 	@EventLink
-	public void onPost(MotionEvent e) {
+	public void onMotion(MotionEvent e) {
+		if (pulse.isToggled()) {
+			if (timer.hasTimeElapsed(pulseDelay.getInputToLong(), true)) {
+				releasePackets();
+			}
+		}
+
+		if (disableDmg.isToggled()) {
+			if (mc.player.hurtTime > 0) {
+				releasePackets();
+			}
+		}
+
 		if (e.isPost()) {
 			if (mc.player == null || mc.player.isDead || mc.player.ticksExisted <= 10) {
-				blink();
+				releasePackets();
 			}
 			synchronized (packetsReceived) {
 				queuedPackets.addAll(packetsReceived);
@@ -115,7 +147,7 @@ public class Blink extends Module {
 	@EventLink
 	public void onRender3D(RenderEvent e) {
 		if (e.is3D()) {
-			if (renderPosition.isToggled()) {
+			if (renderPosition.is("Line")) {
 				synchronized (positions) {
 					GL11.glPushMatrix();
 					GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -150,7 +182,7 @@ public class Blink extends Module {
 		}
 	}
 
-	private void blink() {
+	private void releasePackets() {
 		synchronized (packetsReceived) {
 			queuedPackets.addAll(packetsReceived);
 		}
@@ -173,7 +205,7 @@ public class Blink extends Module {
 			reset();
 		}
 	}
-	
+
 	@EventLink
 	public void onDisconnect(final DisconnectionEvent e) {
 		if (e.isClient()) {
