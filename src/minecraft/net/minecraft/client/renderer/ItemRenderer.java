@@ -268,7 +268,7 @@ public class ItemRenderer {
 	 *                      of frame) while switching held items.
 	 * @param swingProgress The progress of the arm swing animation.
 	 */
-	private void transformFirstPersonItem(float equipProgress, float swingProgress) {
+	public void transformFirstPersonItem(float equipProgress, float swingProgress) {
 		GlStateManager.translate(0.56F, -0.52F, -0.71999997F);
 		GlStateManager.translate(0.0F, equipProgress * -0.6F, 0.0F);
 		GlStateManager.rotate(45.0F, 0.0F, 1.0F, 0.0F);
@@ -305,7 +305,7 @@ public class ItemRenderer {
 		GlStateManager.scale(1.0F, 1.0F, 1.0F + f1 * 0.2F);
 	}
 
-	private void func_178103_d() {
+	public void func_178103_d() {
 		GlStateManager.translate(-0.24F, 0.17F, 0.0F);
 		GlStateManager.rotate(30.0F, 0.0F, 1.0F, 0.0F);
 		GlStateManager.rotate(-80.0F, 1.0F, 0.0F, 0.0F);
@@ -388,10 +388,8 @@ public class ItemRenderer {
             GlStateManager.enableRescaleNormal();
             GlStateManager.pushMatrix();
 
-            if (this.itemToRender != null) {				Animations animations = (Animations) Haru.instance.getModuleManager().getModule(Animations.class);
-
-
-				GlStateManager.translate(-(animations.xValue.getInput()), -(animations.yValue.getInput()), -(animations.zValue.getInput()));
+            if (this.itemToRender != null) {
+            	Animations animations = (Animations) Haru.instance.getModuleManager().getModule(Animations.class);
 
 				EnumAction enumaction = this.itemToRender.getItemUseAction();
                 final int itemInUseCount = abstractclientplayer.getItemInUseCount();
@@ -421,31 +419,10 @@ public class ItemRenderer {
                                 break;
 
                             case BLOCK:
-								if (Haru.instance.getModuleManager().getModule(Animations.class).isEnabled()) {
-									switch (animations.blockMode.getMode()) {
-										case "1.8":
-											this.transformFirstPersonItem(f, 0.0F);
-											this.func_178103_d();
-											break;
-										case "1.7":
-											this.transformFirstPersonItem(f, f1);
-											this.func_178103_d();
-											break;
-										case "Astolfo":
-											GlStateManager.rotate(System.currentTimeMillis() % 360, 0, 0, -0.1f);
-											this.transformFirstPersonItem(f / 1.6f, 0);
-											this.func_178103_d();
-											break;
-										case "Spin":
-											float angle = (float) (System.currentTimeMillis() % (360 * 20) * animations.spinSpeed.getInput());
-											GlStateManager.translate(0.54F, -0.4F, -0.81999997F);
-											GlStateManager.translate(0.0F, 0f, 0.0F);
-											GlStateManager.scale(0.4f, 0.4f, 0.4f);
-											GlStateManager.rotate(72.0F, 0.0F, 1.0F, 0.0F);
-											GlStateManager.rotate(angle, 0f, 0.1f, 0f);
-											break;
-									}
-								}
+                                this.transformFirstPersonItem(f, f1);
+                                this.func_178103_d();
+                                break;
+
                             case BOW:
                                 this.transformFirstPersonItem(f, f1);
                                 this.func_178098_a(partialTicks, abstractclientplayer);
@@ -453,9 +430,6 @@ public class ItemRenderer {
                     }
                 } else if (!event.isCancelled()) {
                     this.func_178105_d(f1);
-					if (this.itemToRender.getItem() instanceof ItemFishingRod) {
-						GlStateManager.translate(0.0F, 0.0F, -0.35F);
-					}
                     this.transformFirstPersonItem(f, f1);
                 }
 
@@ -463,7 +437,7 @@ public class ItemRenderer {
             } else if (!abstractclientplayer.isInvisible()) {
                 this.func_178095_a(abstractclientplayer, f, f1);
             }
-
+            
             GlStateManager.popMatrix();
             GlStateManager.disableRescaleNormal();
             RenderHelper.disableStandardItemLighting();

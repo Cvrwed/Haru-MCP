@@ -5,7 +5,6 @@ import java.nio.FloatBuffer;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
@@ -27,7 +26,6 @@ import cc.unknown.Haru;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.event.impl.render.RenderEvent.RenderType;
 import cc.unknown.module.impl.settings.Fixes;
-import cc.unknown.module.impl.visuals.FreeLook;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.material.Material;
@@ -668,9 +666,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 		double d0 = entity.prevPosX + (entity.posX - entity.prevPosX) * (double) partialTicks;
 		double d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * (double) partialTicks + (double) f;
 		double d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double) partialTicks;
-		final FreeLook freeLook = (FreeLook) Haru.instance.getModuleManager().getModule(FreeLook.class);
 
-		if (freeLook.isEnabled() && freeLook != null) {
 		if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).isPlayerSleeping()) {
 			f += 1;
 			GlStateManager.translate(0F, 0.3F, 0f);
@@ -689,13 +685,11 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 				}
 
 				GlStateManager.rotate(
-						freeLook.getCameraYaw()
-								+ (freeLook.getCameraYaw() - freeLook.getCameraYaw()) * partialTicks + 180.0F,
-						0.0F, -1.0F, 0.0F);
+						entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180f,
+						0f, -1f, 0f);
 				GlStateManager.rotate(
-						freeLook.getCameraPitch()
-								+ (freeLook.getCameraPitch() - freeLook.getCameraPitch()) * partialTicks,
-						-1.0F, 0.0F, 0.0F);
+						entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks,
+						-1f, 0f, 0f);
 			}
 		} else if (mc.gameSettings.thirdPersonView > 0) {
 			double d3 = thirdPersonDistanceTemp + (thirdPersonDistance - thirdPersonDistanceTemp) * partialTicks;
@@ -723,11 +717,11 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 
 		if (Reflector.EntityViewRenderEvent_CameraSetup_Constructor.exists()) {
 			if (!this.mc.gameSettings.debugCamEnable) {
-				float yaw = freeLook.getCameraYaw()
-						+ (freeLook.getCameraYaw() - freeLook.getCameraYaw()) * partialTicks + 180.0F;
-				float pitch = freeLook.getCameraPitch()
-						+ (freeLook.getCameraPitch() - freeLook.getCameraPitch()) * partialTicks;
-				float roll = 0.0F;
+				float yaw = entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks
+						+ 180.0F;
+				float pitch = entity.prevRotationPitch
+						+ (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
+				float roll1 = 0.0F;
 
 				if (entity instanceof EntityAnimal) {
 					EntityAnimal entityanimal1 = (EntityAnimal) entity;
@@ -737,22 +731,21 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 				}
 
 				Block block = ActiveRenderInfo.getBlockAtEntityViewpoint(this.mc.world, entity, partialTicks);
-				Object event = Reflector.newInstance(Reflector.EntityViewRenderEvent_CameraSetup_Constructor,
+				Object event1 = Reflector.newInstance(Reflector.EntityViewRenderEvent_CameraSetup_Constructor,
 						new Object[] { this, entity, block, Float.valueOf(partialTicks), Float.valueOf(yaw),
-								Float.valueOf(pitch), Float.valueOf(roll) });
-				Reflector.postForgeBusEvent(event);
-				roll = Reflector.getFieldValueFloat(event, Reflector.EntityViewRenderEvent_CameraSetup_roll, roll);
-				pitch = Reflector.getFieldValueFloat(event, Reflector.EntityViewRenderEvent_CameraSetup_pitch, pitch);
-				yaw = Reflector.getFieldValueFloat(event, Reflector.EntityViewRenderEvent_CameraSetup_yaw, yaw);
-				GlStateManager.rotate(roll, 0.0F, 0.0F, 1.0F);
+								Float.valueOf(pitch), Float.valueOf(roll1) });
+				Reflector.postForgeBusEvent(event1);
+				roll1 = Reflector.getFieldValueFloat(event1, Reflector.EntityViewRenderEvent_CameraSetup_roll, roll1);
+				pitch = Reflector.getFieldValueFloat(event1, Reflector.EntityViewRenderEvent_CameraSetup_pitch, pitch);
+				yaw = Reflector.getFieldValueFloat(event1, Reflector.EntityViewRenderEvent_CameraSetup_yaw, yaw);
+				GlStateManager.rotate(roll1, 0.0F, 0.0F, 1.0F);
 				GlStateManager.rotate(pitch, 1.0F, 0.0F, 0.0F);
 				GlStateManager.rotate(yaw, 0.0F, 1.0F, 0.0F);
 			}
 		} else if (!this.mc.gameSettings.debugCamEnable) {
 			GlStateManager.rotate(
-					freeLook.getCameraPitch()
-							+ (freeLook.getCameraPitch() - freeLook.getCameraPitch()) * partialTicks,
-					1.0F, 0.0F, 0.0F);
+					entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 1.0F,
+					0.0F, 0.0F);
 
 			if (entity instanceof EntityAnimal) {
 				EntityAnimal entityanimal = (EntityAnimal) entity;
@@ -761,8 +754,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 						0.0F, 1.0F, 0.0F);
 			} else {
 				GlStateManager.rotate(
-						freeLook.getCameraYaw()
-								+ (freeLook.getCameraYaw() - freeLook.getCameraYaw()) * partialTicks + 180.0F,
+						entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F,
 						0.0F, 1.0F, 0.0F);
 			}
 		}
@@ -772,8 +764,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 		d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * (double) partialTicks + (double) f;
 		d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double) partialTicks;
 		this.cloudFog = this.mc.renderGlobal.hasCloudFog(d0, d1, d2, partialTicks);
-		}
-		
+
 	}
 
 	/**
@@ -1150,43 +1141,33 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 			Mouse.setGrabbed(true);
 		}
 
-        if (this.mc.inGameHasFocus && flag)
-        {
-    		final FreeLook freeLook = (FreeLook) Objects
-    				.requireNonNull(Haru.instance.getModuleManager().getModule(FreeLook.class));
-            if(freeLook.isEnabled()) {
-            	FreeLook.overrideMouse();
-            } else {
-                this.mc.mouseHelper.mouseXYChange();
-                float f = this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
-                float f1 = f * f * f * 8.0F;
-                float f2 = (float)this.mc.mouseHelper.deltaX * f1;
-                float f3 = (float)this.mc.mouseHelper.deltaY * f1;
-                int i = 1;
+		if (this.mc.inGameHasFocus && flag) {
+			this.mc.mouseHelper.mouseXYChange();
+			float f = this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
+			float f1 = f * f * f * 8.0F;
+			float f2 = (float) this.mc.mouseHelper.deltaX * f1;
+			float f3 = (float) this.mc.mouseHelper.deltaY * f1;
+			int i = 1;
 
-                if (this.mc.gameSettings.invertMouse)
-                {
-                    i = -1;
-                }
+			if (this.mc.gameSettings.invertMouse) {
+				i = -1;
+			}
 
-                if (this.mc.gameSettings.smoothCamera)
-                {
-                    this.smoothCamYaw += f2;
-                    this.smoothCamPitch += f3;
-                    float f4 = p_181560_1_ - this.smoothCamPartialTicks;
-                    this.smoothCamPartialTicks = p_181560_1_;
-                    f2 = this.smoothCamFilterX * f4;
-                    f3 = this.smoothCamFilterY * f4;
-                    this.mc.player.setAngles(f2, f3 * (float)i);
-                }
-                else
-                {
-                    this.smoothCamYaw = 0.0F;
-                    this.smoothCamPitch = 0.0F;
-                    this.mc.player.setAngles(f2, f3 * (float)i);
-                }
-            }
-        }
+			if (this.mc.gameSettings.smoothCamera) {
+				this.smoothCamYaw += f2;
+				this.smoothCamPitch += f3;
+				float f4 = p_181560_1_ - this.smoothCamPartialTicks;
+				this.smoothCamPartialTicks = p_181560_1_;
+				f2 = this.smoothCamFilterX * f4;
+				f3 = this.smoothCamFilterY * f4;
+				this.mc.player.setAngles(f2, f3 * (float) i);
+			} else {
+				this.smoothCamYaw = 0.0F;
+				this.smoothCamPitch = 0.0F;
+				this.mc.player.setAngles(f2, f3 * (float) i);
+			}
+
+		}
 
 		this.mc.mcProfiler.endSection();
 
