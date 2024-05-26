@@ -7,6 +7,7 @@ import cc.unknown.event.impl.api.EventBus;
 import cc.unknown.module.ModuleManager;
 import cc.unknown.ui.clickgui.HaruGui;
 import cc.unknown.ui.clickgui.impl.theme.ThemeManager;
+import cc.unknown.utils.camera.CameraHandler;
 import cc.unknown.utils.player.rotation.RotationManager;
 
 public enum Haru {
@@ -18,6 +19,7 @@ public enum Haru {
 	private RotationManager rotationManager;
 	private ModuleManager moduleManager;
 	private ThemeManager themeManager;
+	private CameraHandler cameraHandler;
 
 	private HaruGui haruGui;
 	private EventBus eventBus = new EventBus();
@@ -26,6 +28,7 @@ public enum Haru {
 		commandManager = new CommandManager();
 		moduleManager = new ModuleManager();
 		rotationManager = new RotationManager();
+		cameraHandler = new CameraHandler();
 		haruGui = new HaruGui();
 		configManager = new ConfigManager();
 		themeManager = new ThemeManager();
@@ -63,5 +66,9 @@ public enum Haru {
 
 	public ThemeManager getThemeManager() {
 		return themeManager;
+	}
+
+	public CameraHandler getCameraHandler() {
+		return cameraHandler;
 	}
 }

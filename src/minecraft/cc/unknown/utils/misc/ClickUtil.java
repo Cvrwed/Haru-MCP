@@ -42,10 +42,8 @@ public enum ClickUtil implements Loona {
 
 	private boolean breakHeld;
 	private int invClick;
-	private long leftDelay = 50L;
-	private long leftLastSwing = 0L;
-	private long rightDelay = 0L;
-	private long rightLastSwing = 0L;
+	private int leftDelay = 0, rightDelay = 0;
+	private long leftLastSwing = 0L, rightLastSwing = 0L;
 	private int clickDelay = 0;
 
 	public int getClickDelay() {
@@ -101,19 +99,20 @@ public enum ClickUtil implements Loona {
 				return;
 			}
 
-			for (int i = 0; i < 1 + doubleClick; i++) {
-				if (System.currentTimeMillis() - leftLastSwing >= leftDelay) {
-					leftLastSwing = System.currentTimeMillis();
-					leftDelay = getClickDelay();
+			if (System.currentTimeMillis() - leftLastSwing > leftDelay) {
+				 for (int i = 0; i < 1 + doubleClick; i++) {
 					KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), true);
 					KeyBinding.onTick(mc.gameSettings.keyBindAttack.getKeyCode());
-				} else if (leftLastSwing > leftDelay * 1000) {
-					KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), false);
+					leftLastSwing = System.currentTimeMillis();
+					leftDelay = getClickDelay();
 				}
+			} else if (leftLastSwing > leftDelay * 1000) {
+				KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), false);
+
 			}
 		}
 	}
-	
+
 	public void getRightClick() {
 		AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
 		Mouse.poll();
@@ -127,16 +126,18 @@ public enum ClickUtil implements Loona {
 			if (!rightClickAllowed())
 				return;
 
-			for (int i = 0; i < 1 + doubleClick; i++) {
-				if (System.currentTimeMillis() - rightLastSwing >= rightDelay) {
-					rightLastSwing = System.currentTimeMillis();
-					rightDelay = getClickDelay();
+			if (System.currentTimeMillis() - rightLastSwing > rightDelay) {
+				for (int i = 0; i < 1 + doubleClick; i++) {
 					KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
 					KeyBinding.onTick(mc.gameSettings.keyBindUseItem.getKeyCode());
-				} else if (System.currentTimeMillis() - rightLastSwing > rightDelay * 1000) {
-					KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
+					
+					rightLastSwing = System.currentTimeMillis();
+					rightDelay = getClickDelay();
 				}
+			} else if (System.currentTimeMillis() - rightLastSwing > rightDelay * 1000) {
+				KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
 			}
+
 		}
 	}
 
@@ -186,7 +187,7 @@ public enum ClickUtil implements Loona {
 		AutoClick right = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
 
 		ItemStack item = mc.player.getHeldItem();
-		
+
 		if (item != null) {
 
 			if (item.getItem() instanceof ItemSword) {
@@ -241,7 +242,7 @@ public enum ClickUtil implements Loona {
 		AutoClick left = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
 		return (left.getHitSelect().isToggled() && !hitSelectLogic());
 	}
-	
+
 	public void shouldInvClick() {
 		if (Mouse.isButtonDown(0) && (Keyboard.isKeyDown(54) || Keyboard.isKeyDown(42))) {
 			invClick++;
@@ -254,7 +255,7 @@ public enum ClickUtil implements Loona {
 		clickDelay = MathHelper.randomClickDelay(min, max);
 	}
 
-	public void setLeftDelay(long leftDelay) {
+	public void setLeftDelay(int leftDelay) {
 		this.leftDelay = leftDelay;
 	}
 

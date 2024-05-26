@@ -13,11 +13,13 @@ import com.google.common.collect.Maps;
 
 import cc.unknown.Haru;
 import cc.unknown.event.impl.player.JumpEvent;
+import cc.unknown.module.impl.settings.Fixes;
 import cc.unknown.module.impl.visuals.Fullbright;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.BaseAttributeMap;
@@ -1895,6 +1897,7 @@ public abstract class EntityLivingBase extends Entity {
 	/**
 	 * returns a (normalized) vector of where this entity is looking
 	 */
+	@Override
 	public Vec3 getLookVec() {
 		return this.getLook(1.0F);
 	}
@@ -1902,14 +1905,20 @@ public abstract class EntityLivingBase extends Entity {
 	/**
 	 * interpolated look vector
 	 */
+	@Override
 	public Vec3 getLook(float partialTicks) {
-		if (partialTicks == 1.0F) {
-			return this.getVectorForRotation(this.rotationPitch, this.rotationYawHead);
-		} else {
-			float f = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * partialTicks;
-			float f1 = this.prevRotationYawHead + (this.rotationYawHead - this.prevRotationYawHead) * partialTicks;
-			return this.getVectorForRotation(f, f1);
-		}
+		Fixes tweaks = (Fixes) Haru.instance.getModuleManager().getModule(Fixes.class);
+
+        if (this instanceof EntityPlayerSP && tweaks.isEnabled() && tweaks.rawInput.isToggled()) {
+            return super.getLook(partialTicks);
+        }
+        
+        if (partialTicks == 1.0f) {
+            return this.getVectorForRotation(this.rotationPitch, this.rotationYawHead);
+        }
+        final float f = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * partialTicks;
+        final float f2 = this.prevRotationYawHead + (this.rotationYawHead - this.prevRotationYawHead) * partialTicks;
+        return this.getVectorForRotation(f, f2);
 	}
 
 	/**

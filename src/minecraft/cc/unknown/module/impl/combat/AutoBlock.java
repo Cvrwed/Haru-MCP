@@ -8,6 +8,7 @@ import cc.unknown.event.impl.render.RenderItemEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.client.Cold;
@@ -21,12 +22,14 @@ public class AutoBlock extends Module {
 	public static DoubleSliderValue duration = new DoubleSliderValue("Block duration", 20, 100, 1, 500, 1);
 	public static DoubleSliderValue distance = new DoubleSliderValue("Distance to player", 0, 3, 0, 6, 0.01);
 	public static SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
+	private BooleanValue forceBlock = new BooleanValue("Force Block Animation", true);
+	
 	private boolean block;
 	private final Cold blockTime = new Cold(0);
 	private EntityPlayer target = null;
 
 	public AutoBlock() {
-		this.registerSetting(duration, distance, chance);
+		this.registerSetting(duration, distance, chance, forceBlock);
 	}
 
 	@EventLink
@@ -58,7 +61,7 @@ public class AutoBlock extends Module {
 	
     @EventLink
     public void onRenderItem(RenderItemEvent e) {
-        if (PlayerUtil.isHoldingWeapon()) {
+        if (PlayerUtil.isHoldingWeapon() && forceBlock.isToggled()) {
             e.setEnumAction(EnumAction.BLOCK);
             e.setUseItem(true);
         }

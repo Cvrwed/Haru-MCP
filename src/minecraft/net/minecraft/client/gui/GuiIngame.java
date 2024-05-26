@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 import cc.unknown.Haru;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.event.impl.render.RenderEvent.RenderType;
-import cc.unknown.module.impl.settings.Tweaks;
+import cc.unknown.module.impl.settings.Helper;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -19,19 +19,14 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.scoreboard.Score;
@@ -45,7 +40,6 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringUtils;
 import net.minecraft.util.enums.EnumChatFormatting;
 import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
@@ -451,7 +445,7 @@ public class GuiIngame extends Gui {
 	}
 
 	private void renderScoreboard(ScoreObjective p_180475_1_, ScaledResolution p_180475_2_) {
-		Tweaks tweaks = (Tweaks) Haru.instance.getModuleManager().getModule(Tweaks.class);
+		Helper tweaks = (Helper) Haru.instance.getModuleManager().getModule(Helper.class);
 		if (tweaks.noScoreboard.isToggled())
 			return;
 		Scoreboard scoreboard = p_180475_1_.getScoreboard();

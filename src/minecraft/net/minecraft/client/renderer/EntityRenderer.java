@@ -5,6 +5,7 @@ import java.nio.FloatBuffer;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
@@ -25,7 +26,8 @@ import com.google.gson.JsonSyntaxException;
 import cc.unknown.Haru;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.event.impl.render.RenderEvent.RenderType;
-import cc.unknown.module.impl.settings.Tweaks;
+import cc.unknown.module.impl.settings.Fixes;
+import cc.unknown.module.impl.visuals.FreeLook;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.material.Material;
@@ -611,7 +613,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 	}
 
 	private void hurtCameraEffect(float partialTicks) {
-		Tweaks tw = (Tweaks) Haru.instance.getModuleManager().getModule(Tweaks.class);
+		Fixes tw = (Fixes) Haru.instance.getModuleManager().getModule(Fixes.class);
 		if (tw.noHurtCam.isToggled())
 			return;
 
@@ -661,15 +663,17 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 	 * sets up player's eye (or camera in third person mode)
 	 */
 	private void orientCamera(float partialTicks) {
-        Entity entity = mc.getRenderViewEntity();
-        float f = entity.getEyeHeight();
+		Entity entity = mc.getRenderViewEntity();
+		float f = entity.getEyeHeight();
 		double d0 = entity.prevPosX + (entity.posX - entity.prevPosX) * (double) partialTicks;
 		double d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * (double) partialTicks + (double) f;
 		double d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double) partialTicks;
+		final FreeLook freeLook = (FreeLook) Haru.instance.getModuleManager().getModule(FreeLook.class);
 
-        if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).isPlayerSleeping()) {
-            f += 1;
-            GlStateManager.translate(0F, 0.3F, 0f);
+		if (freeLook.isEnabled() && freeLook != null) {
+		if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).isPlayerSleeping()) {
+			f += 1;
+			GlStateManager.translate(0F, 0.3F, 0f);
 
 			if (!mc.gameSettings.debugCamEnable) {
 				BlockPos blockpos = new BlockPos(entity);
@@ -684,35 +688,45 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 					GlStateManager.rotate((float) (j * 90), 0.0F, 1.0F, 0.0F);
 				}
 
-				GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180f, 0f, -1f, 0f);
-				GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1f, 0f, 0f);
+				GlStateManager.rotate(
+						freeLook.getCameraYaw()
+								+ (freeLook.getCameraYaw() - freeLook.getCameraYaw()) * partialTicks + 180.0F,
+						0.0F, -1.0F, 0.0F);
+				GlStateManager.rotate(
+						freeLook.getCameraPitch()
+								+ (freeLook.getCameraPitch() - freeLook.getCameraPitch()) * partialTicks,
+						-1.0F, 0.0F, 0.0F);
 			}
 		} else if (mc.gameSettings.thirdPersonView > 0) {
-            double d3 = thirdPersonDistanceTemp + (thirdPersonDistance - thirdPersonDistanceTemp) * partialTicks;
+			double d3 = thirdPersonDistanceTemp + (thirdPersonDistance - thirdPersonDistanceTemp) * partialTicks;
 
-            if (mc.gameSettings.debugCamEnable) {
-            	GlStateManager.translate(0f, 0f, (float) (-d3));
-            } else {
-                float f1 = entity.rotationYaw;
-                float f2 = entity.rotationPitch;
+			if (mc.gameSettings.debugCamEnable) {
+				GlStateManager.translate(0f, 0f, (float) (-d3));
+			} else {
+				float f1 = entity.rotationYaw;
+				float f2 = entity.rotationPitch;
 
-                if (mc.gameSettings.thirdPersonView == 2) f2 += 180f;
+				if (mc.gameSettings.thirdPersonView == 2)
+					f2 += 180f;
 
-                if (mc.gameSettings.thirdPersonView == 2) GlStateManager.rotate(180f, 0f, 1f, 0f);
+				if (mc.gameSettings.thirdPersonView == 2)
+					GlStateManager.rotate(180f, 0f, 1f, 0f);
 
-                GlStateManager.rotate(entity.rotationPitch - f2, 1f, 0f, 0f);
-                GlStateManager.rotate(entity.rotationYaw - f1, 0f, 1f, 0f);
-                GlStateManager.translate(0f, 0f, (float) (-d3));
-                GlStateManager.rotate(f1 - entity.rotationYaw, 0f, 1f, 0f);
-                GlStateManager.rotate(f2 - entity.rotationPitch, 1f, 0f, 0f);
-            }
-        } else GlStateManager.translate(0.0F, 0.0F, -0.1F);
-		
+				GlStateManager.rotate(entity.rotationPitch - f2, 1f, 0f, 0f);
+				GlStateManager.rotate(entity.rotationYaw - f1, 0f, 1f, 0f);
+				GlStateManager.translate(0f, 0f, (float) (-d3));
+				GlStateManager.rotate(f1 - entity.rotationYaw, 0f, 1f, 0f);
+				GlStateManager.rotate(f2 - entity.rotationPitch, 1f, 0f, 0f);
+			}
+		} else
+			GlStateManager.translate(0.0F, 0.0F, -0.1F);
+
 		if (Reflector.EntityViewRenderEvent_CameraSetup_Constructor.exists()) {
 			if (!this.mc.gameSettings.debugCamEnable) {
-				float yaw = entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks
-						+ 180.0F;
-				float pitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
+				float yaw = freeLook.getCameraYaw()
+						+ (freeLook.getCameraYaw() - freeLook.getCameraYaw()) * partialTicks + 180.0F;
+				float pitch = freeLook.getCameraPitch()
+						+ (freeLook.getCameraPitch() - freeLook.getCameraPitch()) * partialTicks;
 				float roll = 0.0F;
 
 				if (entity instanceof EntityAnimal) {
@@ -736,8 +750,9 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 			}
 		} else if (!this.mc.gameSettings.debugCamEnable) {
 			GlStateManager.rotate(
-					entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 1.0F,
-					0.0F, 0.0F);
+					freeLook.getCameraPitch()
+							+ (freeLook.getCameraPitch() - freeLook.getCameraPitch()) * partialTicks,
+					1.0F, 0.0F, 0.0F);
 
 			if (entity instanceof EntityAnimal) {
 				EntityAnimal entityanimal = (EntityAnimal) entity;
@@ -746,7 +761,8 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 						0.0F, 1.0F, 0.0F);
 			} else {
 				GlStateManager.rotate(
-						entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F,
+						freeLook.getCameraYaw()
+								+ (freeLook.getCameraYaw() - freeLook.getCameraYaw()) * partialTicks + 180.0F,
 						0.0F, 1.0F, 0.0F);
 			}
 		}
@@ -756,6 +772,8 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 		d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * (double) partialTicks + (double) f;
 		d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double) partialTicks;
 		this.cloudFog = this.mc.renderGlobal.hasCloudFog(d0, d1, d2, partialTicks);
+		}
+		
 	}
 
 	/**
@@ -1132,32 +1150,43 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 			Mouse.setGrabbed(true);
 		}
 
-		if (this.mc.inGameHasFocus && flag) {
-			this.mc.mouseHelper.mouseXYChange();
-			float f = this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
-			float f1 = f * f * f * 8.0F;
-			float f2 = (float) this.mc.mouseHelper.deltaX * f1;
-			float f3 = (float) this.mc.mouseHelper.deltaY * f1;
-			int i = 1;
+        if (this.mc.inGameHasFocus && flag)
+        {
+    		final FreeLook freeLook = (FreeLook) Objects
+    				.requireNonNull(Haru.instance.getModuleManager().getModule(FreeLook.class));
+            if(freeLook.isEnabled()) {
+            	FreeLook.overrideMouse();
+            } else {
+                this.mc.mouseHelper.mouseXYChange();
+                float f = this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
+                float f1 = f * f * f * 8.0F;
+                float f2 = (float)this.mc.mouseHelper.deltaX * f1;
+                float f3 = (float)this.mc.mouseHelper.deltaY * f1;
+                int i = 1;
 
-			if (this.mc.gameSettings.invertMouse) {
-				i = -1;
-			}
+                if (this.mc.gameSettings.invertMouse)
+                {
+                    i = -1;
+                }
 
-			if (this.mc.gameSettings.smoothCamera) {
-				this.smoothCamYaw += f2;
-				this.smoothCamPitch += f3;
-				float f4 = p_181560_1_ - this.smoothCamPartialTicks;
-				this.smoothCamPartialTicks = p_181560_1_;
-				f2 = this.smoothCamFilterX * f4;
-				f3 = this.smoothCamFilterY * f4;
-				this.mc.player.setAngles(f2, f3 * (float) i);
-			} else {
-				this.smoothCamYaw = 0.0F;
-				this.smoothCamPitch = 0.0F;
-				this.mc.player.setAngles(f2, f3 * (float) i);
-			}
-		}
+                if (this.mc.gameSettings.smoothCamera)
+                {
+                    this.smoothCamYaw += f2;
+                    this.smoothCamPitch += f3;
+                    float f4 = p_181560_1_ - this.smoothCamPartialTicks;
+                    this.smoothCamPartialTicks = p_181560_1_;
+                    f2 = this.smoothCamFilterX * f4;
+                    f3 = this.smoothCamFilterY * f4;
+                    this.mc.player.setAngles(f2, f3 * (float)i);
+                }
+                else
+                {
+                    this.smoothCamYaw = 0.0F;
+                    this.smoothCamPitch = 0.0F;
+                    this.mc.player.setAngles(f2, f3 * (float)i);
+                }
+            }
+        }
 
 		this.mc.mcProfiler.endSection();
 

@@ -91,9 +91,17 @@ public enum Theme implements ColorUtil {
 
     public double getBlendFactor(Vector2d screenCoordinates) {
         return Math.sin(System.currentTimeMillis() / 600.0D
-                + screenCoordinates.getX() * 0.005D
-                + screenCoordinates.getY() * 0.06D
+                + /*screenCoordinates.getX()*/ 10 * 0.005D
+                + /*screenCoordinates.getY()*/ 10 * 0.06D
         ) * 0.5D + 0.5D;
+    }
+    
+    public Color getGradient() {
+    	return convert(getFirstColor(), getSecondColor());
+    }
+    
+    public Color convert(Color color, Color color2) {
+        return new Color((int) (color.getRed() * (Math.sin(System.currentTimeMillis() / 1.0E8 * 0.5 * 400000.0 + 10 * 0.550000011920929) + 1.0) * 0.5 + color2.getRed() * 1.0 - (Math.sin(System.currentTimeMillis() / 1.0E8 * 0.5 * 400000.0 + 10 * 0.550000011920929) + 1.0) * 0.5), (int) (color.getGreen() * (Math.sin(System.currentTimeMillis() / 1.0E8 * 0.5 * 400000.0 + 10 * 0.550000011920929) + 1.0) * 0.5 + color2.getGreen() * 1.0 - (Math.sin(System.currentTimeMillis() / 1.0E8 * 0.5 * 400000.0 + 10 * 0.550000011920929) + 1.0) * 0.5), (int) (color.getBlue() * (Math.sin(System.currentTimeMillis() / 1.0E8 * 0.5 * 400000.0 + 10 * 0.550000011920929) + 1.0) * 0.5 + color2.getBlue() * 1.0 - (Math.sin(System.currentTimeMillis() / 1.0E8 * 0.5 * 400000.0 + 10 * 0.550000011920929) + 1.0) * 0.5));
     }
 
     public enum KeyColors {

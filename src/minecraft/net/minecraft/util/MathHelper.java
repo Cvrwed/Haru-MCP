@@ -73,8 +73,14 @@ public class MathHelper {
         }
     }
     
-    public static int randomClickDelay(int minCPS, int maxCPS) {
+    /*public static int randomClickDelay(int minCPS, int maxCPS) {
         return (int) (Math.random() * (1000 / minCPS - 1000 / maxCPS + 1) + 1000 / maxCPS);
+    }*/
+    
+    public static int randomClickDelay(int minCPS, int maxCPS) {
+        double minDelay = 1000.0 / maxCPS;
+        double maxDelay = 1000.0 / minCPS;
+        return (int) Math.round(ThreadLocalRandom.current().nextDouble(minDelay, maxDelay + 1));
     }
     
     public static double randomInRange(DoubleSupplier minSupplier, DoubleSupplier maxSupplier) {

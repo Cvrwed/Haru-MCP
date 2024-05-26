@@ -31,7 +31,7 @@ public class AutoClick extends Module {
 	private final ModeValue clickMode = new ModeValue("Click Mode", "Left", "Left", "Right", "Both");
 	private final ModeValue clickStyle = new ModeValue("Click Style", "Normal", "Normal", "Double Click");
 
-	private final DoubleSliderValue leftCPS = new DoubleSliderValue("Left Click Speed", 16, 19, 1, 35, 1);
+	private final DoubleSliderValue leftCPS = new DoubleSliderValue("Left Click Speed", 16, 19, 1, 22, 1);
 	private final BooleanValue weaponOnly = new BooleanValue("Only Use Weapons", false);
 	private final BooleanValue breakBlocks = new BooleanValue("Break Blocks", false);
 	private final BooleanValue hitSelect = new BooleanValue("Precise Hit Selection", false);
@@ -53,15 +53,9 @@ public class AutoClick extends Module {
 	}
 	
 	@Override
-	public void onEnable() {
-		ClickUtil.instance.setLeftLastSwing(0L);
-		ClickUtil.instance.setLeftDelay(50L);
-	}
-	
-	@Override
 	public void onDisable() {
 		ClickUtil.instance.setLeftLastSwing(0L);
-		ClickUtil.instance.setLeftDelay(50L);
+		ClickUtil.instance.setLeftDelay(0);
 	}
 
 	@EventLink

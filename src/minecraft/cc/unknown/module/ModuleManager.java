@@ -13,7 +13,8 @@ import cc.unknown.module.impl.combat.*;
 import cc.unknown.module.impl.exploit.*;
 import cc.unknown.module.impl.other.*;
 import cc.unknown.module.impl.player.*;
-import cc.unknown.module.impl.settings.Tweaks;
+import cc.unknown.module.impl.settings.Helper;
+import cc.unknown.module.impl.settings.Fixes;
 import cc.unknown.module.impl.visuals.*;
 import cc.unknown.utils.Loona;
 import net.minecraft.client.gui.FontRenderer;
@@ -83,11 +84,13 @@ public class ModuleManager implements Loona {
 				new KeyStrokes(),
 				new TargetHUD(),
 				new Trajectories(),
+				new FreeLook(),
 				new Nametags(),
 				new ESP(),
 				
 				//
-				new Tweaks()
+				new Fixes(),
+				new Helper()
 				
 		);
 		

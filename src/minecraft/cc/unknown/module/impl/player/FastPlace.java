@@ -17,11 +17,11 @@ import net.minecraft.item.ItemStack;
 
 @Register(name = "FastPlace", category = Category.Player)
 public class FastPlace extends Module {
-	private SliderValue delaySlider = new SliderValue("Delay", 1, 0, 4, 0.5);
+	private SliderValue delaySlider = new SliderValue("Delay", 1, 0, 4, 1);
 	private BooleanValue blockOnly = new BooleanValue("Blocks only", true);
 	private BooleanValue projSeparate = new BooleanValue("Separate Projectile Delay", true);
 	private BooleanValue pitchCheck = new BooleanValue("Pitch Check", false);
-	private SliderValue projSlider = new SliderValue("Projectile Delay", 2, 0, 4, 0.5);
+	private SliderValue projSlider = new SliderValue("Projectile Delay", 2, 0, 4, 1);
 
 	public FastPlace() {
 		this.registerSetting(delaySlider, blockOnly, projSeparate, pitchCheck, projSlider);
