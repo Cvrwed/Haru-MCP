@@ -64,7 +64,7 @@ public enum Theme implements ColorUtil {
     }
 
     public Color getAccentColor(Vector2d screenCoordinates) {
-        return ColorUtil.mixColors(getFirstColor(), getSecondColor(), getBlendFactor(screenCoordinates));
+        return ColorUtil.mixColors(firstColor, secondColor, getBlendFactor(screenCoordinates));
     }
     
     public Color getAccentColor() {
@@ -97,7 +97,7 @@ public enum Theme implements ColorUtil {
     }
     
     public Color getGradient() {
-    	return convert(getFirstColor(), getSecondColor());
+    	return convert(firstColor, secondColor);
     }
     
     public Color convert(Color color, Color color2) {
@@ -129,14 +129,6 @@ public enum Theme implements ColorUtil {
 
 	public String getThemeName() {
 		return themeName;
-	}
-
-	public Color getFirstColor() {
-		return firstColor;
-	}
-
-	public Color getSecondColor() {
-		return secondColor;
 	}
 
 	public Color getThirdColor() {

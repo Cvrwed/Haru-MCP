@@ -18,13 +18,12 @@ import cc.unknown.module.impl.api.Register;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
-import cc.unknown.ui.clickgui.impl.theme.Theme;
 import cc.unknown.utils.client.Cold;
 import cc.unknown.utils.network.PacketUtil;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.util.vec.Vec3;
 
 @Register(name = "Blink", category = Category.Player)
@@ -44,6 +43,8 @@ public class Blink extends Module {
 	private BooleanValue disableAttack = new BooleanValue("Release when attacking", true);
 	private BooleanValue disableDmg = new BooleanValue("Release when receive dmg", true);
 	private Cold timer = new Cold();
+	
+	 private EntityOtherPlayerMP fakePlayer;
 
 	public Blink() {
 		this.registerSetting(renderPosition, pulse, pulseDelay, disableDisconnect, disableAttack, disableDmg);
@@ -125,6 +126,10 @@ public class Blink extends Module {
 			if (timer.hasTimeElapsed(pulseDelay.getInputToLong(), true)) {
 				releasePackets();
 			}
+			
+			if (renderPosition.is("Fake")) {
+				
+			}
 		}
 
 		if (disableDmg.isToggled()) {
@@ -157,10 +162,10 @@ public class Blink extends Module {
 					GL11.glDisable(GL11.GL_DEPTH_TEST);
 					mc.entityRenderer.disableLightmap();
 					GL11.glBegin(GL11.GL_LINE_STRIP);
-					GL11.glColor4f(getTheme().getSecondColor().getRed() / 255.0f,
-							getTheme().getSecondColor().getGreen() / 255.0f,
-							getTheme().getSecondColor().getBlue() / 255.0f,
-							getTheme().getSecondColor().getAlpha() / 255.0f);
+					GL11.glColor4f(getTheme().getMainColor().getRed() / 255.0f,
+							getTheme().getMainColor().getGreen() / 255.0f,
+							getTheme().getMainColor().getBlue() / 255.0f,
+							getTheme().getMainColor().getAlpha() / 255.0f);
 
 					double renderPosX = mc.getRenderManager().viewerPosX;
 					double renderPosY = mc.getRenderManager().viewerPosY;
