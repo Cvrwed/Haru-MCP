@@ -1,5 +1,7 @@
 package net.minecraft.client.renderer;
 
+import cc.unknown.module.impl.exploit.TickBase;
+import cc.unknown.module.impl.visuals.Animations;
 import org.lwjgl.opengl.GL11;
 
 import cc.unknown.Haru;
@@ -375,10 +377,10 @@ public class ItemRenderer {
 	
     public void renderItemInFirstPerson(final float partialTicks) {
         if (!Config.isShaders() || !Shaders.isSkipRenderHand()) {
-            float animationProgression = 1.0F - (this.prevEquippedProgress + (this.equippedProgress - this.prevEquippedProgress) * partialTicks);
+            float f = 1.0F - (this.prevEquippedProgress + (this.equippedProgress - this.prevEquippedProgress) * partialTicks);
             final AbstractClientPlayer abstractclientplayer = this.mc.player;
-            float swingProgress = abstractclientplayer.getSwingProgress(partialTicks);
-            final float f2 = abstractclientplayer.prevRotationPitch + (abstractclientplayer.rotationPitch - abstractclientplayer.prevRotationPitch) * partialTicks;
+            float f1 = abstractclientplayer.getSwingProgress(partialTicks);
+			final float f2 = abstractclientplayer.prevRotationPitch + (abstractclientplayer.rotationPitch - abstractclientplayer.prevRotationPitch) * partialTicks;
             final float f3 = abstractclientplayer.prevRotationYaw + (abstractclientplayer.rotationYaw - abstractclientplayer.prevRotationYaw) * partialTicks;
             this.func_178101_a(f2, f3);
             this.func_178109_a(abstractclientplayer);
@@ -386,54 +388,80 @@ public class ItemRenderer {
             GlStateManager.enableRescaleNormal();
             GlStateManager.pushMatrix();
 
-            if (this.itemToRender != null) {
-                EnumAction enumaction = this.itemToRender.getItemUseAction();
+            if (this.itemToRender != null) {				Animations animations = (Animations) Haru.instance.getModuleManager().getModule(Animations.class);
+
+
+				GlStateManager.translate(-(animations.xValue.getInput()), -(animations.yValue.getInput()), -(animations.zValue.getInput()));
+
+				EnumAction enumaction = this.itemToRender.getItemUseAction();
                 final int itemInUseCount = abstractclientplayer.getItemInUseCount();
                 boolean useItem = itemInUseCount > 0;
 
-                final RenderItemEvent event = new RenderItemEvent(enumaction, useItem, animationProgression, partialTicks, swingProgress, itemToRender);
+                final RenderItemEvent event = new RenderItemEvent(enumaction, useItem, f, partialTicks, f1, itemToRender);
                 Haru.instance.getEventBus().post(event);
                 enumaction = event.getEnumAction();
                 useItem = event.isUseItem();
-                animationProgression = event.getAnimationProgression();
-                swingProgress = event.getSwingProgress();
+                f = event.getAnimationProgression();
+                f1 = event.getSwingProgress();
+
 
                 if (this.itemToRender.getItem() instanceof ItemMap) {
-                    this.renderItemMap(abstractclientplayer, f2, animationProgression, swingProgress);
+                    this.renderItemMap(abstractclientplayer, f2, f, f1);
                 } else if (useItem) {
                     if (!event.isCancelled()) {
                         switch (enumaction) {
                             case NONE:
-                                this.transformFirstPersonItem(animationProgression, swingProgress);
+                                this.transformFirstPersonItem(f, f1);
                                 break;
 
                             case EAT:
                             case DRINK:
                                 this.func_178104_a(abstractclientplayer, partialTicks);
-                                this.transformFirstPersonItem(animationProgression, swingProgress);
+                                this.transformFirstPersonItem(f, f1);
                                 break;
 
                             case BLOCK:
-                                this.transformFirstPersonItem(animationProgression, swingProgress);
-                                this.func_178103_d();
-                                break;
-
+								if (Haru.instance.getModuleManager().getModule(Animations.class).isEnabled()) {
+									switch (animations.blockMode.getMode()) {
+										case "1.8":
+											this.transformFirstPersonItem(f, 0.0F);
+											this.func_178103_d();
+											break;
+										case "1.7":
+											this.transformFirstPersonItem(f, f1);
+											this.func_178103_d();
+											break;
+										case "Astolfo":
+											GlStateManager.rotate(System.currentTimeMillis() % 360, 0, 0, -0.1f);
+											this.transformFirstPersonItem(f / 1.6f, 0);
+											this.func_178103_d();
+											break;
+										case "Spin":
+											float angle = (float) (System.currentTimeMillis() % (360 * 20) * animations.spinSpeed.getInput());
+											GlStateManager.translate(0.54F, -0.4F, -0.81999997F);
+											GlStateManager.translate(0.0F, 0f, 0.0F);
+											GlStateManager.scale(0.4f, 0.4f, 0.4f);
+											GlStateManager.rotate(72.0F, 0.0F, 1.0F, 0.0F);
+											GlStateManager.rotate(angle, 0f, 0.1f, 0f);
+											break;
+									}
+								}
                             case BOW:
-                                this.transformFirstPersonItem(animationProgression, swingProgress);
+                                this.transformFirstPersonItem(f, f1);
                                 this.func_178098_a(partialTicks, abstractclientplayer);
                         }
                     }
                 } else if (!event.isCancelled()) {
-                    this.func_178105_d(swingProgress);
+                    this.func_178105_d(f1);
 					if (this.itemToRender.getItem() instanceof ItemFishingRod) {
 						GlStateManager.translate(0.0F, 0.0F, -0.35F);
 					}
-                    this.transformFirstPersonItem(animationProgression, swingProgress);
+                    this.transformFirstPersonItem(f, f1);
                 }
 
                 this.renderItem(abstractclientplayer, this.itemToRender, ItemCameraTransforms.TransformType.FIRST_PERSON);
             } else if (!abstractclientplayer.isInvisible()) {
-                this.func_178095_a(abstractclientplayer, animationProgression, swingProgress);
+                this.func_178095_a(abstractclientplayer, f, f1);
             }
 
             GlStateManager.popMatrix();

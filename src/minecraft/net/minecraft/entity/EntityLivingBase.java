@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import cc.unknown.module.impl.visuals.Animations;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
@@ -1176,11 +1177,10 @@ public abstract class EntityLivingBase extends Entity {
 	 * enchantments into account.
 	 */
 	private int getArmSwingAnimationEnd() {
-		return this.isPotionActive(Potion.digSpeed)
-				? 6 - (1 + this.getActivePotionEffect(Potion.digSpeed).getAmplifier()) * 1
-				: (this.isPotionActive(Potion.digSlowdown)
-						? 6 + (1 + this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2
-						: 6);
+		Animations animations = (Animations) Haru.instance.getModuleManager().getModule(Animations.class);
+
+		double multiplier = this != Minecraft.getMinecraft().player ? 1 : animations.isEnabled() ? (animations).animationSpeed.getInput() : 1;
+		return this.isPotionActive(Potion.digSpeed) ? 6 - (1 + this.getActivePotionEffect(Potion.digSpeed).getAmplifier()) * 1 : (int) ((this.isPotionActive(Potion.digSlowdown) ? 6 + (1 + this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2 : 6) * (float) multiplier);
 	}
 
 	/**

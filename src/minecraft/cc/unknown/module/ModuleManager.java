@@ -77,6 +77,7 @@ public class ModuleManager implements Loona {
 				
 				// visuals
 				new Ambience(),
+				new Animations(),
 				new Fullbright(),
 				new ClickGuiModule(),
 				new HUD(),

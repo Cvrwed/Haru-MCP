@@ -14,8 +14,14 @@ public class HiddenUtil {
 	public static void setVisible(boolean visible) {
 	    if (Haru.instance.getModuleManager() != null) {
 	        List<Class<? extends Module>> modules = Arrays.asList(
+<<<<<<< HEAD
 	        		Fixes.class,
 	        		
+=======
+	        		Tweaks.class,
+
+					Animations.class,
+>>>>>>> 6469fea148ac2c4aa25962af7a84db51a6540a1d
 	        		Ambience.class,
 	        		ClickGuiModule.class,
 	        		Fullbright.class,
