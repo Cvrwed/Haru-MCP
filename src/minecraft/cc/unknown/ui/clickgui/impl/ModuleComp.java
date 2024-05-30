@@ -55,7 +55,7 @@ public class ModuleComp extends Component {
 		}
 	}
 
-	public static void e() {
+	public void render(float x, float y, float x1, float y1) {
 		GL11.glDisable(2929);
 		GL11.glEnable(3042);
 		GL11.glDisable(3553);
@@ -64,9 +64,16 @@ public class ModuleComp extends Component {
 		GL11.glEnable(2848);
 		GL11.glHint(3154, 4354);
 		GL11.glHint(3155, 4354);
-	}
-
-	public static void f() {
+		GL11.glShadeModel(7425);
+		GL11.glBegin(7);
+		GL11.glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
+		GL11.glVertex2f(x, y1);
+		GL11.glVertex2f(x1, y1);
+		GL11.glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
+		GL11.glVertex2f(x1, y);
+		GL11.glVertex2f(x, y);
+		GL11.glEnd();
+		GL11.glShadeModel(7424);
 		GL11.glEnable(3553);
 		GL11.glDisable(3042);
 		GL11.glEnable(2929);
@@ -76,49 +83,25 @@ public class ModuleComp extends Component {
 		GL11.glEdgeFlag(true);
 	}
 
-	public static void g(int h) {
-		float a = 0.0F;
-		float r = 0.0F;
-		float g = 0.0F;
-		float b = 0.0F;
-
-		GL11.glColor4f(r, g, b, a);
-	}
-
-	public static void v(float x, float y, float x1, float y1, int t, int b) {
-		e();
-		GL11.glShadeModel(7425);
-		GL11.glBegin(7);
-		g(t);
-		GL11.glVertex2f(x, y1);
-		GL11.glVertex2f(x1, y1);
-		g(b);
-		GL11.glVertex2f(x1, y);
-		GL11.glVertex2f(x, y);
-		GL11.glEnd();
-		GL11.glShadeModel(7424);
-		f();
-	}
-
 	@Override
 	public void renderComponent() {
-		v((float) this.category.getX(), (float) (this.category.getY() + this.o),
-				(float) (this.category.getX() + this.category.getWidth()), (float) (this.category.getY() + 15 + this.o),
-				this.mod.isEnabled() ? getTheme().getMainColor().getRGB() : -12829381,
-				this.mod.isEnabled() ? getTheme().getMainColor().getRGB() : -12302777);
+		render(this.category.getX(), (this.category.getY() + this.o),
+				(this.category.getX() + this.category.getWidth()), (this.category.getY() + 15 + this.o));
+		
 		GL11.glPushMatrix();
-		int button_rgb;
+		int button;
 		if (this.mod.isEnabled()) {
-			button_rgb = getTheme().getMainColor().getRGB();
+			button = getTheme().getMainColor().getRGB();
 		} else if (this.mod.canBeEnabled()) {
-			button_rgb = Color.lightGray.getRGB();
+			button = Color.lightGray.getRGB();
 		} else {
-			button_rgb = new Color(102, 102, 102).getRGB();
+			button = new Color(102, 102, 102).getRGB();
 		}
+		
 		mc.fontRendererObj.drawStringWithShadow(this.mod.getRegister().name(),
 				(float) (this.category.getX() + this.category.getWidth() / 2
-						- Minecraft.getMinecraft().fontRendererObj.getStringWidth(this.mod.getRegister().name()) / 2),
-				(float) (this.category.getY() + this.o + 4), button_rgb);
+						- mc.fontRendererObj.getStringWidth(this.mod.getRegister().name()) / 2),
+				(float) (this.category.getY() + this.o + 4), button);
 		GL11.glPopMatrix();
 		if (this.open && !this.settings.isEmpty()) {
 			this.settings.forEach(Component::renderComponent);

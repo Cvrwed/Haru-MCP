@@ -123,7 +123,12 @@ public class MoveUtil implements Loona {
 		return (float) Math.sqrt(motionX * motionX + motionZ * motionZ);
 	}
 
-	public static void updateBinds() {
+    public static void updateBinds() {
+        updateBinds(true);
+    }
+
+    public static void updateBinds(boolean checkGui) {
+        if (checkGui && mc.currentScreen != null) return;
 		mc.gameSettings.keyBindJump.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindJump);
 		mc.gameSettings.keyBindSprint.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSprint);
 		mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);

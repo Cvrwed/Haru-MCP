@@ -6,7 +6,7 @@ import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
@@ -14,7 +14,7 @@ import cc.unknown.utils.player.CombatUtil;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.util.MathHelper;
 
-@Register(name = "BridgeAssist", category = Category.Player)
+@Info(name = "BridgeAssist", category = Category.Player)
 public class BridgeAssist extends Module {
 
 	private boolean waitingForAim;

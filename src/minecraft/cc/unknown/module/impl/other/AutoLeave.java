@@ -7,13 +7,13 @@ import cc.unknown.event.impl.move.LivingEvent;
 import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.client.Cold;
 import net.minecraft.network.play.server.SPacketChat;
 
-@Register(name = "AutoLeave", category = Category.Other)
+@Info(name = "AutoLeave", category = Category.Other)
 public class AutoLeave extends Module {
 
 	private ModeValue mode = new ModeValue("Mode", "/salir", "/salir");

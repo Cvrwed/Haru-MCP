@@ -161,8 +161,14 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
 					f2 = f1 - f;
 				}
+				
+				float f7;
 
-				float f7 = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
+                if (entity == Minecraft.getMinecraft().player) {
+                    f7 = entity.prevRenderPitch + (entity.renderPitch - entity.prevRenderPitch) * partialTicks;
+                } else {
+                    f7 = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
+                }
 				this.renderLivingAt(entity, x, y, z);
 				float f8 = this.handleRotationFloat(entity, partialTicks);
 				this.rotateCorpse(entity, f8, f, partialTicks);

@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import cc.unknown.Haru;
 import cc.unknown.command.Command;
-import cc.unknown.command.Flips;
+import cc.unknown.command.api.Flips;
 import cc.unknown.config.Config;
 
 @Flips(name = "Config", alias = "cfg", desc = "Save or load ur config", syntax = ".cfg save <name>")

@@ -19,6 +19,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import cc.unknown.Haru;
 import cc.unknown.event.impl.network.PacketEvent;
+import cc.unknown.utils.player.rotation.RotationManager;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelException;
@@ -44,6 +45,7 @@ import io.netty.handler.timeout.TimeoutException;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.CryptManager;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ITickable;
@@ -80,7 +82,8 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 		}
 	};
 	private final PacketDirection direction;
-	public final Queue<InboundHandlerTuplePacketListener> outboundPacketsQueue = Queues.<InboundHandlerTuplePacketListener>newConcurrentLinkedQueue();
+	public final Queue<InboundHandlerTuplePacketListener> outboundPacketsQueue = Queues
+			.<InboundHandlerTuplePacketListener>newConcurrentLinkedQueue();
 	public final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
 	/** The active channel */
@@ -150,7 +153,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 		logger.debug("Set listener of {} to {}", new Object[] { this, handler });
 		packetListener = handler;
 	}
-	
+
 	public void channelRead0(ChannelHandlerContext p_channelRead0_1_, Packet p_channelRead0_2_) throws Exception {
 		if (channel.isOpen()) {
 			try {
@@ -162,7 +165,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 			}
 		}
 	}
-	
+
 	public void receivePacketSilent(final Packet packet) {
 		if (channel.isOpen()) {
 			try {
@@ -177,14 +180,15 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 		Haru.instance.getEventBus().post(e);
 		if (e.isCancelled())
 			return;
-		
+
 		if (isChannelOpen()) {
 			flushOutboundQueue();
 			dispatchPacket(packetIn, (GenericFutureListener<? extends Future<? super Void>>[]) null);
 		} else {
 			readWriteLock.writeLock().lock();
 			try {
-				outboundPacketsQueue.add(new InboundHandlerTuplePacketListener(e.getPacket(), (GenericFutureListener[]) null));
+				outboundPacketsQueue
+						.add(new InboundHandlerTuplePacketListener(e.getPacket(), (GenericFutureListener[]) null));
 			} finally {
 				readWriteLock.writeLock().unlock();
 			}
@@ -194,13 +198,13 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 	public void sendPacketSilent(Packet packetIn) {
 		if (isChannelOpen()) {
 			flushOutboundQueue();
-			dispatchPacket(packetIn, (GenericFutureListener<? extends Future<? super Void>>[]) null);
+			dispatchPacketSilent(packetIn, null);
 		} else {
 			readWriteLock.writeLock().lock();
 
 			try {
-				outboundPacketsQueue.add(
-						new InboundHandlerTuplePacketListener(packetIn, (GenericFutureListener[]) null));
+				outboundPacketsQueue
+						.add(new InboundHandlerTuplePacketListener(packetIn, (GenericFutureListener[]) null));
 			} finally {
 				readWriteLock.writeLock().unlock();
 			}
@@ -230,9 +234,66 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 	 * the channel eventloop thread to do that.
 	 */
 
-	public void dispatchPacket(Packet packetIn, final GenericFutureListener<? extends Future<? super Void>>[] futureListeners) {
+	private void dispatchPacketSilent(final Packet packetIn,
+			final GenericFutureListener<? extends Future<? super Void>>[] futureListeners) {
+		final ConnectionState enumconnectionstate = ConnectionState.getFromPacket(packetIn);
+		final ConnectionState enumconnectionstate1 = this.channel.attr(attrKeyConnectionState).get();
+
+		if (packetIn instanceof CPacketPlayer) {
+			if (RotationManager.isEnabled) {
+				CPacketPlayer wrapper = (CPacketPlayer) packetIn;
+				wrapper.yaw = RotationManager.clientRotation[0];
+				wrapper.pitch = RotationManager.clientRotation[1];
+			}
+		}
+
+		if (enumconnectionstate1 != enumconnectionstate) {
+			logger.debug("Disabled auto read");
+			this.channel.config().setAutoRead(false);
+		}
+
+		if (this.channel.eventLoop().inEventLoop()) {
+			if (enumconnectionstate != enumconnectionstate1) {
+				this.setConnectionState(enumconnectionstate);
+			}
+
+			ChannelFuture channelfuture = this.channel.writeAndFlush(packetIn);
+
+			if (futureListeners != null) {
+				channelfuture.addListeners(futureListeners);
+			}
+
+			channelfuture.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+		} else {
+			this.channel.eventLoop().execute(new Runnable() {
+				public void run() {
+					if (enumconnectionstate != enumconnectionstate1) {
+						NetworkManager.this.setConnectionState(enumconnectionstate);
+					}
+
+					ChannelFuture channelfuture1 = NetworkManager.this.channel.writeAndFlush(packetIn);
+
+					if (futureListeners != null) {
+						channelfuture1.addListeners(futureListeners);
+					}
+
+					channelfuture1.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+				}
+			});
+		}
+	}
+
+	public void dispatchPacket(Packet packetIn,
+			final GenericFutureListener<? extends Future<? super Void>>[] futureListeners) {
 		final ConnectionState connectionstate = ConnectionState.getFromPacket(packetIn);
 		final ConnectionState connectionstate1 = (ConnectionState) channel.attr(attrKeyConnectionState).get();
+		if (packetIn instanceof CPacketPlayer) {
+			if (RotationManager.isEnabled) {
+				CPacketPlayer wrapper = (CPacketPlayer) packetIn;
+				wrapper.yaw = RotationManager.clientRotation[0];
+				wrapper.pitch = RotationManager.clientRotation[1];
+			}
+		}
 		if (connectionstate1 != connectionstate) {
 			logger.debug("Disabled auto read");
 			channel.config().setAutoRead(false);
@@ -269,8 +330,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 				while (!outboundPacketsQueue.isEmpty()) {
 					InboundHandlerTuplePacketListener tuplePacket = (InboundHandlerTuplePacketListener) outboundPacketsQueue
 							.poll();
-					dispatchPacket(tuplePacket.packet,
-							tuplePacket.futureListeners);
+					dispatchPacket(tuplePacket.packet, tuplePacket.futureListeners);
 				}
 			} finally {
 				readWriteLock.readLock().unlock();

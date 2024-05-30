@@ -8,7 +8,7 @@ import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.DescValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
@@ -19,7 +19,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.network.play.server.SPacketTimeUpdate;
 
-@Register(name = "ClickGui", category = Category.Visuals, key = Keyboard.KEY_RSHIFT)
+@Info(name = "ClickGui", category = Category.Visuals, key = Keyboard.KEY_RSHIFT)
 public class ClickGuiModule extends Module {
 	
     private DescValue a = new DescValue("Color Modes");

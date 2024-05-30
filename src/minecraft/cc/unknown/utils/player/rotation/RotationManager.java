@@ -3,199 +3,229 @@ package cc.unknown.utils.player.rotation;
 import java.util.Random;
 
 import cc.unknown.Haru;
-import cc.unknown.event.impl.EventLink;
-import cc.unknown.event.impl.network.PacketEvent;
-import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.utils.Loona;
+import cc.unknown.utils.player.MoveUtil;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.util.vec.AxisAlignedBB;
 import net.minecraft.util.vec.Vec3;
 
 public class RotationManager implements Loona {
 
-	public RotationManager() {
-		Haru.instance.getEventBus().register(this);
-	}
-	
-	@EventLink
-	public void onTick(final TickEvent e) {
-        if (targetRotation != null) {
-            keepLength--;
-            if (keepLength <= 0) 
-            	reset();
-        }
+	public static boolean isEnabled = false;
+	public static float[] clientRotation = new float[] { 0.0F, 0.0F };
+	public static float keepRotationTicks = 0;
+	public static float randomizeAmount = 0.0F;
+
+	public static boolean strafeFix = true;
+	public static boolean strictStrafeFix = false;
+
+	public static void setStrafeFix(boolean enabled, boolean strict) {
+		strafeFix = enabled;
+		strictStrafeFix = strict;
 	}
 
-	@EventLink
-	public void onPacket(final PacketEvent e) {
-		final Packet<?> p = e.getPacket();
-		if (e.isSend()) {
-			
-			if (p instanceof CPacketPlayer) {
-				final CPacketPlayer wrapper = (CPacketPlayer) p;
+	public static void disable() {
+		isEnabled = false;
+		keepRotationTicks = 0;
+		strafeFix = false;
+		strictStrafeFix = true;
+	}
 
-				if (targetRotation != null && !keepCurrentRotation && (targetRotation.getYaw() != serverRotation.getYaw() || targetRotation.getPitch() != serverRotation.getPitch())) {
-					wrapper.yaw = targetRotation.getYaw();
-					wrapper.pitch = targetRotation.getPitch();
-					wrapper.rotating = true;	
-				}
-				
-				if (wrapper.rotating) {
-					serverRotation = new Rotation(wrapper.yaw, wrapper.pitch);
+	public static void setClientRotation(final float[] targetRotation) {
+		setClientRotation(targetRotation, 0);
+	}
+
+	public static void setClientRotation(final float[] targetRotation, int keepRotation) {
+		if (!isEnabled || keepRotationTicks <= 0) {
+			isEnabled = true;
+			keepRotationTicks = keepRotation;
+			clientRotation = targetRotation;
+		}
+	}
+
+	public static void setPlayerRotation(float[] targetRotation) {
+		targetRotation = applyGCD(targetRotation,
+				new float[] { mc.player.prevRotationYaw, mc.player.prevRotationPitch });
+		mc.player.rotationYaw = targetRotation[0];
+		mc.player.rotationPitch = targetRotation[1];
+	}
+
+	public static void updateStrafeFixBinds() {
+		if (isEnabled) {
+			if (strafeFix) {
+				if (!strictStrafeFix) {
+					if (MoveUtil.isBindsMoving()) {
+						int strafeYaw = Math
+								.round((clientRotation[0] - MoveUtil.getBindsDirection(mc.player.rotationYaw)) / 45);
+						if (strafeYaw > 4) {
+							strafeYaw -= 8;
+						}
+						if (strafeYaw < -4) {
+							strafeYaw += 8;
+						}
+						mc.gameSettings.keyBindForward.pressed = Math.abs(strafeYaw) <= 1;
+						mc.gameSettings.keyBindLeft.pressed = strafeYaw >= 1 && strafeYaw <= 3;
+						mc.gameSettings.keyBindBack.pressed = Math.abs(strafeYaw) >= 3;
+						mc.gameSettings.keyBindRight.pressed = strafeYaw >= -3 && strafeYaw <= -1;
+					} else {
+						mc.gameSettings.keyBindForward.pressed = false;
+						mc.gameSettings.keyBindRight.pressed = false;
+						mc.gameSettings.keyBindBack.pressed = false;
+						mc.gameSettings.keyBindLeft.pressed = false;
+					}
 				}
 			}
 		}
 	}
-	
-	private static Random random = new Random();
 
-	private static int keepLength;
-	private static int revTick;
+	public static float[] getNeededRotations(final Vec3 vec) {
+		final Vec3 playerVector = new Vec3(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ);
+		final double y = vec.yCoord - playerVector.yCoord;
+		final double x = vec.xCoord - playerVector.xCoord;
+		final double z = vec.zCoord - playerVector.zCoord;
 
-	public static Rotation targetRotation;
-	public static Rotation serverRotation = new Rotation(0F, 0F);
-	public static float[] clientRotation = new float[]{0.0F, 0.0F};
+		final double dff = Math.sqrt(x * x + z * z);
+		final float yaw = (float) Math.toDegrees(Math.atan2(z, x)) - 90;
+		final float pitch = (float) -Math.toDegrees(Math.atan2(y, dff));
 
-	public static boolean keepCurrentRotation = false;
-
-	public static Rotation getRotationsEntity(EntityLivingBase entity) {
-		return getRotations(entity.posX, entity.posY + entity.getEyeHeight() - 0.4, entity.posZ);
+		return new float[] { updateRots(yaw, yaw, 180), updateRots(pitch, pitch, 90) };
 	}
-	
-    public static float[] getRotationsToPosition(final double x, final double y, final double z) {
-        final double deltaX = x - mc.player.posX;
-        final double deltaY = y - mc.player.posY - mc.player.getEyeHeight();
-        final double deltaZ = z - mc.player.posZ;
-        final double horizontalDistance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
-        final float yaw = (float)Math.toDegrees(-Math.atan2(deltaX, deltaZ));
-        final float pitch = (float)Math.toDegrees(-Math.atan2(deltaY, horizontalDistance));
-        return new float[] { yaw, pitch };
-    }
 
-	public static Rotation toRotation(final Vec3 vec, final boolean predict) {
-		final Vec3 eyesPos = new Vec3(mc.player.posX,
-				mc.player.getEntityBoundingBox().minY + mc.player.getEyeHeight(), mc.player.posZ);
+	public static float[] getTargetRotations(AxisAlignedBB aabb, double random) {
+		double minX = 0.0, maxX = 1.0;
+		double minY = 0.0, maxY = 1.0;
+		double minZ = 0.0, maxZ = 1.0;
 
-		if (predict) {
-			if (mc.player.onGround) {
-				eyesPos.addVector(mc.player.motionX, 0.0, mc.player.motionZ);
-			} else
-				eyesPos.addVector(mc.player.motionX, mc.player.motionY, mc.player.motionZ);
+		double x, y, z;
+		Vec3 rotPoint = new Vec3(aabb.minX, aabb.minY, aabb.minZ);
+		rotPoint = new Vec3(Math.max(aabb.minX, Math.min(aabb.maxX, mc.player.posX)),
+				Math.max(aabb.minY, Math.min(aabb.maxY, mc.player.posY)),
+				Math.max(aabb.minZ, Math.min(aabb.maxZ, mc.player.posZ)));
+
+		final double randX = MathHelper.getRandomDoubleInRange(new Random(), -random, random);
+		final double randY = MathHelper.getRandomDoubleInRange(new Random(), -random, random);
+		final double randZ = MathHelper.getRandomDoubleInRange(new Random(), -random, random);
+
+		rotPoint.addVector(randX, randY, randZ);
+
+		return getRotations(rotPoint);
+	}
+
+	public static float[] getRotations(final Vec3 start, final Vec3 dst) {
+		final double xDif = dst.xCoord - start.xCoord;
+		final double yDif = dst.yCoord - start.yCoord;
+		final double zDif = dst.zCoord - start.zCoord;
+
+		final double distXZ = Math.sqrt(xDif * xDif + zDif * zDif);
+
+		return new float[] { (float) (Math.atan2(zDif, xDif) * 180 / Math.PI) - 90,
+				(float) (-(Math.atan2(yDif, distXZ) * 180 / Math.PI)) };
+	}
+
+	public static float[] getRotations(Entity entity) {
+		return getRotations(entity.posX, entity.posY, entity.posZ);
+	}
+
+	public static float[] getRotations(Vec3 vec) {
+		return getRotations(vec.xCoord, vec.yCoord, vec.zCoord);
+	}
+
+	public static float[] getRotations(double x, double y, double z) {
+		final Vec3 lookVec = mc.player.getPositionEyes(1.0f);
+		final double dx = lookVec.xCoord - x;
+		final double dy = lookVec.yCoord - y;
+		final double dz = lookVec.zCoord - z;
+
+		final double dist = Math.hypot(dx, dz);
+		final double yaw = Math.toDegrees(Math.atan2(dz, dx));
+		final double pitch = Math.toDegrees(Math.atan2(dy, dist));
+
+		return new float[] { (float) yaw + 90, (float) pitch };
+	}
+
+	public static Vec3 getNormalRotVector(float[] rotation) {
+		return getNormalRotVector(rotation[0], rotation[1]);
+	}
+
+	public static Vec3 getNormalRotVector(float yaw, float pitch) {
+		return mc.player.getVectorForRotation(pitch, yaw);
+	}
+
+	public static double getRotationDifference(Entity e) {
+		float[] entityRotation = getRotations(e.posX, e.posY, e.posZ);
+		return getRotationDifference(entityRotation);
+	}
+
+	public static double getRotationDifference(Vec3 e) {
+		float[] entityRotation = getRotations(e.xCoord, e.yCoord, e.zCoord);
+		return getRotationDifference(entityRotation);
+	}
+
+	public static double getRotationDifference(double x, double y, double z) {
+		float[] entityRotation = getRotations(x, y, z);
+		return getRotationDifference(entityRotation);
+	}
+
+	public static double getRotationDifference(float[] e) {
+		final double yawDif = MathHelper.wrapAngle180(mc.player.rotationYaw - e[0]).doubleValue();
+		final double pitchDif = MathHelper.wrapAngle180(mc.player.rotationPitch - e[1]).doubleValue();
+		return Math.sqrt(yawDif * yawDif + pitchDif * pitchDif);
+	}
+
+	public static float[] getRotations(final float[] lastRotations, final float smoothing, final Vec3 start,
+			final Vec3 dst) {
+		final float[] rotations = getRotations(start, dst);
+		applySmoothing(lastRotations, smoothing, rotations);
+
+		return rotations;
+	}
+
+	public static void applySmoothing(final float[] lastRotations, final float smoothing, final float[] dstRotation) {
+		if (smoothing > 0) {
+			final float yawChange = MathHelper.wrapAngle180(dstRotation[0] - lastRotations[0]).floatValue();
+			final float pitchChange = MathHelper.wrapAngle180(dstRotation[1] - lastRotations[1]).floatValue();
+
+			final float smoothingFactor = Math.max(1.0F, smoothing / 10.0F);
+
+			dstRotation[0] = lastRotations[0] + yawChange / smoothingFactor;
+			dstRotation[1] = Math.max(Math.min(90.0F, lastRotations[1] + pitchChange / smoothingFactor), -90.0F);
 		}
-
-		final double diffX = vec.xCoord - eyesPos.xCoord;
-		final double diffY = vec.yCoord - eyesPos.yCoord;
-		final double diffZ = vec.zCoord - eyesPos.zCoord;
-
-		return new Rotation(MathHelper.wrapAngle180((float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90F).floatValue(),
-				MathHelper.wrapAngle180(
-						(float) (-Math.toDegrees(Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ))))).floatValue());
 	}
 
-	public static Vec3 getCenter(final AxisAlignedBB bb) {
-		return new Vec3(bb.minX + (bb.maxX - bb.minX) * 0.5, bb.minY + (bb.maxY - bb.minY) * 0.5,
-				bb.minZ + (bb.maxZ - bb.minZ) * 0.5);
+	public static float[] applyGCD(final float[] rotations, final float[] prevRots) {
+		final float mouseSensitivity = (float) (mc.gameSettings.mouseSensitivity * (1 + Math.random() / 10000000) * 0.6F
+				+ 0.2F);
+		final double multiplier = mouseSensitivity * mouseSensitivity * mouseSensitivity * 8.0F * 0.15D;
+		final float yaw = prevRots[0] + (float) (Math.round((rotations[0] - prevRots[0]) / multiplier) * multiplier);
+		final float pitch = prevRots[1] + (float) (Math.round((rotations[1] - prevRots[1]) / multiplier) * multiplier);
+
+		return new float[] { yaw, MathHelper.clamp_float(pitch, -90, 90) };
 	}
 
-	public static double getRotationDifference(final Entity entity) {
-		final Rotation rotation = toRotation(getCenter(entity.getEntityBoundingBox()), true);
-
-		return getRotationDifference(rotation, new Rotation(mc.player.rotationYaw, mc.player.rotationPitch));
+	public static float updateRots(float from, float to, float speed) {
+		float f = MathHelper.wrapAngle180(to - from).floatValue();
+		if (f > speed)
+			f = speed;
+		if (f < -speed)
+			f = -speed;
+		return from + f;
 	}
 
-	public static double getRotationDifference(final Rotation rotation) {
-		return serverRotation == null ? 0D : getRotationDifference(rotation, serverRotation);
+	public static float[] getLimitedRotation(float[] from, float[] to, float speed) {
+		final double yawDif = MathHelper.wrapAngle180(from[0] - to[0]).doubleValue();
+		final double pitchDif = MathHelper.wrapAngle180(from[1] - to[1]).doubleValue();
+		final double rotDif = Math.sqrt(yawDif * yawDif + pitchDif * pitchDif);
+
+		final double yawLimit = yawDif * speed / rotDif;
+		final double pitchLimit = pitchDif * speed / rotDif;
+
+		return new float[] { updateRots(from[0], to[0], (float) yawLimit),
+				updateRots(from[1], to[1], (float) pitchLimit) };
 	}
 
-	public static double getRotationDifference(final Rotation a, final Rotation b) {
-		return Math.hypot(getAngleDifference(a.getYaw(), b.getYaw()), a.getPitch() - b.getPitch());
-	}
-
-	public static Rotation limitAngleChange(final Rotation currentRotation, final Rotation targetRotation,
-			final float turnSpeed) {
-		final float yawDifference = getAngleDifference(targetRotation.getYaw(), currentRotation.getYaw());
-		final float pitchDifference = getAngleDifference(targetRotation.getPitch(), currentRotation.getPitch());
-
-		return new Rotation(
-				currentRotation.getYaw()
-						+ (yawDifference > turnSpeed ? turnSpeed : Math.max(yawDifference, -turnSpeed)),
-				currentRotation.getPitch()
-						+ (pitchDifference > turnSpeed ? turnSpeed : Math.max(pitchDifference, -turnSpeed)));
-	}
-
-	public static float getAngleDifference(final float a, final float b) {
-		return ((((a - b) % 360F) + 540F) % 360F) - 180F;
-	}
-
-	public static void setTargetRotation(final Rotation rotation) {
-		setTargetRotation(rotation, 0);
-	}
-
-	public static void setTargetRotation(final Rotation rotation, final int keep) {
-		if (Double.isNaN(rotation.getYaw()) || Double.isNaN(rotation.getPitch()) || rotation.getPitch() > 90
-				|| rotation.getPitch() < -90)
-			return;
-
-		rotation.fixedSensitivity(mc.gameSettings.mouseSensitivity);
-		targetRotation = rotation;
-		keepLength = keep;
-	}
-	
-    public static Rotation getRotationsNonLivingEntity(Entity entity) {
-        return getRotations(entity.posX, entity.posY + (entity.getEntityBoundingBox().maxY-entity.getEntityBoundingBox().minY)*0.5, entity.posZ);
-    }
-
-	public static void reset() {
-        keepLength = 0;
-        targetRotation = null;
-	}
-
-	public static Rotation getRotations(Entity ent) {
-		double x = ent.posX;
-		double z = ent.posZ;
-		double y = ent.posY + (double) (ent.getEyeHeight() / 2.0f);
-		return getRotationFromPosition(x, z, y);
-	}
-
-	public static Rotation getRotations(double posX, double posY, double posZ) {
-		double x = posX - mc.player.posX;
-		double y = posY - (mc.player.posY + (double) mc.player.getEyeHeight());
-		double z = posZ - mc.player.posZ;
-		double dist = MathHelper.sqrt_double(x * x + z * z);
-		float yaw = (float) (Math.atan2(z, x) * 180.0 / Math.PI) - 90.0f;
-		float pitch = (float) (-(Math.atan2(y, dist) * 180.0 / Math.PI));
-		return new Rotation(yaw, pitch);
-	}
-
-	public static Rotation getRotationFromPosition(double x, double z, double y) {
-		double xDiff = x - mc.player.posX;
-		double zDiff = z - mc.player.posZ;
-		double yDiff = y - mc.player.posY - 1.2;
-		double dist = MathHelper.sqrt_double(xDiff * xDiff + zDiff * zDiff);
-		float yaw = (float) (Math.atan2(zDiff, xDiff) * 180.0 / Math.PI) - 90.0f;
-		float pitch = (float) (-Math.atan2(yDiff, dist) * 180.0 / Math.PI);
-		return new Rotation(yaw, pitch);
-	}
-    
-    public static Vec3 getVectorForRotation(final Rotation rotation) {
-        float yawCos = MathHelper.cos(-rotation.getYaw() * 0.017453292F - (float) Math.PI);
-        float yawSin = MathHelper.sin(-rotation.getYaw() * 0.017453292F - (float) Math.PI);
-        float pitchCos = -MathHelper.cos(-rotation.getPitch() * 0.017453292F);
-        float pitchSin = MathHelper.sin(-rotation.getPitch() * 0.017453292F);
-        return new Vec3(yawSin * pitchCos, pitchSin, yawCos * pitchCos);
-    }
-
-	public static Rotation getTargetRotation() {
-		return targetRotation;
-	}
-
-	public static Rotation getServerRotation() {
-		return serverRotation;
+	public static EnumFacing getEnumDirection(float yaw) {
+		return EnumFacing.getHorizontal(MathHelper.floor_double((double) (yaw * 4.0F / 360.0F) + 0.5D) & 3);
 	}
 }

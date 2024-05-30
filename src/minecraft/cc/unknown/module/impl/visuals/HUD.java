@@ -14,7 +14,7 @@ import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
@@ -27,7 +27,7 @@ import cc.unknown.utils.client.FuckUtil.PositionMode;
 import cc.unknown.utils.misc.HiddenUtil;
 import net.minecraft.client.gui.Gui;
 
-@Register(name = "HUD", category = Category.Visuals)
+@Info(name = "HUD", category = Category.Visuals)
 public class HUD extends Module {
 
 	private ModeValue colorMode = new ModeValue("ArrayList Theme", "Static", "Static", "Aubergine", "Aqua", "Banana", "Blend", "Blossom", "Bubblegum", "Candy Cane", "Cherry", "Christmas", "Coral", "Digital Horizon", "Express", "Lime Water", "Lush", "Halogen", "Hyper", "Magic", "May", "Orange Juice", "Pastel", "Pumpkin", "Satin", "Snowy Sky", "Steel Fade", "Sundae", "Sunkist", "Water", "Winter", "Theme");

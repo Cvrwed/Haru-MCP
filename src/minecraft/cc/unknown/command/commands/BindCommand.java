@@ -4,7 +4,7 @@ import org.lwjgl.input.Keyboard;
 
 import cc.unknown.Haru;
 import cc.unknown.command.Command;
-import cc.unknown.command.Flips;
+import cc.unknown.command.api.Flips;
 import cc.unknown.module.impl.Module;
 import cc.unknown.utils.misc.KeybindUtil;
 

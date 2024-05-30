@@ -192,8 +192,6 @@ public enum ClickUtil implements Loona {
 
 			if (item.getItem() instanceof ItemSword) {
 				return false;
-			} else if (item.getItem() instanceof ItemFishingRod) {
-				return false;
 			} else if (item.getItem() instanceof ItemBow) {
 				return false;
 			}

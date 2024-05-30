@@ -9,7 +9,7 @@ import org.lwjgl.input.Keyboard;
 import com.google.gson.JsonObject;
 
 import cc.unknown.Haru;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.Setting;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.utils.Loona;
@@ -22,11 +22,11 @@ public class Module implements Loona {
 	private boolean enabled = false;
 	private boolean hidden = true;
 	private int key;
-	private Register register;
+	private Info register;
 	
 	public Module() {
-		if (this.getClass().isAnnotationPresent(Register.class)) {
-			this.register = this.getClass().getAnnotation(Register.class);
+		if (this.getClass().isAnnotationPresent(Info.class)) {
+			this.register = this.getClass().getAnnotation(Info.class);
 			this.key = getRegister().key();
 		} else {
 			throw new RuntimeException("@Register not found" + this.getClass().getSimpleName());
@@ -183,7 +183,7 @@ public class Module implements Loona {
 		this.hidden = hidden;
 	}
 
-	public Register getRegister() {
+	public Info getRegister() {
 		return register;
 	}
 }

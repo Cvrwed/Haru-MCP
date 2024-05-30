@@ -5,10 +5,11 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
-import cc.unknown.Haru;
 import cc.unknown.event.impl.move.MoveEvent;
 import cc.unknown.event.impl.player.StrafeEvent;
 import cc.unknown.utils.Loona;
+import cc.unknown.utils.player.MoveUtil;
+import cc.unknown.utils.player.rotation.RotationManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;
@@ -17,9 +18,7 @@ import net.minecraft.block.BlockWall;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockPattern;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.command.CommandResultStats;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.crash.CrashReport;
@@ -55,7 +54,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-public abstract class Entity implements ICommandSender {
+public abstract class Entity implements ICommandSender, Loona {
 	private static final AxisAlignedBB ZERO_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
 	private static int nextEntityID;
 	private int entityId;
@@ -1128,36 +1127,59 @@ public abstract class Entity implements ICommandSender {
 	/**
 	 * Used in both water and by flying objects
 	 */
-	public void moveFlying(float strafe, float forward, float friction) {
-        float yaw = this.rotationYaw;
-        if(this == Minecraft.getMinecraft().player) {
-            StrafeEvent e = new StrafeEvent(strafe, forward, friction, this.rotationYaw);
-            Haru.instance.getEventBus().post(e);
-            if (e.isCancelled()) {
-                return;
+	public void moveFlying(float strafe, float forward, float friction)     {
+        float movingYaw = this.rotationYaw;
+        if (RotationManager.isEnabled) {
+            if (RotationManager.strafeFix) {
+                movingYaw = RotationManager.clientRotation[0];
+                if (!RotationManager.strictStrafeFix) {
+                    if (MoveUtil.isBindsMoving()) {
+                        int strafeYaw = Math.round((RotationManager.clientRotation[0] - MoveUtil.getBindsDirection(mc.player.rotationYaw)) / 45);
+                        if (strafeYaw > 4) {
+                            strafeYaw -= 8;
+                        }
+                        if (strafeYaw < -4) {
+                            strafeYaw += 8;
+                        }
+                        mc.gameSettings.keyBindForward.pressed = Math.abs(strafeYaw) <= 1;
+                        mc.gameSettings.keyBindLeft.pressed = strafeYaw >= 1 && strafeYaw <= 3;
+                        mc.gameSettings.keyBindBack.pressed = Math.abs(strafeYaw) >= 3;
+                        mc.gameSettings.keyBindRight.pressed = strafeYaw >= -3 && strafeYaw <= -1;
+                    } else {
+                        mc.gameSettings.keyBindForward.pressed = false;
+                        mc.gameSettings.keyBindRight.pressed = false;
+                        mc.gameSettings.keyBindBack.pressed = false;
+                        mc.gameSettings.keyBindLeft.pressed = false;
+                    }
+                }
+            } else {
+                movingYaw = mc.player.rotationYaw;
             }
-            strafe = e.getStrafe();
-            forward = e.getForward();
-            friction = e.getFriction();
-            yaw = e.getYaw();
         }
+        StrafeEvent e = new StrafeEvent(strafe, forward, friction, movingYaw);
+        if(this == mc.player) e.call();
+        if(e.isCancelled()) return;
 
-        float f = strafe * strafe + forward * forward;
+        float f = e.getStrafe() * e.getStrafe() + e.getForward() * e.getForward();
+
         if (f >= 1.0E-4F) {
             f = MathHelper.sqrt_float(f);
-            if (f < 1.0F) {
+
+            if (f < 1.0F)
+            {
                 f = 1.0F;
             }
 
-            f = friction / f;
-            strafe *= f;
-            forward *= f;
-            float f1 = MathHelper.sin(yaw * 3.1415927F / 180.0F);
-            float f2 = MathHelper.cos(yaw * 3.1415927F / 180.0F);
-            this.motionX += (double)(strafe * f2 - forward * f1);
-            this.motionZ += (double)(forward * f2 + strafe * f1);
+            f = e.getFriction() / f;
+            e.setStrafe(e.getStrafe() * f);
+            e.setForward(e.getForward() * f);
+            float f1 = MathHelper.sin(e.getYaw() * (float)Math.PI / 180.0F);
+            float f2 = MathHelper.cos(e.getYaw() * (float)Math.PI / 180.0F);
+
+            this.motionX += e.getStrafe() * f2 - e.getForward() * f1;
+            this.motionZ += e.getForward() * f2 + e.getStrafe() * f1;
         }
-	}
+    }
 
 	public int getBrightnessForRender(float partialTicks) {
 		BlockPos blockpos = new BlockPos(this.posX, this.posY + (double) this.getEyeHeight(), this.posZ);
@@ -1362,7 +1384,7 @@ public abstract class Entity implements ICommandSender {
     /**
      * Creates a Vec3 using the pitch and yaw of the entities rotation.
      */
-    protected final Vec3 getVectorForRotation(float pitch, float yaw) {
+    public final Vec3 getVectorForRotation(float pitch, float yaw) {
         float f = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
         float f1 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
         float f2 = -MathHelper.cos(-pitch * 0.017453292F);

@@ -5,10 +5,10 @@ import cc.unknown.event.impl.move.HitSlowDownEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.SliderValue;
 
-@Register(name = "KeepSprint", category = Category.Combat)
+@Info(name = "KeepSprint", category = Category.Combat)
 public class KeepSprint extends Module {
 	
     private final SliderValue deffensive = new SliderValue("Defensive Motion", 0.6, 0, 1, 0.05);

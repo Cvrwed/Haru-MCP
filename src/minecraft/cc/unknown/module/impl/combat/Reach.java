@@ -10,7 +10,7 @@ import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.event.impl.other.MouseEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.SliderValue;
@@ -27,7 +27,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.vec.AxisAlignedBB;
 import net.minecraft.util.vec.Vec3;
 
-@Register(name = "Reach", category = Category.Combat)
+@Info(name = "Reach", category = Category.Combat)
 public class Reach extends Module {
 	private DoubleSliderValue rangeCombat = new DoubleSliderValue("Range", 3, 3, 3.0, 6, 0.01);
 	private SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);

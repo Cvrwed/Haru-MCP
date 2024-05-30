@@ -6,7 +6,7 @@ import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +14,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-@Register(name = "BedWarsHelper", category = Category.Other)
+@Info(name = "BedWarsHelper", category = Category.Other)
 public class BedWarsHelper extends Module {
 	private BooleanValue stoneSword = new BooleanValue("Stone Sword", false);
 	private BooleanValue ironSword = new BooleanValue("Iron Sword", true);

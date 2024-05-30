@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import cc.unknown.command.Command;
-import cc.unknown.command.Flips;
+import cc.unknown.command.api.Flips;
 import cc.unknown.utils.player.FriendUtil;
 import net.minecraft.entity.Entity;
 

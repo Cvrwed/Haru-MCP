@@ -14,7 +14,7 @@ import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.event.impl.world.ChangeWorldEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
@@ -26,7 +26,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.vec.Vec3;
 
-@Register(name = "Blink", category = Category.Player)
+@Info(name = "Blink", category = Category.Player)
 public class Blink extends Module {
 
 	private final List<Packet<?>> packets = new ArrayList<>();
@@ -43,8 +43,8 @@ public class Blink extends Module {
 	private BooleanValue disableAttack = new BooleanValue("Release when attacking", true);
 	private BooleanValue disableDmg = new BooleanValue("Release when receive dmg", true);
 	private Cold timer = new Cold();
-	
-	 private EntityOtherPlayerMP fakePlayer;
+
+	private EntityOtherPlayerMP fakePlayer;
 
 	public Blink() {
 		this.registerSetting(renderPosition, pulse, pulseDelay, disableDisconnect, disableAttack, disableDmg);
@@ -58,6 +58,13 @@ public class Blink extends Module {
 			return;
 		}
 		packets.clear();
+
+		if (renderPosition.is("Fake")) {
+			fakePlayer = new EntityOtherPlayerMP(mc.world, mc.player.getGameProfile());
+			fakePlayer.setRotationYawHead(mc.player.rotationYawHead);
+			fakePlayer.copyLocationAndAnglesFrom(mc.player);
+			mc.world.addEntityToWorld(fakePlayer.getEntityId(), fakePlayer);
+		}
 	}
 
 	@Override
@@ -67,6 +74,11 @@ public class Blink extends Module {
 		if (mc.player == null)
 			return;
 		releasePackets();
+		
+        if (fakePlayer != null) {
+            mc.world.removeEntityFromWorld(fakePlayer.getEntityId());
+            fakePlayer = null;
+        }
 	}
 
 	@EventLink
@@ -126,10 +138,6 @@ public class Blink extends Module {
 			if (timer.hasTimeElapsed(pulseDelay.getInputToLong(), true)) {
 				releasePackets();
 			}
-			
-			if (renderPosition.is("Fake")) {
-				
-			}
 		}
 
 		if (disableDmg.isToggled()) {
@@ -163,8 +171,7 @@ public class Blink extends Module {
 					mc.entityRenderer.disableLightmap();
 					GL11.glBegin(GL11.GL_LINE_STRIP);
 					GL11.glColor4f(getTheme().getMainColor().getRed() / 255.0f,
-							getTheme().getMainColor().getGreen() / 255.0f,
-							getTheme().getMainColor().getBlue() / 255.0f,
+							getTheme().getMainColor().getGreen() / 255.0f, getTheme().getMainColor().getBlue() / 255.0f,
 							getTheme().getMainColor().getAlpha() / 255.0f);
 
 					double renderPosX = mc.getRenderManager().viewerPosX;

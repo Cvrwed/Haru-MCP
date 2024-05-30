@@ -6,7 +6,7 @@ import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.utils.keystrokes.KeyStroke;
 import cc.unknown.utils.keystrokes.RenderKeys;
@@ -15,7 +15,7 @@ import cc.unknown.utils.keystrokes.gui.ConfigGui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 
-@Register(name = "KeyStrokes", category = Category.Visuals)
+@Info(name = "KeyStrokes", category = Category.Visuals)
 public class KeyStrokes extends Module {
 	private final RenderKeys[] keyRenderers = { new RenderKeys(mc.gameSettings.keyBindForward, 26, 2),
 			new RenderKeys(mc.gameSettings.keyBindBack, 26, 26), new RenderKeys(mc.gameSettings.keyBindLeft, 2, 26),

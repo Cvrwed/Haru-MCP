@@ -1,4 +1,4 @@
-package cc.unknown.command;
+package cc.unknown.module.impl.api;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -6,14 +6,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import org.lwjgl.input.Keyboard;
+
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface Flips {
-	String name();
+public @interface Info {
 
-	String desc();
-
-	String alias();
-	
-	String syntax();
+    String name();
+    Category category();
+    int key() default Keyboard.KEY_NONE;
 }

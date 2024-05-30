@@ -10,7 +10,7 @@ import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.event.impl.render.RenderItemEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.ModeValue;
@@ -25,13 +25,13 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.CPacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 
-@Register(name = "AutoClick", category = Category.Combat)
+@Info(name = "AutoClick", category = Category.Combat)
 public class AutoClick extends Module {
 
 	private final ModeValue clickMode = new ModeValue("Click Mode", "Left", "Left", "Right", "Both");
 	private final ModeValue clickStyle = new ModeValue("Click Style", "Normal", "Normal", "Double Click");
 
-	private final DoubleSliderValue leftCPS = new DoubleSliderValue("Left Click Speed", 16, 19, 1, 22, 1);
+	private final DoubleSliderValue leftCPS = new DoubleSliderValue("Left Click Speed", 16, 19, 1, 34, 1);
 	private final BooleanValue weaponOnly = new BooleanValue("Only Use Weapons", false);
 	private final BooleanValue breakBlocks = new BooleanValue("Break Blocks", false);
 	private final BooleanValue hitSelect = new BooleanValue("Precise Hit Selection", false);
@@ -106,10 +106,6 @@ public class AutoClick extends Module {
 			}
 		}
 	}
-    
-    private ItemStack getItemStack() {
-        return (mc.player == null || mc.player.inventoryContainer == null ? null : mc.player.inventoryContainer.getSlot(mc.player.inventory.currentItem + 36).getStack());
-    }
 
 	public ModeValue getClickMode() {
 		return clickMode;

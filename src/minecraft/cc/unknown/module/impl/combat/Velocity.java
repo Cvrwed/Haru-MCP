@@ -7,7 +7,7 @@ import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
@@ -22,7 +22,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.world.World;
 
-@Register(name = "Velocity", category = Category.Combat)
+@Info(name = "Velocity", category = Category.Combat)
 public class Velocity extends Module {
 
 	public ModeValue mode = new ModeValue("Mode", "Packet", "Packet", "Verus", "Ground Grim", "Polar", "Minemen",

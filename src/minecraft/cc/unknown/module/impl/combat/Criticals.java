@@ -9,7 +9,7 @@ import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.client.Cold;
@@ -22,7 +22,7 @@ import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.network.play.client.CPacketAnimation;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 
-@Register(name = "Criticals", category = Category.Combat)
+@Info(name = "Criticals", category = Category.Combat)
 public class Criticals extends Module {
 
 	private BooleanValue aggressive = new BooleanValue("Aggressive", true);

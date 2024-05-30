@@ -1,5 +1,7 @@
 package net.minecraft.client.entity;
 
+import java.util.Random;
+
 import cc.unknown.Haru;
 import cc.unknown.event.impl.move.LivingEvent;
 import cc.unknown.event.impl.move.MotionEvent;
@@ -9,7 +11,9 @@ import cc.unknown.event.impl.move.UpdateEvent.Mode;
 import cc.unknown.event.impl.network.ChatSendEvent;
 import cc.unknown.module.impl.player.NoSlow;
 import cc.unknown.module.impl.player.Sprint;
+import cc.unknown.utils.player.MoveUtil;
 import cc.unknown.utils.player.PlayerUtil;
+import cc.unknown.utils.player.rotation.RotationManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -170,19 +174,19 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 * Called to update the entity's position/logic.
 	 */
     public void onUpdate() {
-        if (this.worldObj.isBlockLoaded(new BlockPos(this.posX, 0.0D, this.posZ))) {
+        if (worldObj.isBlockLoaded(new BlockPos(posX, 0.0D, posZ))) {
         	UpdateEvent e = new UpdateEvent(Mode.Pre);
             e.call();
             if (e.isCancelled()) return;
             super.onUpdate();
             Haru.instance.getEventBus().post(new UpdateEvent(Mode.Post));
 
-            if (this.isRiding()) {
-                this.sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerLook(this.rotationYaw, this.rotationPitch, this.onGround));
-                this.sendQueue.sendQueue(new CPacketInput(this.moveStrafing, this.moveForward, this.movementInput.jump, this.movementInput.sneak));
+            if (isRiding()) {
+                sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerLook(rotationYaw, rotationPitch, onGround));
+                sendQueue.sendQueue(new CPacketInput(moveStrafing, moveForward, movementInput.jump, movementInput.sneak));
             } else {
-                this.onUpdateWalkingPlayer();
-        		Haru.instance.getEventBus().post(new MotionEvent(MotionType.Post, posX, posY, posZ, rotationYaw, rotationPitch, onGround));
+                onUpdateWalkingPlayer();
+        		Haru.instance.getEventBus().post(new MotionEvent(MotionType.Post, posX, posY, posZ, rotationYaw, rotationPitch, lastReportedYaw, lastReportedPitch, onGround, mc.player));
             }
         }
     }
@@ -193,69 +197,110 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 */
     
     public void onUpdateWalkingPlayer() {
-        boolean flag = this.isSprinting();
-        if (flag != this.serverSprintState) {
-            if (flag) {
-                this.sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.START_SPRINTING));
-            } else {
-                this.sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.STOP_SPRINTING));
-            }
+        final float realYaw = rotationYaw;
+        final float realPitch = rotationPitch;
+        if (RotationManager.isEnabled) {
+            rotationYaw = RotationManager.clientRotation[0];
+            rotationPitch = RotationManager.clientRotation[1];
+            rotationYaw += (new Random()).nextFloat() * RotationManager.randomizeAmount;
+            rotationPitch += (new Random()).nextFloat() * RotationManager.randomizeAmount;
 
-            this.serverSprintState = flag;
-        }
+            float[] gcdFix = RotationManager.applyGCD(new float[]{rotationYaw, rotationPitch}, new float[] {lastReportedYaw, lastReportedPitch});
+            rotationYaw = gcdFix[0];
+            rotationPitch = gcdFix[1];
 
-        boolean flag1 = this.isSneaking();
-
-        if (flag1 != this.serverSneakState) {
-            if (flag1) {
-                this.sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.START_SNEAKING));
-            } else {
-                this.sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.STOP_SNEAKING));
-            }
-
-            this.serverSneakState = flag1;
-        }
-
-        if (this.isCurrentViewEntity()) {
-    		MotionEvent motionEvent = new MotionEvent(MotionType.Pre, posX, getEntityBoundingBox().minY, posZ, rotationYaw, rotationPitch, onGround);
-    		Haru.instance.getEventBus().post(motionEvent);
-            if (motionEvent.isCancelled()) return;
-            
-            double d0 = motionEvent.getX() - this.lastReportedPosX;
-            double d1 = motionEvent.getY() - this.lastReportedPosY;
-            double d2 = motionEvent.getZ() - this.lastReportedPosZ;
-            double d3 = motionEvent.getYaw() - this.lastReportedYaw;
-            double d4 = motionEvent.getPitch() - this.lastReportedPitch;
-            boolean flag2 = d0 * d0 + d1 * d1 + d2 * d2 > 9.0E-4D || this.positionUpdateTicks >= 20;
-            boolean flag3 = d3 != 0.0D || d4 != 0.0D;
-
-            if (this.ridingEntity == null) {
-                if (flag2 && flag3) {
-                    this.sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerPosLook(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), motionEvent.getYaw(), motionEvent.getPitch(), motionEvent.isOnGround()));
-                } else if (flag2) {
-                    this.sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerPosition(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), motionEvent.isOnGround()));
-                } else if (flag3) {
-                    this.sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerLook(motionEvent.getYaw(), motionEvent.getPitch(), motionEvent.isOnGround()));
-                } else {
-                    this.sendQueue.sendQueue(new CPacketPlayer(motionEvent.isOnGround()));
+            if (RotationManager.keepRotationTicks <= 0) {
+                RotationManager.isEnabled = false;
+                if (RotationManager.strafeFix) {
+                    MoveUtil.updateBinds(false);
+                    RotationManager.strafeFix = false;
                 }
             } else {
-                this.sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerPosLook(this.motionX, -999.0D, this.motionZ, motionEvent.getYaw(), motionEvent.getPitch(), motionEvent.isOnGround()));
+                RotationManager.keepRotationTicks--;
+            }
+        } else {
+            RotationManager.clientRotation[0] = rotationYaw;
+            RotationManager.clientRotation[1] = rotationPitch;
+            RotationManager.keepRotationTicks = 0;
+            RotationManager.randomizeAmount = 0F;
+        }
+        
+        final MotionEvent motionEvent = new MotionEvent(MotionType.Pre, posX, posY, posZ, rotationYaw, rotationPitch, lastReportedYaw, lastReportedPitch, onGround, mc.player);
+        Haru.instance.getEventBus().post(motionEvent);
+		
+        rotationYaw = realYaw;
+        rotationPitch = realPitch;
+    	
+        boolean flag = isSprinting();
+        if (flag != serverSprintState) {
+            if (flag) {
+                sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.START_SPRINTING));
+            } else {
+                sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.STOP_SPRINTING));
+            }
+
+            serverSprintState = flag;
+        }
+
+        boolean flag1 = isSneaking();
+
+        if (flag1 != serverSneakState) {
+            if (flag1) {
+                sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.START_SNEAKING));
+            } else {
+                sendQueue.sendQueue(new CPacketEntityAction(this, CPacketEntityAction.Mode.STOP_SNEAKING));
+            }
+
+            serverSneakState = flag1;
+        }
+
+        if (motionEvent.isCancelled()) return;
+        
+        if (isCurrentViewEntity()) {
+            
+            double d0 = motionEvent.getX() - lastReportedPosX;
+            double d1 = motionEvent.getY() - lastReportedPosY;
+            double d2 = motionEvent.getZ() - lastReportedPosZ;
+            double d3 = motionEvent.getYaw() - lastReportedYaw;
+            double d4 = motionEvent.getPitch() - lastReportedPitch;
+            boolean flag2 = d0 * d0 + d1 * d1 + d2 * d2 > 9.0E-4D || positionUpdateTicks >= 20;
+            boolean flag3 = d3 != 0.0D || d4 != 0.0D;
+
+            if (ridingEntity == null) {
+                if (flag2 && flag3) {
+                    sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerPosLook(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), motionEvent.getYaw(), motionEvent.getPitch(), motionEvent.isOnGround()));
+                } else if (flag2) {
+                    sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerPosition(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), motionEvent.isOnGround()));
+                } else if (flag3) {
+                    sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerLook(motionEvent.getYaw(), motionEvent.getPitch(), motionEvent.isOnGround()));
+                } else {
+                    sendQueue.sendQueue(new CPacketPlayer(motionEvent.isOnGround()));
+                }
+            } else {
+                sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerPosLook(motionX, -999.0D, motionZ, motionEvent.getYaw(), motionEvent.getPitch(), motionEvent.isOnGround()));
                 flag2 = false;
             }
 
-            ++this.positionUpdateTicks;
+            ++positionUpdateTicks;
 
             if (flag2) {
-                this.lastReportedPosX = motionEvent.getX();
-                this.lastReportedPosY = motionEvent.getY();
-                this.lastReportedPosZ = motionEvent.getZ();
-                this.positionUpdateTicks = 0;
+                lastReportedPosX = motionEvent.getX();
+                lastReportedPosY = motionEvent.getY();
+                lastReportedPosZ = motionEvent.getZ();
+                positionUpdateTicks = 0;
             }
-
+            
             if (flag3) {
-                this.lastReportedYaw = motionEvent.getYaw();
-                this.lastReportedPitch = motionEvent.getPitch();
+                lastReportedYaw = motionEvent.getYaw();
+                lastReportedPitch = motionEvent.getPitch();
+            }
+            
+            if (motionEvent.getPitch() != mc.player.rotationPitch)
+                this.renderPitch = motionEvent.getPitch();
+
+            if (motionEvent.getYaw() != mc.player.rotationYaw) {
+                this.renderYawOffset = motionEvent.getYaw();
+                this.rotationYawHead = motionEvent.getYaw();
             }
         }
     }
@@ -637,6 +682,8 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 */
 	public void onLivingUpdate() {
 		Haru.instance.getEventBus().post(new LivingEvent());
+		
+		this.renderPitch = this.rotationPitch;
 
 		if (sprintingTicksLeft > 0) {
 			--sprintingTicksLeft;
