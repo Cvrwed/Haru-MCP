@@ -59,6 +59,7 @@ public class ModuleManager implements Loona {
 				new BedWarsHelper(),
 				new MidClick(),
 				new Inventory(),
+				new SelfTrap(),
 				
 				// player
 				new AntiFireBall(),

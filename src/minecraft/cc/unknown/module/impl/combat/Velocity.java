@@ -13,6 +13,7 @@ import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.Loona;
 import cc.unknown.utils.network.PacketUtil;
+import cc.unknown.utils.player.MoveUtil;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.network.play.client.CPacketPlayer;
@@ -25,7 +26,7 @@ import net.minecraft.world.World;
 @Register(name = "Velocity", category = Category.Combat)
 public class Velocity extends Module {
 
-	public ModeValue mode = new ModeValue("Mode", "Packet", "Packet", "Verus", "Ground Grim", "Polar", "Minemen",
+	public ModeValue mode = new ModeValue("Mode", "Packet", "Packet", "Verus", "Ground Grim", "Polar", "Minemen", "WatchdogBoost",
 			"Intave");
 	public SliderValue horizontal = new SliderValue("Horizontal", 90, -100, 100, 1);
 	public SliderValue vertical = new SliderValue("Vertical", 100, -100, 100, 1);
@@ -56,6 +57,10 @@ public class Velocity extends Module {
 		if (chance.getInput() != 100.0D && Math.random() >= chance.getInput() / 100.0D) return;
 		
 		switch (mode.getMode()) {
+		case "WatchdogBoost":
+			if(mc.player.hurtTime == 8);{
+				MoveUtil.strafe(MoveUtil.getSpeed() * 0.7f);
+			}
 		case "Packet":
 			e.setX(e.getX() * horizontal.getInput() / 100.0);
 			e.setY(e.getY() * vertical.getInput() / 100.0);
