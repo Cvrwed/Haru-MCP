@@ -4,5 +4,7 @@ eclipse/
 jars/
 logs/
 runtime/
+bin/
 temp/
+.metadata/
 startclient.bat
