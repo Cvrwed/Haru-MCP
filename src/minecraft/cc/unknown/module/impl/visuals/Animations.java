@@ -4,7 +4,7 @@ import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.render.RenderItemEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
@@ -18,7 +18,7 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemSword;
 import net.minecraft.util.MathHelper;
 
-@Register(name = "Animations", category = Category.Visuals)
+@Info(name = "Animations", category = Category.Visuals)
 public class Animations extends Module {
 
 	private ModeValue blockMode = new ModeValue("Block Mode", "1.7", "1.7", "1.8", "Astolfo", "Spin");

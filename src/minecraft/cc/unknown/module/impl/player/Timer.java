@@ -10,7 +10,7 @@ import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.impl.combat.AimAssist;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
@@ -24,7 +24,7 @@ import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.MathHelper;
 
-@Register(name = "Timer", category = Category.Player)
+@Info(name = "Timer", category = Category.Player)
 public class Timer extends Module {
 	
 	private ModeValue mode = new ModeValue("Mode", "Constant", "Constant", "Random", "Ground");

@@ -1,7 +1,7 @@
 package cc.unknown.command.commands;
 
 import cc.unknown.command.Command;
-import cc.unknown.command.Flips;
+import cc.unknown.command.api.Flips;
 
 @Flips(name = "Clear", alias = "cls", desc = "Clear the chat.", syntax = ".cls")
 public class ClearCommand extends Command {

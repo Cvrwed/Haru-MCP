@@ -1,17 +1,14 @@
 package cc.unknown.utils.player;
 
 import cc.unknown.utils.Loona;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.vec.AxisAlignedBB;
-import net.minecraft.util.vec.Vec3;
 
 public enum CombatUtil implements Loona {
 	instance;
@@ -29,24 +26,18 @@ public enum CombatUtil implements Loona {
 	    }
 	}
 
-	public boolean isTeam(EntityPlayer entity) {
-		if (mc.player.getTeam() != null && entity.getTeam() != null) {
-			Character targetColor = entity.getDisplayName().getFormattedText().charAt(1);
-			Character playerColor = mc.player.getDisplayName().getFormattedText().charAt(1);
-			if (playerColor.equals(targetColor)) {
-				return false;
-			}
-		} else {
-			return false;
-		}
-		return true;
-	}
-	
-    public boolean isOnSameTeam(EntityPlayer entity) {
-        if (entity.getTeam() != null && mc.player.getTeam() != null)
-            return entity.getDisplayName().getFormattedText().charAt(1) == mc.player.getDisplayName().getFormattedText().charAt(1);
-        else
+    public boolean isTeam(Entity entity) {
+        if (!(entity instanceof EntityPlayer)) {
             return false;
+        }
+        EntityPlayer otherPlayer = (EntityPlayer) entity;
+        ScorePlayerTeam otherTeam = (ScorePlayerTeam) otherPlayer.getTeam();
+        ScorePlayerTeam myTeam = (ScorePlayerTeam) mc.player.getTeam();
+
+        if (myTeam != null && otherTeam != null) {
+            return myTeam.equals(otherTeam);
+        }
+        return false;
     }
 
 	public float rotsToFloat(final float[] rots, final int m) {

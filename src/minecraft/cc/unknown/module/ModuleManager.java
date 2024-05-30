@@ -34,7 +34,7 @@ public class ModuleManager implements Loona {
 				new AimAssist(),
 				new AutoBlock(),
 				new Criticals(),
-				new BlockHit(),
+				//new BlockHit(),
 				new KeepSprint(),
 				new JumpReset(),
 				new SprintReset(),
@@ -58,6 +58,7 @@ public class ModuleManager implements Loona {
 				new AutoRegister(),
 				new BedWarsHelper(),
 				new MidClick(),
+				new MusicPlayer(),
 				new Inventory(),
 				new SelfTrap(),
 				
@@ -86,7 +87,7 @@ public class ModuleManager implements Loona {
 				new KeyStrokes(),
 				new TargetHUD(),
 				new Trajectories(),
-				new FreeLook(),
+				//new FreeLook(),
 				new Nametags(),
 				new ESP(),
 				

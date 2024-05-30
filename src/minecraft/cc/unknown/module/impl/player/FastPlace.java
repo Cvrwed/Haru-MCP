@@ -5,7 +5,7 @@ import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.player.PlayerUtil;
@@ -15,7 +15,7 @@ import net.minecraft.item.ItemFishingRod;
 import net.minecraft.item.ItemSnowball;
 import net.minecraft.item.ItemStack;
 
-@Register(name = "FastPlace", category = Category.Player)
+@Info(name = "FastPlace", category = Category.Player)
 public class FastPlace extends Module {
 	private SliderValue delaySlider = new SliderValue("Delay", 1, 0, 4, 1);
 	private BooleanValue blockOnly = new BooleanValue("Blocks only", true);
@@ -43,9 +43,6 @@ public class FastPlace extends Module {
 			return;
 
 		ItemStack item = mc.player.getHeldItem();
-		if (item.getItem() instanceof ItemFishingRod) {
-			return;
-		}
 
 		if (item != null) {
 

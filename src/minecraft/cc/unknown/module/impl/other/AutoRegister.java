@@ -7,12 +7,12 @@ import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.utils.client.Cold;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketChat;
 
-@Register(name = "AutoRegister", category = Category.Other)
+@Info(name = "AutoRegister", category = Category.Other)
 public class AutoRegister extends Module {
 
     private String text;

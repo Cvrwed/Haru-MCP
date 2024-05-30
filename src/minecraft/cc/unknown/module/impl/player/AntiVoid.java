@@ -8,7 +8,7 @@ import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.player.PlayerUtil;
@@ -19,7 +19,7 @@ import net.minecraft.network.play.client.CPacketPlayerBlockPlacement;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.util.vec.Vec3;
 
-@Register(name = "AntiVoid", category = Category.Player)
+@Info(name = "AntiVoid", category = Category.Player)
 public class AntiVoid extends Module {
 
 	private int overVoidTicks;

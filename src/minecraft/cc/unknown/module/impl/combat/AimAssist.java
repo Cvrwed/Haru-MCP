@@ -20,7 +20,7 @@ import cc.unknown.event.impl.player.JumpEvent;
 import cc.unknown.event.impl.player.StrafeEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
@@ -28,6 +28,7 @@ import cc.unknown.utils.misc.ClickUtil;
 import cc.unknown.utils.player.CombatUtil;
 import cc.unknown.utils.player.FriendUtil;
 import cc.unknown.utils.player.PlayerUtil;
+import cc.unknown.utils.player.rotation.RotationManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
@@ -41,10 +42,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 
-@Register(name = "AimAssist", category = Category.Combat)
+@Info(name = "AimAssist", category = Category.Combat)
 public class AimAssist extends Module {
 
-	private ModeValue mode = new ModeValue("Priority", "Low Health", "Low Health", "Distance");
+	private ModeValue mode = new ModeValue("Priority", "Low Health", "Low Health", "Distance", "Angle", "Armor");
 	private SliderValue horizontalAimSpeed = new SliderValue("Horizontal Aim Speed", 45, 5, 100, 1);
 	private SliderValue horizontalAimFineTuning = new SliderValue("Horizontal Aim Fine-tuning", 15, 2, 97, 1);
 	private BooleanValue horizontalRandomization = new BooleanValue("Horizontal Randomization", false);
@@ -120,8 +121,8 @@ public class AimAssist extends Module {
 		            		float pitchChange = random.nextBoolean() ? -nextFloat(0F, verticalRandomizationAmount.getInputToFloat()) : nextFloat(0F, verticalRandomizationAmount.getInputToFloat());
 		            		float pitchAdjustment = (float) (verticalRandomization.isToggled() ? pitchChange : resultVertical);
 		            		float newPitch = mc.player.rotationPitch + pitchAdjustment;
-		            		mc.player.rotationPitch += pitchAdjustment;
-		            		mc.player.rotationPitch = newPitch >= 90f ? newPitch - 360f : newPitch <= -90f ? newPitch + 360f : newPitch;
+		            	    mc.player.rotationPitch += pitchAdjustment;
+		            	    mc.player.rotationPitch = newPitch >= 90f ? newPitch - 360f : newPitch <= -90f ? newPitch + 360f : newPitch;
 		            	}
 		            }
 				}
@@ -155,7 +156,7 @@ public class AimAssist extends Module {
 				if (mc.player.getDistanceToEntity(entity) > enemyDetectionRange.getInput()) continue;
 				if (ignoreFriendlyEntities.isToggled() && FriendUtil.instance.friends.contains(entity.getName())) continue;
 				if (!mc.player.canEntityBeSeen(entity) && lineOfSightCheck.isToggled()) continue;
-				if (ignoreTeammates.isToggled() && !CombatUtil.instance.isOnSameTeam((EntityPlayer) entity)) continue;
+				if (ignoreTeammates.isToggled() && CombatUtil.instance.isTeam((EntityPlayer) entity)) continue;
 				if (!aimAtInvisibleEnemies.isToggled() && entity.isInvisible()) continue;
 				if (!centerAim.isToggled() && fov != 360 && !isWithinFOV((EntityPlayer) entity, fov)) continue;
 				targets.add((EntityPlayer) entity);
@@ -163,11 +164,24 @@ public class AimAssist extends Module {
 		}
 		
 		switch (mode.getMode()) {
-		case "Distance":
+		case "Distance": {
 			targets.sort(Comparator.comparingDouble(entity -> mc.player.getDistanceToEntity(entity)));
+			}
 			break;
-		case "Low Health":
+		case "Angle": {
+			targets.sort((entity1, entity2) -> {
+				float[] rot1 = RotationManager.getRotations(entity1);
+				float[] rot2 = RotationManager.getRotations(entity2);
+				return (int) ((mc.player.rotationYaw - rot1[0]) - (mc.player.rotationYaw - rot2[0]));
+			});}
+		break;
+		case "Armor": {
+			targets.sort(Comparator.comparingInt(entity -> (entity instanceof EntityPlayer ? ((EntityPlayer) entity).inventory.getTotalArmorValue() : (int) entity.getHealth())));
+			}
+		break;
+		case "Low Health": {
 			targets.sort(Comparator.comparingDouble(entity -> ((EntityPlayer) entity).getHealth()).reversed());
+		}
 			break;
 		}
 

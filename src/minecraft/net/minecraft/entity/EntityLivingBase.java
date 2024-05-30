@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-import cc.unknown.module.impl.visuals.Animations;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
@@ -15,7 +14,9 @@ import com.google.common.collect.Maps;
 import cc.unknown.Haru;
 import cc.unknown.event.impl.player.JumpEvent;
 import cc.unknown.module.impl.settings.Fixes;
+import cc.unknown.module.impl.visuals.Animations;
 import cc.unknown.module.impl.visuals.Fullbright;
+import cc.unknown.utils.player.rotation.RotationManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -200,6 +201,9 @@ public abstract class EntityLivingBase extends Entity {
 	/** Number of ticks since last jump */
 	public int jumpTicks;
 	private float absorptionAmount;
+	
+	public float renderPitch, prevRenderPitch;
+
 	/**
 	 * Called by the /kill command.
 	 */
@@ -217,6 +221,7 @@ public abstract class EntityLivingBase extends Entity {
 		this.field_70769_ao = (float) Math.random() * 12398.0F;
 		this.rotationYaw = (float) (Math.random() * Math.PI * 2.0D);
 		this.rotationYawHead = this.rotationYaw;
+		this.renderPitch = this.rotationPitch;
 		this.stepHeight = 0.6F;
 	}
 
@@ -363,6 +368,7 @@ public abstract class EntityLivingBase extends Entity {
 		this.prevRenderYawOffset = this.renderYawOffset;
 		this.prevRotationYawHead = this.rotationYawHead;
 		this.prevRotationYaw = this.rotationYaw;
+		this.prevRenderPitch = this.renderPitch;
 		this.prevRotationPitch = this.rotationPitch;
 		this.worldObj.theProfiler.endSection();
 	}
@@ -1179,8 +1185,13 @@ public abstract class EntityLivingBase extends Entity {
 	private int getArmSwingAnimationEnd() {
 		Animations animations = (Animations) Haru.instance.getModuleManager().getModule(Animations.class);
 
-		double multiplier = this != Minecraft.getMinecraft().player ? 1 : animations.isEnabled() ? (animations).animationSpeed.getInput() : 1;
-		return this.isPotionActive(Potion.digSpeed) ? 6 - (1 + this.getActivePotionEffect(Potion.digSpeed).getAmplifier()) * 1 : (int) ((this.isPotionActive(Potion.digSlowdown) ? 6 + (1 + this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2 : 6) * (float) multiplier);
+		double multiplier = this != Minecraft.getMinecraft().player ? 1
+				: animations.isEnabled() ? (animations).animationSpeed.getInput() : 1;
+		return this.isPotionActive(Potion.digSpeed)
+				? 6 - (1 + this.getActivePotionEffect(Potion.digSpeed).getAmplifier()) * 1
+				: (int) ((this.isPotionActive(Potion.digSlowdown)
+						? 6 + (1 + this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2
+						: 6) * (float) multiplier);
 	}
 
 	/**
@@ -1384,22 +1395,27 @@ public abstract class EntityLivingBase extends Entity {
 	 * Causes this entity to do an upwards motion (jumping).
 	 */
 	protected void jump() {
-		JumpEvent e = new JumpEvent(rotationYaw);
-		if (this == Minecraft.getMinecraft().player)
-			e.call();
+		float yaw = this.rotationYaw;
+		if (RotationManager.isEnabled && RotationManager.strafeFix) {
+			yaw = RotationManager.clientRotation[0];
+		}
+		JumpEvent e = new JumpEvent(yaw);
+		if (this == Minecraft.getMinecraft().player && e.call().isCancelled())
+			return;
 
-		motionY = getJumpUpwardsMotion();
+		this.motionY = this.getJumpUpwardsMotion();
 
-		if (isPotionActive(Potion.jump))
-			motionY += ((getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F);
-
-		if (isSprinting()) {
-			float f = e.getYaw() * 0.017453292F;
-			motionX -= (MathHelper.sin(f) * 0.2F);
-			motionZ += (MathHelper.cos(f) * 0.2F);
+		if (this.isPotionActive(Potion.jump)) {
+			this.motionY += (float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F;
 		}
 
-		isAirBorne = true;
+		if (this.isSprinting()) {
+			float f = e.getYaw() * 0.017453292F;
+			this.motionX -= MathHelper.sin(f) * 0.2F;
+			this.motionZ += MathHelper.cos(f) * 0.2F;
+		}
+
+		this.isAirBorne = true;
 	}
 
 	/**
@@ -1728,6 +1744,7 @@ public abstract class EntityLivingBase extends Entity {
 			this.rotationYaw = (float) ((double) this.rotationYaw + d3 / (double) this.newPosRotationIncrements);
 			this.rotationPitch = (float) ((double) this.rotationPitch
 					+ (this.newRotationPitch - (double) this.rotationPitch) / (double) this.newPosRotationIncrements);
+			this.renderPitch = rotationPitch;
 			--this.newPosRotationIncrements;
 			this.setPosition(d0, d1, d2);
 			this.setRotation(this.rotationYaw, this.rotationPitch);
@@ -1854,6 +1871,7 @@ public abstract class EntityLivingBase extends Entity {
 		this.newPosZ = z;
 		this.newRotationYaw = (double) yaw;
 		this.newRotationPitch = (double) pitch;
+		this.renderPitch = pitch;
 		this.newPosRotationIncrements = posRotationIncrements;
 	}
 
@@ -1909,16 +1927,16 @@ public abstract class EntityLivingBase extends Entity {
 	public Vec3 getLook(float partialTicks) {
 		Fixes tweaks = (Fixes) Haru.instance.getModuleManager().getModule(Fixes.class);
 
-        if (this instanceof EntityPlayerSP && tweaks.isEnabled() && tweaks.rawInput.isToggled()) {
-            return super.getLook(partialTicks);
-        }
-        
-        if (partialTicks == 1.0f) {
-            return this.getVectorForRotation(this.rotationPitch, this.rotationYawHead);
-        }
-        final float f = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * partialTicks;
-        final float f2 = this.prevRotationYawHead + (this.rotationYawHead - this.prevRotationYawHead) * partialTicks;
-        return this.getVectorForRotation(f, f2);
+		if (this instanceof EntityPlayerSP && tweaks.isEnabled() && tweaks.rawInput.isToggled()) {
+			return super.getLook(partialTicks);
+		}
+
+		if (partialTicks == 1.0f) {
+			return this.getVectorForRotation(this.rotationPitch, this.rotationYawHead);
+		}
+		final float f = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * partialTicks;
+		final float f2 = this.prevRotationYawHead + (this.rotationYawHead - this.prevRotationYawHead) * partialTicks;
+		return this.getVectorForRotation(f, f2);
 	}
 
 	/**
@@ -1976,7 +1994,7 @@ public abstract class EntityLivingBase extends Entity {
 	public void setRotationYawHead(float rotation) {
 		this.rotationYawHead = rotation;
 	}
-	
+
 	public void func_181013_g(float p_181013_1_) {
 		this.renderYawOffset = p_181013_1_;
 	}

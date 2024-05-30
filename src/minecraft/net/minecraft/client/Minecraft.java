@@ -162,6 +162,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.handshake.client.CHandshake;
 import net.minecraft.network.login.client.CPacketLoginStart;
 import net.minecraft.network.play.client.CPacketClientStatus;
+import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.profiler.IPlayerUsage;
 import net.minecraft.profiler.PlayerUsageSnooper;
 import net.minecraft.profiler.Profiler;
@@ -1577,6 +1578,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
 		if (!this.isGamePaused && this.world != null) {
 			this.playerController.updateController();
+			RotationManager.updateStrafeFixBinds();
 		}
 
 		this.mcProfiler.endStartSection("textures");
@@ -2833,12 +2835,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	}
 
 	public Entity getRenderViewEntity() {
-		if (RotationManager.targetRotation != null && Loona.mc.player != null) {
-			final float yaw = RotationManager.targetRotation.getYaw();
-			Loona.mc.player.rotationYawHead = yaw;
-			Loona.mc.player.renderYawOffset = yaw;
-
-		}
 		return this.renderViewEntity;
 	}
 

@@ -2,7 +2,7 @@ package cc.unknown.module.impl.player;
 
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 
-@Register(name = "Sprint", category = Category.Player)
+@Info(name = "Sprint", category = Category.Player)
 public class Sprint extends Module { }

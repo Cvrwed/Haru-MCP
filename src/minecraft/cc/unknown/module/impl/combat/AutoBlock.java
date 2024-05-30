@@ -7,7 +7,7 @@ import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.event.impl.render.RenderItemEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.SliderValue;
@@ -17,19 +17,19 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 
-@Register(name = "AutoBlock", category = Category.Combat)
+@Info(name = "AutoBlock", category = Category.Combat)
 public class AutoBlock extends Module {
-	public static DoubleSliderValue duration = new DoubleSliderValue("Block duration", 20, 100, 1, 500, 1);
-	public static DoubleSliderValue distance = new DoubleSliderValue("Distance to player", 0, 3, 0, 6, 0.01);
-	public static SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
+	private DoubleSliderValue duration = new DoubleSliderValue("Block duration", 20, 100, 1, 500, 1);
+	private DoubleSliderValue distance = new DoubleSliderValue("Distance to player", 0, 3, 0, 6, 0.01);
 	private BooleanValue forceBlock = new BooleanValue("Force Block Animation", true);
+	private SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
 	
 	private boolean block;
 	private final Cold blockTime = new Cold(0);
 	private EntityPlayer target = null;
 
 	public AutoBlock() {
-		this.registerSetting(duration, distance, chance, forceBlock);
+		this.registerSetting(duration, distance, forceBlock, chance);
 	}
 
 	@EventLink
@@ -61,7 +61,7 @@ public class AutoBlock extends Module {
 	
     @EventLink
     public void onRenderItem(RenderItemEvent e) {
-        if (PlayerUtil.isHoldingWeapon() && forceBlock.isToggled()) {
+        if (PlayerUtil.isHoldingWeapon() && forceBlock.isToggled() && target != null) {
             e.setEnumAction(EnumAction.BLOCK);
             e.setUseItem(true);
         }

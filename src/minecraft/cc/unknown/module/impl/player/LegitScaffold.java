@@ -10,7 +10,7 @@ import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.SliderValue;
@@ -22,7 +22,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.WorldSettings;
 
-@Register(name = "LegitScaffold", category = Category.Player)
+@Info(name = "LegitScaffold", category = Category.Player)
 public class LegitScaffold extends Module {
 	private SliderValue shiftTime = new SliderValue("Shift Time", 140, 5, 200, 5);
 	private BooleanValue pitchCheck = new BooleanValue("Pitch Check", false);
@@ -60,9 +60,11 @@ public class LegitScaffold extends Module {
 
 	@EventLink
 	public void onSuicide(MotionEvent e) {
-		if (mc.currentScreen != null && !e.isPre()) return;
-		if (mc.playerController.getCurrentGameType() == WorldSettings.GameType.SPECTATOR) return;
-
+		if (mc.currentScreen != null && !e.isPre())
+			return;
+		if (mc.playerController.getCurrentGameType() == WorldSettings.GameType.SPECTATOR)
+			return;
+		
 		if (PlayerUtil.playerOverAir() && (!onlyGround.isToggled() || mc.player.onGround) && mc.player.motionY < 0.1) {
 			shiftTimer.reset();
 		}

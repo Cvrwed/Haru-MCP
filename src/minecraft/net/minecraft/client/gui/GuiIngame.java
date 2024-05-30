@@ -445,8 +445,8 @@ public class GuiIngame extends Gui {
 	}
 
 	private void renderScoreboard(ScoreObjective p_180475_1_, ScaledResolution p_180475_2_) {
-		Helper tweaks = (Helper) Haru.instance.getModuleManager().getModule(Helper.class);
-		if (tweaks.noScoreboard.isToggled())
+		Helper helper = (Helper) Haru.instance.getModuleManager().getModule(Helper.class);
+		if (helper.noScoreboard.isToggled() && helper.isEnabled())
 			return;
 		Scoreboard scoreboard = p_180475_1_.getScoreboard();
 		Collection<Score> collection = scoreboard.getSortedScores(p_180475_1_);

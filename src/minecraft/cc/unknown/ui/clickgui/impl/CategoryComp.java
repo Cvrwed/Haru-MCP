@@ -1,11 +1,13 @@
 package cc.unknown.ui.clickgui.impl;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.lwjgl.opengl.GL11;
+
 import cc.unknown.Haru;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.ui.clickgui.impl.theme.Theme;
 import cc.unknown.utils.Loona;
 import cc.unknown.utils.client.RenderUtil;
 import net.minecraft.client.gui.FontRenderer;
@@ -13,7 +15,7 @@ import net.minecraft.client.gui.FontRenderer;
 public class CategoryComp implements Loona {
 	private ArrayList<ModuleComp> modulesInCategory = new ArrayList<>();
 	private Category category;
-	private boolean open = false;
+	private boolean categoryOpened = false;
 	private int width = 92; // 92
 	private int x = 5;
 	private int y = 5;
@@ -64,24 +66,26 @@ public class CategoryComp implements Loona {
 	}
 
 	public void setOpened(boolean on) {
-		this.open = on;
+		this.categoryOpened = on;
 		if (Haru.instance.getHudConfig() != null) {
 			Haru.instance.getHudConfig().saveHud();
 		}
 	}
 
 	public void render(FontRenderer r) {
+		mc.gameSettings.guiScale = 2;
+				
 		this.width = 92;
-		if (!this.modulesInCategory.isEmpty() && this.open) {
+		if (!this.modulesInCategory.isEmpty() && this.categoryOpened) {
 			int categoryHeight = 0;
 
 			for (ModuleComp module : this.modulesInCategory) {
 				categoryHeight += module.getHeight();
 			}
 
-			RenderUtil.drawBorderedRoundedRect(this.x - 1, this.y, this.x + this.width + 1, this.y + this.bh + categoryHeight + 4f, 20f, 2f, getTheme().getMainColor().getRGB(), getTheme().getBackColor().getRGB());
-		} else if (!this.open) {
-			RenderUtil.drawBorderedRoundedRect(this.x - 1, this.y, this.x + this.width + 1, this.y + this.bh + 4f, 20f, 2f, getTheme().getMainColor().getRGB(), getTheme().getBackColor().getRGB());
+			RenderUtil.drawBorderedRoundedRect(this.x - 1, this.y, this.x + this.width + 1, this.y + this.bh + categoryHeight + 4, 20, 2, getTheme().getMainColor().getRGB(), getTheme().getBackColor().getRGB());
+		} else if (!this.categoryOpened) {
+			RenderUtil.drawBorderedRoundedRect(this.x - 1, this.y, this.x + this.width + 1, this.y + this.bh + 4, 20, 2, getTheme().getMainColor().getRGB(), getTheme().getBackColor().getRGB());
 		}
 
 		String center = this.n4m ? this.pvp : this.category.getName();
@@ -91,7 +95,10 @@ public class CategoryComp implements Loona {
 		r.drawStringWithShadow(center, (float) x, (float) y, getTheme().getMainColor().getRGB());
 
 		if (!this.n4m) {
-			if (this.open && !this.modulesInCategory.isEmpty()) {
+	         GL11.glPushMatrix();
+	         r.drawStringWithShadow(this.categoryOpened ? "*" : "^", (float)(this.x + marginX), (float)((double)this.y + marginY), Color.white.getRGB());
+	         GL11.glPopMatrix();
+			if (this.categoryOpened && !this.modulesInCategory.isEmpty()) {
 			    this.modulesInCategory.forEach(Component::renderComponent);
 			}
 		}
@@ -196,11 +203,11 @@ public class CategoryComp implements Loona {
 	}
 
 	public boolean isOpen() {
-		return open;
+		return categoryOpened;
 	}
 
 	public void setOpen(boolean open) {
-		this.open = open;
+		this.categoryOpened = open;
 	}
 
 }

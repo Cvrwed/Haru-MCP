@@ -8,7 +8,7 @@ import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.ui.clickgui.impl.theme.Theme;
 import cc.unknown.utils.misc.DragUtil;
@@ -20,7 +20,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.CPacketUseEntity;
 
-@Register(name = "TargetHUD", category = Category.Visuals)
+@Info(name = "TargetHUD", category = Category.Visuals)
 public class TargetHUD extends Module {
 
 	private final SliderValue posX = new SliderValue("Position X", 100, -1000, 1000, 0.1);

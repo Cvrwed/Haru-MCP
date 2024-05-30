@@ -6,10 +6,11 @@ import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.client.Cold;
+import cc.unknown.utils.misc.ClickUtil;
 import cc.unknown.utils.network.PacketUtil;
 import cc.unknown.utils.player.CombatUtil;
 import cc.unknown.utils.player.PlayerUtil;
@@ -19,7 +20,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.network.play.client.CPacketEntityAction;
 
-@Register(name = "SprintReset", category = Category.Combat)
+@Info(name = "SprintReset", category = Category.Combat)
 public class SprintReset extends Module {
 
 	private ModeValue mode = new ModeValue("Mode", "WTap", "WTap", "STap", "Packet");
@@ -28,12 +29,26 @@ public class SprintReset extends Module {
 	private SliderValue tapRange = new SliderValue("Tap Range", 3.0, 3.0, 6.0, 0.5);
 	private SliderValue chance = new SliderValue("Tap Chance", 100, 0, 100, 1);
 	private final Cold timer = new Cold(0);
-	private int tap;
+	private int tap = 0;
 	private int hitsCount = 0;
 	private EntityPlayer target = null;
 
 	public SprintReset() {
 		this.registerSetting(mode, packets, onceEvery, tapRange, chance);
+	}
+	
+	@Override
+	public void onEnable() {
+		tap = 0;
+		hitsCount = 0;
+		target = null;
+	}
+	
+	@Override
+	public void onDisable() {
+		tap = 0;
+		hitsCount = 0;
+		target = null;
 	}
 
 	@EventLink
@@ -42,9 +57,7 @@ public class SprintReset extends Module {
 	}
 
 	@EventLink
-	public void onPacket(PacketEvent e) {
-		if (target == null) return;
-		
+	public void onPacket(PacketEvent e) {		
 		if (chance.getInput() != 100.0D && Math.random() >= chance.getInput() / 100.0D) {
 			return;
 		}
@@ -52,11 +65,14 @@ public class SprintReset extends Module {
 		Packet<?> p = e.getPacket();
 		if (e.isSend() && p instanceof CPacketUseEntity) {
 			CPacketUseEntity wrapper = (CPacketUseEntity) p;
-			if (wrapper.getAction() == CPacketUseEntity.Mode.ATTACK) {
-				double entityDistance = mc.player.getDistanceToEntity(wrapper.getEntityFromWorld(mc.world));
-				if (entityDistance <= tapRange.getInputToInt()) {
+			if (wrapper.getAction() == CPacketUseEntity.Mode.ATTACK) {				
+				EntityPlayer entity = (EntityPlayer) wrapper.getEntityFromWorld(mc.world);
+				if (target != null && wrapper.getEntityId() == target.getEntityId()) return;
+				target = entity;
+				
+				if (target.getDistanceToEntity(entity) <= tapRange.getInputToInt()) {
 					hitsCount++;
-					if (hitsCount >= onceEvery.getInputToInt()) {
+					if (hitsCount > onceEvery.getInputToInt()) {
 						switch (mode.getMode()) {
 						case "Packet":
 							if (mc.player.isSprinting()) setSprinting(false);

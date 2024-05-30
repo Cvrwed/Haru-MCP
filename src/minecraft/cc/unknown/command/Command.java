@@ -3,6 +3,7 @@ package cc.unknown.command;
 import java.util.HashMap;
 import java.util.Map;
 
+import cc.unknown.command.api.Flips;
 import cc.unknown.utils.Loona;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.util.enums.EnumChatFormatting;

@@ -6,11 +6,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import cc.unknown.Haru;
 import cc.unknown.command.Command;
-import cc.unknown.command.Flips;
+import cc.unknown.command.api.Flips;
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.player.TickEvent;
-import cc.unknown.utils.network.PacketUtil;
+import cc.unknown.utils.client.Cold;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiChat;
@@ -20,19 +20,20 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayServer;
-import net.minecraft.network.play.client.CPacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.CPacketClickWindow;
-import net.minecraft.network.play.server.SPacketPlayerPosLook;
-import net.minecraft.network.play.server.SPacketOpenWindow;
+import net.minecraft.network.play.client.CPacketPlayerBlockPlacement;
 import net.minecraft.network.play.server.SPacketCloseWindow;
+import net.minecraft.network.play.server.SPacketOpenWindow;
+import net.minecraft.network.play.server.SPacketPlayerPosLook;
 
-@Flips(name = "Game", alias = "join", desc = "It automatically enters the selected minigame.", syntax = ".game <mini game> <lobby>")
+@Flips(name = "Game", alias = "join", desc = "It automatically enters the selected minigame. [Only for Universocraft]", syntax = ".game <mini game> <lobby>")
 public class GameCommand extends Command {
 
     private HashMap<String, Item> hashMap = new HashMap<>();
+    private Cold timer = new Cold(0);
     private boolean joining;
     private Item item;
-    private int number;
+    private int lobby;
     protected int delay;
     private int stage;
     private boolean foundItem;
@@ -43,12 +44,7 @@ public class GameCommand extends Command {
         init();
         Haru.instance.getEventBus().register(this);
     }
-
-    /**
-     * Executes the game command based on the provided arguments.
-     *
-     * @param args The arguments for the command.
-     */
+    
     @Override
     public void onExecute(String[] args) {
         AtomicReference<String> message = new AtomicReference<>("");
@@ -63,7 +59,8 @@ public class GameCommand extends Command {
             }
 
             String gameName = args[0];
-            int lobby;
+            int lobbyNumber;
+            int delays;
 
             if (!this.hashMap.containsKey(gameName)) {
                 message.set(getColor("Red") + " Invalid game. Use: .game list");
@@ -75,14 +72,16 @@ public class GameCommand extends Command {
                 return;
             }
 
-            lobby = Integer.parseInt(args[1]);
+            lobbyNumber = Integer.parseInt(args[1]);
 
-            if (lobby == 0) {
+            if (lobbyNumber == 0) {
                 message.set(getColor("Red") + " Invalid lobby.");
                 return;
             }
 
-            startJoining(this.hashMap.get(gameName), lobby);
+
+            this.startJoining(hashMap.get(gameName), lobbyNumber);
+            
             message.set(getColor("Yellow") + " Have a coffee while I try to get you into the mini-game.");
         }
 
@@ -145,7 +144,7 @@ public class GameCommand extends Command {
                         for (int i = 0; i < inventory.size(); i++) {
                             ItemStack slot = inventory.get(i);
                             if (slot != null)
-                                if (slot.stackSize == this.number) {
+                                if (slot.stackSize == this.lobby) {
                                     mc.getNetHandler().sendQueue((Packet<INetHandlerPlayServer>) new CPacketClickWindow(container.inventorySlots.windowId, i, 0, 0, slot, (short) 1));
                                     this.stage++;
                                     break;
@@ -173,11 +172,6 @@ public class GameCommand extends Command {
         this.hashMap.put("arena", Items.diamond_sword);
     }
 
-    /**
-     * Gets the list of available games.
-     *
-     * @return The list of available games.
-     */
     private String getList() {
         return "\n" +
                 getColor("Green") + " - " + getColor("White") + "sw" + getColor("Gray") + " (Skywars)        \n" +
@@ -192,12 +186,13 @@ public class GameCommand extends Command {
      * Starts the joining process for a game.
      *
      * @param name  The item associated with the game.
-     * @param lobby The lobby number.
+     * @param lobbyNumber The lobby number.
+     * @param enterDelay The delay number.
      */
-    private void startJoining(Item name, int lobby) {
+    private void startJoining(Item name, int lobbyNumber) {
         joining = true;
         item = name;
-        number = lobby;
+        lobby = lobbyNumber;
         delay = 0;
         stage = 0;
         foundItem = foundGame = foundLobby = false;

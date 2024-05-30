@@ -10,7 +10,7 @@ import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.SliderValue;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -29,7 +29,7 @@ import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.util.vec.AxisAlignedBB;
 import net.minecraft.util.vec.Vec3;
 
-@Register(name = "Trajectories", category = Category.Visuals)
+@Info(name = "Trajectories", category = Category.Visuals)
 public class Trajectories extends Module {
 
 	private SliderValue color = new SliderValue("Color [H/S/B]", 0, 0, 350, 10);

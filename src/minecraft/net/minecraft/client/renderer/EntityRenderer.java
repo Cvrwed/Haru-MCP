@@ -611,9 +611,8 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 	}
 
 	private void hurtCameraEffect(float partialTicks) {
-		Fixes tw = (Fixes) Haru.instance.getModuleManager().getModule(Fixes.class);
-		if (tw.noHurtCam.isToggled())
-			return;
+		Fixes fixes = (Fixes) Haru.instance.getModuleManager().getModule(Fixes.class);
+		if (fixes.noHurtCam.isToggled() && fixes.isEnabled()) return;
 
 		if (this.mc.getRenderViewEntity() instanceof EntityLivingBase) {
 			EntityLivingBase entitylivingbase = (EntityLivingBase) this.mc.getRenderViewEntity();

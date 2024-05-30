@@ -2,7 +2,7 @@ package cc.unknown.command.commands;
 
 import cc.unknown.Haru;
 import cc.unknown.command.Command;
-import cc.unknown.command.Flips;
+import cc.unknown.command.api.Flips;
 
 @Flips(name = "Help", alias = "ayuda", desc = "Show the all commands", syntax = ".help")
 public class HelpCommand extends Command {

@@ -1,13 +1,16 @@
 package cc.unknown.event.impl.move;
 
 import cc.unknown.event.Event;
+import net.minecraft.client.entity.EntityPlayerSP;
 
 public class MotionEvent extends Event {
 
     private double x, y, z;
     private float yaw, pitch;
     private boolean onGround;
+    private float lastTickYaw, lastTickPitch;
     private final MotionType motionType;
+    private final EntityPlayerSP player;
 
     /**
      * Constructs a MotionEvent with the specified motion type, coordinates, yaw, pitch, and on-ground status.
@@ -20,7 +23,7 @@ public class MotionEvent extends Event {
      * @param pitch      The pitch value associated with the event.
      * @param onGround   The on-ground status associated with the event.
      */
-    public MotionEvent(MotionType motionType, double x, double y, double z, float yaw, float pitch, boolean onGround) {
+    public MotionEvent(MotionType motionType, double x, double y, double z, float yaw, float pitch, float lastTickYaw, float lastTickPitch, boolean onGround, EntityPlayerSP player) {
         this.motionType = motionType;
         this.x = x;
         this.y = y;
@@ -28,6 +31,7 @@ public class MotionEvent extends Event {
         this.yaw = yaw;
         this.pitch = pitch;
         this.onGround = onGround;
+        this.player = player;
     }
 
     /**

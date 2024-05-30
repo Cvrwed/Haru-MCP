@@ -1,5 +1,6 @@
 package cc.unknown.ui.clickgui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public class HaruGui extends GuiScreen {
 
 		if (cg.backGroundMode.is("Gradient")) {
 			this.drawGradientRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(),
-					getTheme().getAccentColor().getRGB(), getTheme().getAccentColor().getAlpha());
+					getTheme().getMainColor().getRGB(), getTheme().getBackColor().getTransparency());
 		} else if (cg.backGroundMode.is("Normal")) {
 			this.drawGradientRect(0, 0, this.width, this.height, -1072689136, -804253680);
 		}
@@ -74,10 +75,12 @@ public class HaruGui extends GuiScreen {
 			lastMouseX.set(mouseX);
 			lastMouseY.set(mouseY);
 		}
+		
+		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
 	@Override
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		ScaledResolution sr = new ScaledResolution(mc);
 		
 		categoryList.forEach(c -> {
@@ -110,6 +113,8 @@ public class HaruGui extends GuiScreen {
 				}
 			}
 		});
+		
+		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
@@ -137,10 +142,11 @@ public class HaruGui extends GuiScreen {
 			Haru.instance.getHudConfig().saveHud();
 		}
 
+		super.mouseReleased(mouseX, mouseY, state);
 	}
 
 	@Override
-	public void keyTyped(char t, int k) {
+	public void keyTyped(char t, int k) throws IOException {
 		if (k == 1 || k == 54) {
 			this.mc.displayGuiScreen(null);
 		}
@@ -152,6 +158,8 @@ public class HaruGui extends GuiScreen {
 				}
 			}
 		});
+		
+		super.keyTyped(t, k);
 	}
 
 	@Override
@@ -161,6 +169,8 @@ public class HaruGui extends GuiScreen {
 			Haru.instance.getHudConfig().saveHud();
 			cg.disable();
 		}
+		
+		super.onGuiClosed();
 	}
 
 	@Override

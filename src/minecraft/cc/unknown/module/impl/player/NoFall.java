@@ -7,7 +7,7 @@ import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.event.impl.world.AirCollideEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.utils.player.MoveUtil;
 import cc.unknown.utils.player.PlayerUtil;
@@ -25,10 +25,10 @@ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.enums.EnumFacing;
 import net.minecraft.util.vec.AxisAlignedBB;
 
-@Register(name = "NoFall", category = Category.Player)
+@Info(name = "NoFall", category = Category.Player)
 public class NoFall extends Module {
 	private boolean handling;
-	private ModeValue mode = new ModeValue("Mode", "Legit", "Legit", "Packet", "Grim");
+	private ModeValue mode = new ModeValue("Mode", "Legit", "Legit", "Packet");
 
 	public NoFall() {
 		this.registerSetting(mode);
@@ -43,27 +43,6 @@ public class NoFall extends Module {
 	public void onMotion(MotionEvent e) {
 		if (e.isPre()) {
 			switch (mode.getMode()) {
-			case "Grim":
-				if (mc.player.fallDistance >= 3) {
-					mc.player.motionX *= 0.2D;
-					mc.player.motionZ *= 0.2D;
-
-					float distance = mc.player.fallDistance;
-
-					if (MoveUtil.isOnGround(2)) {
-						if (distance > 2) {
-							MoveUtil.strafe(0.19f);
-						}
-
-						if (distance > 3 && MoveUtil.getSpeed() < 0.2) {
-							e.setOnGround(true);
-							distance = 0;
-						}
-					}
-
-					mc.player.fallDistance = distance;
-				}
-				break;
 			case "Legit":
 				if (!PlayerUtil.inGame() || mc.player.dimension == -1)
 					return;
@@ -95,33 +74,6 @@ public class NoFall extends Module {
 			case "Packet":
 				mc.getNetHandler().sendQueue(new CPacketPlayer(true));
 				break;
-			}
-		}
-	}
-
-	@EventLink
-	public void onPacket(PacketEvent e) {
-		if (e.isReceive()) {
-			if (mode.is("Grim")) {
-				if (e.getPacket() instanceof SPacketPlayerPosLook) {
-					handling = true;
-				}
-			}
-		}
-	}
-	
-	@EventLink
-	public void onAirCollide(AirCollideEvent e) {
-		switch(mode.getMode()) {
-		case "Grim":
-			if (mc.player.fallDistance >= 3.0f && !handling) {
-				if (mc.world.getBlockState(e.getPos()).getBlock() instanceof BlockAir && !mc.player.isSneaking()) {
-		            final double x = e.getPos().getX(), y = e.getPos().getY(), z = e.getPos().getZ();
-	
-		            if (y < mc.player.posY) {
-		                e.setReturnValue(AxisAlignedBB.fromBounds(-15, -1, -15, 15, 1, 15).offset(x, y, z));
-		            }
-		        }
 			}
 		}
 	}

@@ -5,7 +5,7 @@ import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.network.PacketUtil;
@@ -16,9 +16,9 @@ import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.network.play.client.CPacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.CPacketHeldItemChange;
 
-@Register(name = "NoSlow", category = Category.Player)
+@Info(name = "NoSlow", category = Category.Player)
 public class NoSlow extends Module {
-	public ModeValue mode = new ModeValue("Mode", "Old Grim", "Old Grim", "Vanilla", "No Item Release", "C08 Tick");
+	public ModeValue mode = new ModeValue("Mode", "Old Grim", "Old Grim", "Vanilla", "No Item Release", "Vulcan");
 	public SliderValue vForward = new SliderValue("Vanilla forward", 1.0, 0.2, 1.0, 0.1);
 	public SliderValue vStrafe = new SliderValue("Vanilla strafe", 1.0, 0.2, 1.0, 0.1);
 
@@ -42,7 +42,7 @@ public class NoSlow extends Module {
 			mc.player.movementInput.moveForward *= vForward.getInputToFloat();
 			mc.player.movementInput.moveStrafe *= vStrafe.getInputToFloat();
 			break;
-		case "C08 Tick":
+		case "Vulcan":
 			if (mc.player.ticksExisted % 3 == 0) {
 				mc.getNetHandler().sendQueue(new CPacketPlayerBlockPlacement(mc.player.getHeldItem()));
 			}
