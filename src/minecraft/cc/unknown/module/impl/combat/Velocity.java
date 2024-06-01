@@ -26,7 +26,7 @@ import net.minecraft.world.World;
 @Info(name = "Velocity", category = Category.Combat)
 public class Velocity extends Module {
 
-	public ModeValue mode = new ModeValue("Mode", "Packet", "Packet", "Verus", "Ground Grim", "Polar", "Minemen", "WatchdogBoost",
+	public ModeValue mode = new ModeValue("Mode", "Packet", "Packet", "Verus", "Ground Grim", "Polar", "Minemen", "Watchdog Boost",
 			"Intave");
 	public SliderValue horizontal = new SliderValue("Horizontal", 90, -100, 100, 1);
 	public SliderValue vertical = new SliderValue("Vertical", 100, -100, 100, 1);
@@ -61,8 +61,8 @@ public class Velocity extends Module {
 		}
 		
 		switch (mode.getMode()) {
-		case "WatchdogBoost":
-			if(mc.player.hurtTime == 8);{
+		case "Watchdog Boost":
+			if(mc.player.hurtTime == 8) {
 				MoveUtil.strafe(MoveUtil.getSpeed() * 0.7f);
 			}
 		case "Packet":

@@ -33,6 +33,13 @@ public class Flight extends Module {
 
 	@Override
 	public void onEnable() {
+		if (PlayerUtil.inGame()) {
+			for (TimedPacket data : packetQueue) {
+				PacketUtil.handlePacket((Packet<? extends INetHandlerPlayClient>) data.getPacket());
+			}
+		}
+		packetQueue.clear();
+		
 		ticks = 0;
 		damageTaken = false;
 		release = false;
@@ -46,6 +53,10 @@ public class Flight extends Module {
 			}
 		}
 		packetQueue.clear();
+		
+		ticks = 0;
+		damageTaken = false;
+		release = false;
 	}
 
 	@EventLink
@@ -56,7 +67,7 @@ public class Flight extends Module {
 		case "Polar":
 
 			if (e.isReceive()) {
-				if (packet instanceof SPacketEntityStatus && ((SPacketEntityStatus) packet).getEntityId() == mc.player.getEntityId() && ((SPacketEntityStatus) packet).getOpCode() == 2 && ticks <= 0) {
+				if (packet instanceof SPacketEntityStatus && ((SPacketEntityStatus) packet).getEntityId() == mc.player.getEntityId() && ticks <= 0) {
 					damageTaken = true;
 					ticks = 40;
 				}

@@ -52,10 +52,6 @@ public class LegitScaffold extends Module {
 		if (PlayerUtil.playerOverAir()) {
 			mc.gameSettings.keyBindSneak.pressed = false;
 		}
-
-		mc.gameSettings.keyBindJump.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindJump);
-		mc.gameSettings.keyBindUseItem.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindUseItem);
-		mc.gameSettings.keyBindSneak.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSneak);
 	}
 
 	@EventLink

@@ -26,7 +26,7 @@ public class Speed extends Module {
 			case "Strafe":
 				if(PlayerUtil.isMoving()) {
 					MoveUtil.strafeY(0);
-					if (mc.player.onGround) {
+					if (e.isOnGround()) {
 						mc.player.jump();
 					}
 				} else {
@@ -45,15 +45,13 @@ public class Speed extends Module {
 
 				break;
 			case "Hypixel":
-				if(PlayerUtil.isMoving()) {
-					
-					}
+				if(PlayerUtil.isMoving()) { }
 				
-					if(mc.player.onGround) {
-						mc.player.jump();
-						MoveUtil.strafe(MoveUtil.getSpeed());
-					}
-					break;
+				if(e.isOnGround()) {
+					mc.player.jump();
+					MoveUtil.strafe(MoveUtil.getSpeed());	
+				}
+				break;
 				}
 				
 			}

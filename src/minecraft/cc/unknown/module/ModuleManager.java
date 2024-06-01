@@ -11,7 +11,7 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.combat.*;
 import cc.unknown.module.impl.exploit.*;
-import cc.unknown.module.impl.move.Speed;
+import cc.unknown.module.impl.move.*;
 import cc.unknown.module.impl.other.*;
 import cc.unknown.module.impl.player.*;
 import cc.unknown.module.impl.settings.Helper;
@@ -53,6 +53,7 @@ public class ModuleManager implements Loona {
 				
 				// move
 				new Speed(),
+				new Flight(),
 				
 				// other
 				new Autoplay(),
