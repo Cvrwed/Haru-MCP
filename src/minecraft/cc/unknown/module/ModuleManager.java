@@ -53,7 +53,7 @@ public class ModuleManager implements Loona {
 				
 				// move
 				new Speed(),
-				new Flight(),
+				//new Flight(),
 				
 				// other
 				new Autoplay(),

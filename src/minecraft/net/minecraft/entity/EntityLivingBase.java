@@ -1753,7 +1753,7 @@ public abstract class EntityLivingBase extends Entity {
 			this.motionY *= 0.98D;
 			this.motionZ *= 0.98D;
 		}
-
+		
 		if (Math.abs(this.motionX) < 0.005D) {
 			this.motionX = 0.0D;
 		}

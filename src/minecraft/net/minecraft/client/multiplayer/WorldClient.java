@@ -1,9 +1,12 @@
 package net.minecraft.client.multiplayer;
 
-import com.google.common.collect.Sets;
+import java.util.Collection;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Callable;
+
+import com.google.common.collect.Sets;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -25,6 +28,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.chat.ChatComponentText;
 import net.minecraft.util.enums.EnumParticleTypes;
+import net.minecraft.util.vec.AxisAlignedBB;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -172,6 +176,9 @@ public class WorldClient extends World
             this.markBlockRangeForRenderUpdate(p_73025_1_ * 16, 0, p_73025_2_ * 16, p_73025_1_ * 16 + 15, 256, p_73025_2_ * 16 + 15);
         }
     }
+    
+
+   
 
     /**
      * Called when an entity is spawned in the world. This includes players.

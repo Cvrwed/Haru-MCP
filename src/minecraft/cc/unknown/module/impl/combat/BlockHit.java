@@ -13,19 +13,5 @@ import net.minecraft.util.IChatComponent;
 
 @Info(name = "BlockHit", category = Category.Combat)
 public class BlockHit extends Module {
-	
-	@EventLink
-	public void onPacket(PacketEvent e) {
-	    if (e.isSend()) {
-	        if (e.getPacket() instanceof CPacketUpdateSign) {
-	            final CPacketUpdateSign packet = (CPacketUpdateSign) e.getPacket();
-
-	            if (packet.lines[3].getUnformattedText().length() <= 0) {
-	                CharSequence textComponent = new SimpleDateFormat("MMM dd, yyyy").format(new Date());
-	                packet.lines[3] = (IChatComponent) textComponent;
-	            }
-	        }
-	    }
-	}
 
 }

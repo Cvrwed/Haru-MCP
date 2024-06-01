@@ -10,6 +10,7 @@ import com.mojang.authlib.GameProfile;
 
 import cc.unknown.Haru;
 import cc.unknown.event.impl.move.HitSlowDownEvent;
+import cc.unknown.utils.Loona;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockDirectional;
@@ -50,6 +51,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.play.client.CPacketAnimation;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.potion.Potion;
 import net.minecraft.scoreboard.IScoreObjectiveCriteria;
@@ -84,6 +86,8 @@ public abstract class EntityPlayer extends EntityLivingBase {
 	/** Inventory of the player */
 	public InventoryPlayer inventory = new InventoryPlayer(this);
 	private InventoryEnderChest theInventoryEnderChest = new InventoryEnderChest();
+    private final ItemStack[] mainInventory = new ItemStack[36];
+    private final ItemStack[] armorInventory = new ItemStack[4];
 
 	/**
 	 * The Container for the player's inventory (which opens when they press E)

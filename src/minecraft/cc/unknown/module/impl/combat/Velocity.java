@@ -92,7 +92,7 @@ public class Velocity extends Module {
 	        case "Universocraft":
 	            adjustPlayerMovement(player -> {
 	                player.motionY = 0.42;
-	                float yawRadians = (float) Math.toRadians(player.rotationYaw);
+	                float yawRadians = (float) Math.toRadians(/*player.rotationYaw*/ 1.2224324);
 	                player.motionX -= MathHelper.sin(yawRadians) * 0.0000001;
 	                player.motionZ += MathHelper.cos(yawRadians) * 0.0000001;
 	            });
@@ -154,8 +154,8 @@ public class Velocity extends Module {
 	    	        double min = 0.1;
 	    	        double max = 0.5;
 	    	        if (PlayerUtil.isMoving() && mc.player.onGround && isValidMotion(mc.player.motionX, min, max) && isValidMotion(mc.player.motionZ, min, max)) {
-	    	            mc.player.motionX -= Math.sin(multi) * min;
-	    	            mc.player.motionZ += Math.cos(multi) * max;
+	    	            mc.player.motionX -= MathHelper.sin((float) multi) * min;
+	    	            mc.player.motionZ += MathHelper.cos((float) multi) * max;
 	    	        }
 	    	    }
 	            break;

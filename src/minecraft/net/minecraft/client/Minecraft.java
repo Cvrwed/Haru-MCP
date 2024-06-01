@@ -162,7 +162,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.handshake.client.CHandshake;
 import net.minecraft.network.login.client.CPacketLoginStart;
 import net.minecraft.network.play.client.CPacketClientStatus;
-import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.profiler.IPlayerUsage;
 import net.minecraft.profiler.PlayerUsageSnooper;
 import net.minecraft.profiler.Profiler;
@@ -1358,32 +1357,30 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	}
 
 	private void sendClickBlockToController(boolean leftClick) {
-		if (!leftClick) {
-			this.leftClickCounter = 0;
-		}
+        if (!leftClick)
+            this.leftClickCounter = 0;
 
-		if (this.leftClickCounter <= 0 && !this.player.isUsingItem()) {
-			if (leftClick && this.objectMouseOver != null
-					&& this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-				BlockPos blockpos = this.objectMouseOver.getBlockPos();
+        if (this.leftClickCounter <= 0) {
+            if (leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+                BlockPos blockPos = this.objectMouseOver.getBlockPos();
 
-				if (this.world.getBlockState(blockpos).getBlock().getMaterial() != Material.air
-						&& this.playerController.onPlayerDamageBlock(blockpos, this.objectMouseOver.sideHit)) {
-					this.effectRenderer.addBlockHitEffects(blockpos, this.objectMouseOver.sideHit);
-					this.player.swingItem();
-				}
-			} else {
-				this.playerController.resetBlockRemoving();
-			}
-		}
+                if (this.world.getBlockState(blockPos).getBlock().getMaterial() != Material.air && this.playerController.onPlayerDamageBlock(blockPos, this.objectMouseOver.sideHit)) {
+                    this.effectRenderer.addBlockHitEffects(blockPos, this.objectMouseOver.sideHit);
+                    this.player.swingItem();
+                }
+            } else {
+                this.playerController.resetBlockRemoving();
+            }
+        }
 	}
 
 	public void leftClickMouse() {
 		if (this.leftClickCounter <= 0) {
 			new MouseEvent(0).call();
 			CPSHelper.registerClick(CPSHelper.MouseButton.LEFT);
+			
 			this.player.swingItem();
-
+			
 			if (this.objectMouseOver == null) {
 				logger.error("Null returned as \'hitResult\', this shouldn\'t happen!");
 

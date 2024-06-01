@@ -9,6 +9,7 @@ import cc.unknown.event.impl.move.MotionEvent.MotionType;
 import cc.unknown.event.impl.move.UpdateEvent;
 import cc.unknown.event.impl.move.UpdateEvent.Mode;
 import cc.unknown.event.impl.network.ChatSendEvent;
+import cc.unknown.event.impl.player.PushEvent;
 import cc.unknown.module.impl.player.NoSlow;
 import cc.unknown.module.impl.player.Sprint;
 import cc.unknown.utils.player.MoveUtil;
@@ -446,6 +447,12 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	}
 
 	protected boolean pushOutOfBlocks(double x, double y, double z) {
+		final PushEvent e = new PushEvent();
+		if (noClip) e.isCancelled();
+		Haru.instance.getEventBus().post(e);
+		
+		if (e.isCancelled()) return false;
+		
 		if (noClip) {
 			return false;
 		} else {
