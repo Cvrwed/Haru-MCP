@@ -10,11 +10,8 @@ import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Info;
-import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
-import cc.unknown.utils.Loona;
-import cc.unknown.utils.network.PacketUtil;
 import cc.unknown.utils.player.MoveUtil;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -23,7 +20,6 @@ import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.enums.EnumFacing;
-import net.minecraft.world.World;
 
 @Info(name = "Velocity", category = Category.Combat)
 public class Velocity extends Module {
@@ -62,44 +58,50 @@ public class Velocity extends Module {
 			}
 		}
 		
-		switch (mode.getMode()) {
-		case "Watchdog Boost":
-			if(mc.player.hurtTime == 8) {
-				MoveUtil.strafe(MoveUtil.getSpeed() * 0.7f);
-			}
-		case "Packet":
-			e.setX(e.getX() * horizontal.getInput() / 100.0);
-			e.setY(e.getY() * vertical.getInput() / 100.0);
-			e.setZ(e.getZ() * horizontal.getInput() / 100.0);
-			break;
-		case "Ground Grim":
-			if (PlayerUtil.isMoving() && mc.player.onGround) {
-				e.setCancelled(true);
-				reset = true;
-			}
-			break;
-		case "Intave":
-			reset = true;
-			break;
-		case "Minemen":
-			if (ticks > 14) {
-				e.setX(e.getX() / 42000.0);
-				e.setY(e.getY() / 8000.0);
-				e.setZ(e.getZ() / 42000.0);
-				e.setCancelled(true);
-				ticks = 0;
-			}
-			break;
-		case "Universocraft":
-            adjustPlayerMovement(player -> {
-                player.motionY = 0.42;
-                float yawRadians = (float) Math.toRadians(/*player.rotationYaw*/ 1.2224324);
-                player.motionX -= MathHelper.sin(yawRadians) * 0.0000001;
-                player.motionZ += MathHelper.cos(yawRadians) * 0.0000001;
-            });
-			break;
-		}
+	    String mode = this.mode.getMode();
+	    switch (mode) {
+	        case "Watchdog Boost":
+	            if (mc.player.hurtTime == 8) {
+	                MoveUtil.strafe(MoveUtil.getSpeed() * 0.7f);
+	            }
+	            break;
 
+	        case "Packet":
+	            adjustKnockBack(e, horizontal.getInput(), vertical.getInput());
+	            break;
+
+	        case "Ground Grim":
+	            if (PlayerUtil.isMoving() && mc.player.onGround) {
+	                e.setCancelled(true);
+	                reset = true;
+	            }
+	            break;
+
+	        case "Intave":
+	            reset = true;
+	            break;
+
+	        case "Minemen":
+	            if (ticks > 14) {
+	                adjustKnockBack(e, 1 / 42000.0, 1 / 8000.0);
+	                e.setCancelled(true);
+	                ticks = 0;
+	            }
+	            break;
+
+	        case "Universocraft":
+	            adjustPlayerMovement(player -> {
+	                player.motionY = 0.42;
+	                float yawRadians = (float) Math.toRadians(player.rotationYaw);
+	                player.motionX -= MathHelper.sin(yawRadians) * 0.0000001;
+	                player.motionZ += MathHelper.cos(yawRadians) * 0.0000001;
+	            });
+	            break;
+
+	        default:
+	            // Handle unexpected modes if necessary
+	            break;
+	    }
 	}
 
 	@EventLink
@@ -123,36 +125,44 @@ public class Velocity extends Module {
 
 	@EventLink
 	public void onPre(MotionEvent e) {
-		if (PlayerUtil.inGame() && e.isPre()) {
-			switch (mode.getMode()) {
-			case "Verus":
-				if (mc.player.hurtTime == 10 - MathHelper.randomValue(3, 4)) {
-					mc.player.motionX = 0.0D;
-					mc.player.motionY = 0.0D;
-					mc.player.motionZ = 0.0D;
-				}
-				break;
-			case "Intave":
-				intaveTick++;
-				if (reset && mc.player.hurtTime == 2) {
-					if (mc.player.onGround && intaveTick % 2 == 0) {
-						mc.player.jump();
-						intaveTick = 0;
-					}
-					reset = false;
-				}
-				break;
-			case "Polar":
-	            if(mc.player.hurtTime >= 1 && mc.player.hurtTime < 6) {
-	                double multi = 1.2224324, min = 0.1, max = 0.5;
-	                if (PlayerUtil.isMoving() && mc.player.onGround && (Math.abs(mc.player.motionX) > min && Math.abs(mc.player.motionZ) > min) && (Math.abs(mc.player.motionX) < max && Math.abs(mc.player.motionZ) < max)) {
-	                    mc.player.motionX -= Math.sin(multi) * min;
-	                    mc.player.motionZ += Math.cos(multi) * max;
-	                }
-	            }
-				break;
-			}
-		}
+	    if (!PlayerUtil.inGame() || !e.isPre()) {
+	        return;
+	    }
+
+	    String mode = this.mode.getMode();
+	    switch (mode) {
+	        case "Verus":
+	    	    if (mc.player.hurtTime == 10 - MathHelper.randomValue(3, 4)) {
+	    	        mc.player.motionX = 0.0D;
+	    	        mc.player.motionY = 0.0D;
+	    	        mc.player.motionZ = 0.0D;
+	    	    }
+	            break;
+	        case "Intave":
+	    	    intaveTick++;
+	    	    if (reset && mc.player.hurtTime == 2) {
+	    	        if (mc.player.onGround && intaveTick % 2 == 0) {
+	    	            mc.player.jump();
+	    	            intaveTick = 0;
+	    	        }
+	    	        reset = false;
+	    	    }
+	            break;
+	        case "Polar":
+	    	    if (mc.player.hurtTime >= 1 && mc.player.hurtTime < 6) {
+	    	        double multi = 1.2224324;
+	    	        double min = 0.1;
+	    	        double max = 0.5;
+	    	        if (PlayerUtil.isMoving() && mc.player.onGround && isValidMotion(mc.player.motionX, min, max) && isValidMotion(mc.player.motionZ, min, max)) {
+	    	            mc.player.motionX -= Math.sin(multi) * min;
+	    	            mc.player.motionZ += Math.cos(multi) * max;
+	    	        }
+	    	    }
+	            break;
+	        default:
+	        	// Handle unexpected modes if necessary
+	            break;
+	    }
 	}
 
 	private boolean checkAir(BlockPos blockPos) {
@@ -166,8 +176,7 @@ public class Velocity extends Module {
 
 		if (mc.player != null) {
 			mc.getNetHandler().sendSilent(new CPacketPlayer(true));
-			mc.getNetHandler().sendSilent(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK,
-					blockPos, EnumFacing.DOWN));
+			mc.getNetHandler().sendSilent(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, blockPos, EnumFacing.DOWN));
 		}
 
 		mc.world.setBlockToAir(blockPos);
@@ -178,4 +187,14 @@ public class Velocity extends Module {
     private void adjustPlayerMovement(Consumer<EntityPlayerSP> adjuster) {
         adjuster.accept(mc.player);
     }
+    
+    private void adjustKnockBack(KnockBackEvent e, double horizontalFactor, double verticalFactor) {
+        e.setX(e.getX() * horizontalFactor);
+        e.setY(e.getY() * verticalFactor);
+        e.setZ(e.getZ() * horizontalFactor);
+    }
+
+	private boolean isValidMotion(double motion, double min, double max) {
+	    return Math.abs(motion) > min && Math.abs(motion) < max;
+	}
 }

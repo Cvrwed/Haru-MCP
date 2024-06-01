@@ -66,7 +66,7 @@ public enum ClickUtil implements Loona {
 				+ clicker.getLeftCPS().getInputMin();
 		Mouse.poll();
 
-		if (mc.currentScreen != null || !mc.inGameHasFocus || checkScreen() || checkHit()) {
+		if (mc.currentScreen != null || !mc.inGameHasFocus || checkScreen()) {
 			return;
 		}
 
@@ -101,7 +101,7 @@ public enum ClickUtil implements Loona {
 
 		Mouse.poll();
 
-		if (mc.currentScreen != null || !mc.inGameHasFocus || checkScreen() || checkHit()) {
+		if (mc.currentScreen != null || !mc.inGameHasFocus || checkScreen()) {
 			return;
 		}
 
@@ -130,7 +130,7 @@ public enum ClickUtil implements Loona {
 	public void ravenLeftClick() {
 		AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
 
-		if (mc.currentScreen != null || !mc.inGameHasFocus || checkScreen() || checkHit()) {
+		if (mc.currentScreen != null || !mc.inGameHasFocus || checkScreen()) {
 			return;
 		}
 
@@ -198,21 +198,6 @@ public enum ClickUtil implements Loona {
 
 		this.leftUpTime = System.currentTimeMillis() + delay;
 		this.leftDownTime = System.currentTimeMillis() + delay / 3L - (long) this.rand.nextInt(10); // 10
-	}
-
-	public boolean hitSelectLogic() {
-	    AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
-
-	    if (clicker.getHitSelect().isToggled()) {
-	        if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-	            Entity target = mc.objectMouseOver.entityHit;
-	            if (target instanceof EntityPlayer) {
-	                EntityPlayer targetPlayer = (EntityPlayer) target;
-	                return PlayerUtil.lookingAtPlayer(mc.player, targetPlayer, clicker.getHitSelectDistance().getInput());
-	            }
-	        }
-	    }
-	    return false;
 	}
 
 	public boolean breakBlockLogic() {
@@ -427,12 +412,7 @@ public enum ClickUtil implements Loona {
 	private boolean checkScreen() {
 		return mc.currentScreen != null || mc.currentScreen instanceof GuiInventory || mc.currentScreen instanceof GuiChest;
 	}
-	
-	private boolean checkHit() {
-		AutoClick left = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
-		return (left.getHitSelect().isToggled() && !hitSelectLogic());
-	}
-	
+
 	public void shouldInvClick() {
 		if (Mouse.isButtonDown(0) && (Keyboard.isKeyDown(54) || Keyboard.isKeyDown(42))) {
 			invClick++;

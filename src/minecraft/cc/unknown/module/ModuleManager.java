@@ -35,7 +35,7 @@ public class ModuleManager implements Loona {
 				new AimAssist(),
 				new AutoBlock(),
 				new Criticals(),
-				//new BlockHit(),
+				new BlockHit(),
 				new KeepSprint(),
 				new JumpReset(),
 				new SprintReset(),

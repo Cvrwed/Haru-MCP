@@ -33,37 +33,19 @@ public class Flight extends Module {
 
 	@Override
 	public void onEnable() {
-		if (PlayerUtil.inGame()) {
-			for (TimedPacket data : packetQueue) {
-				PacketUtil.handlePacket((Packet<? extends INetHandlerPlayClient>) data.getPacket());
-			}
-		}
-		packetQueue.clear();
-		
-		ticks = 0;
-		damageTaken = false;
-		release = false;
+		handleFlush();
 	}
 
 	@Override
 	public void onDisable() {
-		if (PlayerUtil.inGame()) {
-			for (TimedPacket data : packetQueue) {
-				PacketUtil.handlePacket((Packet<? extends INetHandlerPlayClient>) data.getPacket());
-			}
-		}
-		packetQueue.clear();
-		
-		ticks = 0;
-		damageTaken = false;
-		release = false;
+		handleFlush();
 	}
 
 	@EventLink
 	public void onPacket(PacketEvent e) {
 		Packet packet = e.getPacket();
 
-		switch (mode.getMode()) {
+		switch (mode.getMode()) { // necesita el viaversion fix para k sirva
 		case "Polar":
 
 			if (e.isReceive()) {
@@ -92,5 +74,17 @@ public class Flight extends Module {
 			}
 			break;
 		}
+	}
+	
+	private void handleFlush() {
+	    if (PlayerUtil.inGame()) {
+	        for (TimedPacket data : packetQueue) {
+	            PacketUtil.handlePacket((Packet<? extends INetHandlerPlayClient>) data.getPacket());
+	        }
+	    }
+	    packetQueue.clear();
+	    ticks = 0;
+	    damageTaken = false;
+	    release = false;
 	}
 }

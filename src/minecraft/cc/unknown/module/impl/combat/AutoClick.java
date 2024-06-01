@@ -31,8 +31,6 @@ public class AutoClick extends Module {
 	private final DoubleSliderValue leftCPS = new DoubleSliderValue("Left Click Speed", 16, 19, 1, 80, 0.05);
 	private final BooleanValue weaponOnly = new BooleanValue("Only Use Weapons", false);
 	private final BooleanValue breakBlocks = new BooleanValue("Break Blocks", false);
-	private final BooleanValue hitSelect = new BooleanValue("Precise Hit Selection", false);
-	private final SliderValue hitSelectDistance = new SliderValue("Hit Range", 10, 1, 20, 5);
 	private BooleanValue invClicker = new BooleanValue("Auto-Click in Inventory", false);
 	private ModeValue invMode = new ModeValue("Inventory Click Mode", "Pre", "Pre", "Post");
 	private SliderValue invDelay = new SliderValue("Click Tick Delay", 5, 0, 10, 1);
@@ -46,7 +44,7 @@ public class AutoClick extends Module {
 	private ModeValue clickStyle = new ModeValue("Click Style", "Raven", "Raven", "Kuru", "Megumi");
 
 	public AutoClick() {
-		this.registerSetting(clickMode, leftCPS, weaponOnly, breakBlocks, hitSelect, hitSelectDistance, invClicker,
+		this.registerSetting(clickMode, leftCPS, weaponOnly, breakBlocks, invClicker,
 				invMode, invDelay, rightCPS, onlyBlocks, allowEat, allowBow, clickEvent,
 				clickStyle);
 	}
@@ -172,14 +170,6 @@ public class AutoClick extends Module {
 
 	public BooleanValue getBreakBlocks() {
 		return breakBlocks;
-	}
-
-	public BooleanValue getHitSelect() {
-		return hitSelect;
-	}
-
-	public SliderValue getHitSelectDistance() {
-		return hitSelectDistance;
 	}
 
 	public SliderValue getInvDelay() {

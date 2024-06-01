@@ -90,10 +90,6 @@ public class JumpReset extends Module {
 			++counter;
 			return;
 		}
-		
-		if (mode.is("Jump")) {
-			reset = true;
-		}
 	}
 
 	@EventLink
