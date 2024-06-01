@@ -26,19 +26,30 @@ public enum CombatUtil implements Loona {
 	    }
 	}
 
-    public boolean isTeam(Entity entity) {
-        if (!(entity instanceof EntityPlayer)) {
-            return false;
-        }
-        EntityPlayer otherPlayer = (EntityPlayer) entity;
-        ScorePlayerTeam otherTeam = (ScorePlayerTeam) otherPlayer.getTeam();
-        ScorePlayerTeam myTeam = (ScorePlayerTeam) mc.player.getTeam();
+	public boolean isTeam(EntityPlayer player, Entity entity) {
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).getTeam() != null && player.getTeam() != null) {
+			Character entity_3 = entity.getDisplayName().getFormattedText().charAt(3);
+			Character player_3 = player.getDisplayName().getFormattedText().charAt(3);
+			Character entity_2 = entity.getDisplayName().getFormattedText().charAt(2);
+			Character player_2 = player.getDisplayName().getFormattedText().charAt(2);
+			boolean isTeam = false;
+			if (entity_3.equals(player_3) && entity_2.equals(player_2)) {
+				isTeam = true;
+			} else {
+				Character entity_1 = entity.getDisplayName().getFormattedText().charAt(1);
+				Character player_1 = player.getDisplayName().getFormattedText().charAt(1);
+				Character entity_0 = entity.getDisplayName().getFormattedText().charAt(0);
+				Character player_0 = player.getDisplayName().getFormattedText().charAt(0);
+				if (entity_1.equals(player_1) && Character.isDigit(0) && entity_0.equals(player_0)) {
+					isTeam = true;
+				}
+			}
 
-        if (myTeam != null && otherTeam != null) {
-            return myTeam.equals(otherTeam);
-        }
-        return false;
-    }
+			return isTeam;
+		} else {
+			return true;
+		}
+	}
 
 	public float rotsToFloat(final float[] rots, final int m) {
 		if (m == 1) {
