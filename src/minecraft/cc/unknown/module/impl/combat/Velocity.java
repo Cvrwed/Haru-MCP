@@ -1,5 +1,7 @@
 package cc.unknown.module.impl.combat;
 
+import java.util.function.Consumer;
+
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.move.MotionEvent;
 import cc.unknown.event.impl.network.KnockBackEvent;
@@ -26,8 +28,8 @@ import net.minecraft.world.World;
 @Info(name = "Velocity", category = Category.Combat)
 public class Velocity extends Module {
 
-	public ModeValue mode = new ModeValue("Mode", "Packet", "Packet", "Verus", "Ground Grim", "Polar", "Minemen", "Watchdog Boost",
-			"Intave");
+	public ModeValue mode = new ModeValue("Mode", "Universocraft", "Packet", "Verus", "Ground Grim", "Polar", "Minemen", "Watchdog Boost",
+			"Intave", "Universocraft");
 	public SliderValue horizontal = new SliderValue("Horizontal", 90, -100, 100, 1);
 	public SliderValue vertical = new SliderValue("Vertical", 100, -100, 100, 1);
 	public SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
@@ -87,6 +89,14 @@ public class Velocity extends Module {
 				e.setCancelled(true);
 				ticks = 0;
 			}
+			break;
+		case "Universocraft":
+            adjustPlayerMovement(player -> {
+                player.motionY = 0.42;
+                float yawRadians = (float) Math.toRadians(/*player.rotationYaw*/ 1.2224324);
+                player.motionX -= MathHelper.sin(yawRadians) * 0.0000001;
+                player.motionZ += MathHelper.cos(yawRadians) * 0.0000001;
+            });
 			break;
 		}
 
@@ -164,4 +174,8 @@ public class Velocity extends Module {
 
 		return true;
 	}
+	
+    private void adjustPlayerMovement(Consumer<EntityPlayerSP> adjuster) {
+        adjuster.accept(mc.player);
+    }
 }
