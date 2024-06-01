@@ -64,6 +64,7 @@ public class ModuleManager implements Loona {
 				new MidClick(),
 				new MusicPlayer(),
 				new Inventory(),
+				new SelfTrap(),
 				
 				// player
 				new AntiFireBall(),
