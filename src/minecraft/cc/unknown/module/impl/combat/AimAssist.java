@@ -166,14 +166,16 @@ public class AimAssist extends Module {
 		switch (mode.getMode()) {
 		case "Distance": {
 			targets.sort(Comparator.comparingDouble(entity -> mc.player.getDistanceToEntity(entity)));
-			}
-			break;
+			
+		}
+		break;
 		case "Angle": {
 			targets.sort((entity1, entity2) -> {
 				float[] rot1 = RotationManager.getRotations(entity1);
 				float[] rot2 = RotationManager.getRotations(entity2);
 				return (int) ((mc.player.rotationYaw - rot1[0]) - (mc.player.rotationYaw - rot2[0]));
-			});}
+			});
+		}
 		break;
 		case "Armor": {
 			targets.sort(Comparator.comparingInt(entity -> (entity instanceof EntityPlayer ? ((EntityPlayer) entity).inventory.getTotalArmorValue() : (int) entity.getHealth())));
@@ -182,7 +184,7 @@ public class AimAssist extends Module {
 		case "Low Health": {
 			targets.sort(Comparator.comparingDouble(entity -> ((EntityPlayer) entity).getHealth()).reversed());
 		}
-			break;
+		break;
 		}
 
     return targets.isEmpty() ? null : targets.get(0);

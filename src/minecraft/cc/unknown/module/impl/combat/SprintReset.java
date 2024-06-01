@@ -58,8 +58,10 @@ public class SprintReset extends Module {
 
 	@EventLink
 	public void onPacket(PacketEvent e) {		
-		if (chance.getInput() != 100.0D && Math.random() >= chance.getInput() / 100.0D) {
-			return;
+		if (chance.getInput() != 100.0D) {
+			if (Math.random() >= chance.getInput() / 100.0D) {
+				return;
+			}
 		}
 
 		Packet<?> p = e.getPacket();

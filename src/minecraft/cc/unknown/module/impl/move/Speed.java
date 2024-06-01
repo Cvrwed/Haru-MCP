@@ -1,4 +1,4 @@
-package cc.unknown.module.impl.player;
+package cc.unknown.module.impl.move;
 
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.move.MotionEvent;
@@ -9,7 +9,7 @@ import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.utils.player.MoveUtil;
 import cc.unknown.utils.player.PlayerUtil;
 
-@Info(name = "Speed", category = Category.Player)
+@Info(name = "Speed", category = Category.Move)
 public class Speed extends Module {
 
 	private ModeValue mode = new ModeValue("Mode", "Verus", "Verus");

@@ -60,10 +60,12 @@ public class Blink extends Module {
 		packets.clear();
 
 		if (renderPosition.is("Fake")) {
-			fakePlayer = new EntityOtherPlayerMP(mc.world, mc.player.getGameProfile());
-			fakePlayer.setRotationYawHead(mc.player.rotationYawHead);
-			fakePlayer.copyLocationAndAnglesFrom(mc.player);
-			mc.world.addEntityToWorld(fakePlayer.getEntityId(), fakePlayer);
+			if (mc.player != null) {
+				fakePlayer = new EntityOtherPlayerMP(mc.world, mc.player.getGameProfile());
+				fakePlayer.setRotationYawHead(mc.player.rotationYawHead);
+				fakePlayer.copyLocationAndAnglesFrom(mc.player);
+				mc.world.addEntityToWorld(fakePlayer.getEntityId(), fakePlayer);
+			}
 		}
 	}
 
@@ -74,11 +76,11 @@ public class Blink extends Module {
 		if (mc.player == null)
 			return;
 		releasePackets();
-		
-        if (fakePlayer != null) {
-            mc.world.removeEntityFromWorld(fakePlayer.getEntityId());
-            fakePlayer = null;
-        }
+
+		if (fakePlayer != null) {
+			mc.world.removeEntityFromWorld(fakePlayer.getEntityId());
+			fakePlayer = null;
+		}
 	}
 
 	@EventLink
