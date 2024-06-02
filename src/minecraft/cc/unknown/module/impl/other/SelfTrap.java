@@ -14,7 +14,9 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
 @Info(name = "SelfTrap", category = Category.Other)
-public class SelfTrap extends Module {
+
+
+public class SelfTrap extends Module{
 	public ModeValue mode = new ModeValue("Mode", "Slow", "Slow", "Normal");
 	public BooleanValue autoFindBlock = new BooleanValue("Auto find block", false);
 	public int ticks = 0;
@@ -57,6 +59,9 @@ public class SelfTrap extends Module {
 		mc.rightClickDelayTimer = 0;
 		mc.gameSettings.keyBindUseItem.pressed = true;
 		++ticks;
+
+		if(mode.equals("Normal"));{}
+
 		if (mode.is("Normal")) {
 			if (ticks >= 0 && ticks <= 4) {
 				RotationManager.getNormalRotVector(mc.player.rotationYaw + 45F, 0f);
