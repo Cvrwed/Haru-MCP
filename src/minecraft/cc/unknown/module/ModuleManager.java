@@ -11,6 +11,7 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.combat.*;
 import cc.unknown.module.impl.exploit.*;
+import cc.unknown.module.impl.move.Speed;
 import cc.unknown.module.impl.other.*;
 import cc.unknown.module.impl.player.*;
 import cc.unknown.module.impl.settings.Helper;
@@ -50,6 +51,9 @@ public class ModuleManager implements Loona {
 				new BackTrack(),
 				//new Ping(),
 				
+				// move
+				new Speed(),
+				
 				// other
 				new Autoplay(),
 				new AutoLeave(),
@@ -70,7 +74,6 @@ public class ModuleManager implements Loona {
 				new FastPlace(),
 				new BridgeAssist(),
 				new LegitScaffold(),
-				new Speed(),
 				new Sprint(),
 				new Blink(),
 				new Timer(),

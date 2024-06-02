@@ -7,54 +7,50 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.world.World;
 
-public class SPacketEntityStatus implements Packet<INetHandlerPlayClient>
-{
-    private int entityId;
-    private byte logicOpcode;
+public class SPacketEntityStatus implements Packet<INetHandlerPlayClient> {
+	private int entityId;
+	private byte logicOpcode;
 
-    public SPacketEntityStatus()
-    {
-    }
+	public SPacketEntityStatus() {
+	}
 
-    public SPacketEntityStatus(Entity entityIn, byte opCodeIn)
-    {
-        this.entityId = entityIn.getEntityId();
-        this.logicOpcode = opCodeIn;
-    }
+	public SPacketEntityStatus(Entity entityIn, byte opCodeIn) {
+		this.entityId = entityIn.getEntityId();
+		this.logicOpcode = opCodeIn;
+	}
 
-    /**
-     * Reads the raw packet data from the data stream.
-     */
-    public void readPacketData(PacketBuffer buf) throws IOException
-    {
-        this.entityId = buf.readInt();
-        this.logicOpcode = buf.readByte();
-    }
+	/**
+	 * Reads the raw packet data from the data stream.
+	 */
+	public void readPacketData(PacketBuffer buf) throws IOException {
+		this.entityId = buf.readInt();
+		this.logicOpcode = buf.readByte();
+	}
 
-    /**
-     * Writes the raw packet data to the data stream.
-     */
-    public void writePacketData(PacketBuffer buf) throws IOException
-    {
-        buf.writeInt(this.entityId);
-        buf.writeByte(this.logicOpcode);
-    }
+	/**
+	 * Writes the raw packet data to the data stream.
+	 */
+	public void writePacketData(PacketBuffer buf) throws IOException {
+		buf.writeInt(this.entityId);
+		buf.writeByte(this.logicOpcode);
+	}
 
-    /**
-     * Passes this Packet on to the NetHandler for processing.
-     */
-    public void processPacket(INetHandlerPlayClient handler)
-    {
-        handler.handleEntityStatus(this);
-    }
+	/**
+	 * Passes this Packet on to the NetHandler for processing.
+	 */
+	public void processPacket(INetHandlerPlayClient handler) {
+		handler.handleEntityStatus(this);
+	}
 
-    public Entity getEntity(World worldIn)
-    {
-        return worldIn.getEntityByID(this.entityId);
-    }
+	public Entity getEntity(World worldIn) {
+		return worldIn.getEntityByID(this.entityId);
+	}
 
-    public byte getOpCode()
-    {
-        return this.logicOpcode;
-    }
+	public byte getOpCode() {
+		return this.logicOpcode;
+	}
+
+	public int getEntityId() {
+		return entityId;
+	}
 }

@@ -8,77 +8,8 @@ import cc.unknown.utils.Loona;
 import io.netty.util.concurrent.GenericFutureListener;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.SPacketKeepAlive;
-import net.minecraft.network.play.server.SPacketJoinGame;
-import net.minecraft.network.play.server.SPacketChat;
-import net.minecraft.network.play.server.SPacketTimeUpdate;
-import net.minecraft.network.play.server.SPacketEntityEquipment;
-import net.minecraft.network.play.server.SPacketSpawnPosition;
-import net.minecraft.network.play.server.SPacketUpdateHealth;
-import net.minecraft.network.play.server.SPacketRespawn;
-import net.minecraft.network.play.server.SPacketPlayerPosLook;
-import net.minecraft.network.play.server.SPacketHeldItemChange;
-import net.minecraft.network.play.server.SPacketUseBed;
-import net.minecraft.network.play.server.SPacketAnimation;
-import net.minecraft.network.play.server.SPacketSpawnPlayer;
-import net.minecraft.network.play.server.SPacketCollectItem;
-import net.minecraft.network.play.server.SPacketSpawnObject;
-import net.minecraft.network.play.server.SPacketSpawnMob;
-import net.minecraft.network.play.server.SPacketSpawnPainting;
-import net.minecraft.network.play.server.SPacketSpawnExperienceOrb;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
-import net.minecraft.network.play.server.SPacketDestroyEntities;
-import net.minecraft.network.play.server.SPacketEntity;
-import net.minecraft.network.play.server.SPacketEntityTeleport;
-import net.minecraft.network.play.server.SPacketEntityHeadLook;
-import net.minecraft.network.play.server.SPacketEntityStatus;
-import net.minecraft.network.play.server.SPacketEntityAttach;
-import net.minecraft.network.play.server.SPacketEntityMetadata;
-import net.minecraft.network.play.server.SPacketEntityEffect;
-import net.minecraft.network.play.server.SPacketRemoveEntityEffect;
-import net.minecraft.network.play.server.SPacketSetExperience;
-import net.minecraft.network.play.server.SPacketEntityProperties;
-import net.minecraft.network.play.server.SPacketChunkData;
-import net.minecraft.network.play.server.SPacketMultiBlockChange;
-import net.minecraft.network.play.server.SPacketBlockChange;
-import net.minecraft.network.play.server.SPacketBlockAction;
-import net.minecraft.network.play.server.SPacketBlockBreakAnim;
-import net.minecraft.network.play.server.SPacketMapChunkBulk;
-import net.minecraft.network.play.server.SPacketExplosion;
-import net.minecraft.network.play.server.SPacketEffect;
-import net.minecraft.network.play.server.SPacketSoundEffect;
-import net.minecraft.network.play.server.SPacketParticles;
-import net.minecraft.network.play.server.SPacketChangeGameState;
-import net.minecraft.network.play.server.SPacketSpawnGlobalEntity;
-import net.minecraft.network.play.server.SPacketOpenWindow;
-import net.minecraft.network.play.server.SPacketCloseWindow;
-import net.minecraft.network.play.server.SPacketSetSlot;
-import net.minecraft.network.play.server.SPacketWindowItems;
-import net.minecraft.network.play.server.SPacketWindowProperty;
-import net.minecraft.network.play.server.SPacketConfirmTransaction;
-import net.minecraft.network.play.server.SPacketUpdateSign;
-import net.minecraft.network.play.server.SPacketMaps;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.network.play.server.SPacketSignEditorOpen;
-import net.minecraft.network.play.server.SPacketStatistics;
-import net.minecraft.network.play.server.SPacketPlayerListItem;
-import net.minecraft.network.play.server.SPacketPlayerAbilities;
-import net.minecraft.network.play.server.SPacketTabComplete;
-import net.minecraft.network.play.server.SPacketScoreboardObjective;
-import net.minecraft.network.play.server.SPacketUpdateScore;
-import net.minecraft.network.play.server.SPacketDisplayScoreboard;
-import net.minecraft.network.play.server.SPacketTeams;
-import net.minecraft.network.play.server.SPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketClientDisconnect;
-import net.minecraft.network.play.server.SPacketServerDifficulty;
-import net.minecraft.network.play.server.SPacketCombatEvent;
-import net.minecraft.network.play.server.SPacketCamera;
-import net.minecraft.network.play.server.SPacketWorldBorder;
-import net.minecraft.network.play.server.SPacketTitle;
-import net.minecraft.network.play.server.SPacketSetCompressionLevel;
-import net.minecraft.network.play.server.SPacketPlayerListHeaderFooter;
-import net.minecraft.network.play.server.SPacketResourcePackSend;
-import net.minecraft.network.play.server.SPacketUpdateEntityNBT;
+import net.minecraft.network.play.INetHandlerPlayClient;
+import net.minecraft.network.play.server.*;
 
 public class PacketUtil implements Loona {
     public static final ConcurrentLinkedQueue<TimedPacket> packets = new ConcurrentLinkedQueue<>();
@@ -87,18 +18,166 @@ public class PacketUtil implements Loona {
         NetworkManager netManager = mc.getNetHandler() != null ? mc.getNetHandler().getNetworkManager() : null;
         if (netManager != null && netManager.isChannelOpen()) {
             netManager.flushOutboundQueue();
-            for (Packet<?> packet : i) {
-                netManager.dispatchPacket(packet, null);
+            for (Packet<?> p : i) {
+                netManager.dispatchPacket(p, null);
             }
         } else if (netManager != null) {
             try {
                 netManager.readWriteLock.writeLock().lock();
-                for (Packet<?> packet : i) {
-                    netManager.outboundPacketsQueue.add(new NetworkManager.InboundHandlerTuplePacketListener(packet, Arrays.asList((GenericFutureListener<? extends Future<? super Void>>) null).toArray(new GenericFutureListener[0])));
+                for (Packet<?> p : i) {
+                    netManager.outboundPacketsQueue.add(new NetworkManager.InboundHandlerTuplePacketListener(p, Arrays.asList((GenericFutureListener<? extends Future<? super Void>>) null).toArray(new GenericFutureListener[0])));
                 }
             } finally {
                 netManager.readWriteLock.writeLock().unlock();
             }
+        }
+    }
+	
+	public static void handlePacket(Packet<? extends INetHandlerPlayClient> p) {
+		INetHandlerPlayClient netHandler = (INetHandlerPlayClient) mc.getNetHandler();
+
+        if (p instanceof SPacketKeepAlive) {
+            netHandler.handleKeepAlive((SPacketKeepAlive) p);
+        } else if (p instanceof  SPacketJoinGame) {
+            netHandler.handleJoinGame((SPacketJoinGame) p);
+        } else if (p instanceof SPacketChat) {
+            netHandler.handleChat((SPacketChat) p);
+        } else if (p instanceof SPacketTimeUpdate) {
+            netHandler.handleTimeUpdate((SPacketTimeUpdate) p);
+        } else if (p instanceof SPacketEntityEquipment) {
+            netHandler.handleEntityEquipment((SPacketEntityEquipment) p);
+        } else if (p instanceof SPacketSpawnPosition) {
+            netHandler.handleSpawnPosition((SPacketSpawnPosition) p);
+        } else if (p instanceof SPacketUpdateHealth) {
+            netHandler.handleUpdateHealth((SPacketUpdateHealth) p);
+        } else if (p instanceof SPacketRespawn) {
+            netHandler.handleRespawn((SPacketRespawn) p);
+        } else if (p instanceof SPacketPlayerPosLook) {
+            netHandler.handlePlayerPosLook((SPacketPlayerPosLook) p);
+        } else if (p instanceof SPacketHeldItemChange) {
+            netHandler.handleHeldItemChange((SPacketHeldItemChange) p);
+        } else if (p instanceof SPacketSpawnPainting) {
+            netHandler.handleSpawnPainting((SPacketSpawnPainting) p);
+        } else if (p instanceof SPacketUseBed) {
+            netHandler.handleUseBed((SPacketUseBed) p);
+        } else if (p instanceof SPacketAnimation) {
+            netHandler.handleAnimation((SPacketAnimation) p);
+        } else if (p instanceof SPacketSpawnPlayer) {
+            netHandler.handleSpawnPlayer((SPacketSpawnPlayer) p);
+        } else if (p instanceof SPacketCollectItem) {
+            netHandler.handleCollectItem((SPacketCollectItem) p);
+        } else if (p instanceof SPacketSpawnObject) {
+            netHandler.handleSpawnObject((SPacketSpawnObject) p);
+        } else if (p instanceof SPacketSpawnMob) {
+            netHandler.handleSpawnMob((SPacketSpawnMob) p);
+        } else if (p instanceof SPacketSpawnExperienceOrb) {
+            netHandler.handleSpawnExperienceOrb((SPacketSpawnExperienceOrb) p);
+        } else if (p instanceof SPacketEntityVelocity) {
+            netHandler.handleEntityVelocity((SPacketEntityVelocity) p);
+        } else if (p instanceof SPacketDestroyEntities) {
+            netHandler.handleDestroyEntities((SPacketDestroyEntities) p);
+        } else if (p instanceof SPacketEntity) {
+            netHandler.handleEntityMovement((SPacketEntity) p);
+        } else if (p instanceof SPacketEntityTeleport) {
+            netHandler.handleEntityTeleport((SPacketEntityTeleport) p);
+        } else if (p instanceof SPacketEntityStatus) {
+            netHandler.handleEntityStatus((SPacketEntityStatus) p);
+        } else if (p instanceof SPacketEntityHeadLook) {
+            netHandler.handleEntityHeadLook((SPacketEntityHeadLook) p);
+        } else if (p instanceof SPacketEntityAttach) {
+            netHandler.handleEntityAttach((SPacketEntityAttach) p);
+        } else if (p instanceof SPacketEntityMetadata) {
+            netHandler.handleEntityMetadata((SPacketEntityMetadata) p);
+        } else if (p instanceof SPacketEntityEffect) {
+            netHandler.handleEntityEffect((SPacketEntityEffect) p);
+        } else if (p instanceof SPacketRemoveEntityEffect) {
+            netHandler.handleRemoveEntityEffect((SPacketRemoveEntityEffect) p);
+        } else if (p instanceof SPacketSetExperience) {
+            netHandler.handleSetExperience((SPacketSetExperience) p);
+        } else if (p instanceof SPacketEntityProperties) {
+            netHandler.handleEntityProperties((SPacketEntityProperties) p);
+        } else if (p instanceof SPacketChunkData) {
+            netHandler.handleChunkData((SPacketChunkData) p);
+        } else if (p instanceof SPacketMultiBlockChange) {
+            netHandler.handleMultiBlockChange((SPacketMultiBlockChange) p);
+        } else if (p instanceof SPacketBlockChange) {
+            netHandler.handleBlockChange((SPacketBlockChange) p);
+        } else if (p instanceof SPacketBlockAction) {
+            netHandler.handleBlockAction((SPacketBlockAction) p);
+        } else if (p instanceof SPacketBlockBreakAnim) {
+            netHandler.handleBlockBreakAnim((SPacketBlockBreakAnim) p);
+        } else if (p instanceof SPacketMapChunkBulk) {
+            netHandler.handleMapChunkBulk((SPacketMapChunkBulk) p);
+        } else if (p instanceof SPacketExplosion) {
+            netHandler.handleExplosion((SPacketExplosion) p);
+        } else if (p instanceof SPacketEffect) {
+            netHandler.handleEffect((SPacketEffect) p);
+        } else if (p instanceof SPacketSoundEffect) {
+            netHandler.handleSoundEffect((SPacketSoundEffect) p);
+        } else if (p instanceof SPacketParticles) {
+            netHandler.handleParticles((SPacketParticles) p);
+        } else if (p instanceof SPacketChangeGameState) {
+            netHandler.handleChangeGameState((SPacketChangeGameState) p);
+        } else if (p instanceof SPacketSpawnGlobalEntity) {
+            netHandler.handleSpawnGlobalEntity((SPacketSpawnGlobalEntity) p);
+        } else if (p instanceof SPacketOpenWindow) {
+            netHandler.handleOpenWindow((SPacketOpenWindow) p);
+        } else if (p instanceof SPacketCloseWindow) {
+            netHandler.handleCloseWindow((SPacketCloseWindow) p);
+        } else if (p instanceof SPacketSetSlot) {
+            netHandler.handleSetSlot((SPacketSetSlot) p);
+        } else if (p instanceof SPacketWindowItems) {
+            netHandler.handleWindowItems((SPacketWindowItems) p);
+        } else if (p instanceof SPacketWindowProperty) {
+            netHandler.handleWindowProperty((SPacketWindowProperty) p);
+        } else if (p instanceof SPacketConfirmTransaction) {
+            netHandler.handleConfirmTransaction((SPacketConfirmTransaction) p);
+        } else if (p instanceof SPacketUpdateSign) {
+            netHandler.handleUpdateSign((SPacketUpdateSign) p);
+        } else if (p instanceof SPacketMaps) {
+            netHandler.handleMaps((SPacketMaps) p);
+        } else if (p instanceof SPacketUpdateTileEntity) {
+            netHandler.handleUpdateTileEntity((SPacketUpdateTileEntity) p);
+        } else if (p instanceof SPacketSignEditorOpen) {
+            netHandler.handleSignEditorOpen((SPacketSignEditorOpen) p);
+        } else if (p instanceof SPacketStatistics) {
+            netHandler.handleStatistics((SPacketStatistics) p);
+        } else if (p instanceof SPacketPlayerListItem) {
+            netHandler.handlePlayerListItem((SPacketPlayerListItem) p);
+        } else if (p instanceof SPacketPlayerAbilities) {
+            netHandler.handlePlayerAbilities((SPacketPlayerAbilities) p);
+        } else if (p instanceof SPacketTabComplete) {
+            netHandler.handleTabComplete((SPacketTabComplete) p);
+        } else if (p instanceof SPacketScoreboardObjective) {
+            netHandler.handleScoreboardObjective((SPacketScoreboardObjective) p);
+        } else if (p instanceof SPacketUpdateScore) {
+            netHandler.handleUpdateScore((SPacketUpdateScore) p);
+        } else if (p instanceof SPacketDisplayScoreboard) {
+            netHandler.handleDisplayScoreboard((SPacketDisplayScoreboard) p);
+        } else if (p instanceof SPacketTeams) {
+            netHandler.handleTeams((SPacketTeams) p);
+        } else if (p instanceof SPacketCustomPayload) {
+            netHandler.handleCustomPayload((SPacketCustomPayload) p);
+        } else if (p instanceof SPacketClientDisconnect) {
+            netHandler.handleDisconnect((SPacketClientDisconnect) p);
+        } else if (p instanceof SPacketServerDifficulty) {
+            netHandler.handleServerDifficulty((SPacketServerDifficulty) p);
+        } else if (p instanceof SPacketCombatEvent) {
+            netHandler.handleCombatEvent((SPacketCombatEvent) p);
+        } else if (p instanceof SPacketCamera) {
+            netHandler.handleCamera((SPacketCamera) p);
+        } else if (p instanceof SPacketWorldBorder) {
+            netHandler.handleWorldBorder((SPacketWorldBorder) p);
+        } else if (p instanceof SPacketTitle) {
+            netHandler.handleTitle((SPacketTitle) p);
+        } else if (p instanceof SPacketSetCompressionLevel) {
+            netHandler.handleSetCompressionLevel((SPacketSetCompressionLevel) p);
+        } else if (p instanceof SPacketPlayerListHeaderFooter) {
+            netHandler.handlePlayerListHeaderFooter((SPacketPlayerListHeaderFooter) p);
+        } else if (p instanceof SPacketResourcePackSend) {
+            netHandler.handleResourcePack((SPacketResourcePackSend) p);
+        } else if (p instanceof SPacketUpdateEntityNBT) {
+            netHandler.handleEntityNBT((SPacketUpdateEntityNBT) p);
         }
     }
 }

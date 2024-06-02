@@ -54,7 +54,11 @@ public class Velocity extends Module {
 
 	@EventLink
 	public void onKnockBack(KnockBackEvent e) {
-		if (chance.getInput() != 100.0D && Math.random() >= chance.getInput() / 100.0D) return;
+		if (chance.getInput() != 100.0D) {
+			if (Math.random() >= chance.getInput() / 100.0D) {
+				return;
+			}
+		}
 		
 		switch (mode.getMode()) {
 		case "WatchdogBoost":
