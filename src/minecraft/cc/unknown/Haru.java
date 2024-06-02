@@ -1,8 +1,5 @@
 package cc.unknown;
 
-import java.io.File;
-import java.io.IOException;
-
 import cc.unknown.command.CommandManager;
 import cc.unknown.config.ConfigManager;
 import cc.unknown.config.HudConfig;
@@ -10,8 +7,6 @@ import cc.unknown.event.impl.api.EventBus;
 import cc.unknown.module.ModuleManager;
 import cc.unknown.ui.clickgui.HaruGui;
 import cc.unknown.ui.clickgui.impl.theme.ThemeManager;
-import cc.unknown.utils.Loona;
-import cc.unknown.utils.network.waifu.ImageDownloader;
 import cc.unknown.utils.player.rotation.RotationManager;
 
 public enum Haru {
