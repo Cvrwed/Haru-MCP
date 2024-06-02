@@ -19,21 +19,19 @@ import net.minecraft.item.ItemStack;
 public class Scaffold extends Module{
 	
 	private ModeValue rotationMode = new ModeValue("Rotation Mode", "None", "None", "Static");
-	private ModeValue spoofMode = new ModeValue("Spoof Mode", "Switch", "Switch", "Silent");
 	private ModeValue sprintMode = new ModeValue("Sprint", "None", "None", "Vanilla");
-	private SliderValue timer = new SliderValue("Timer", 1, 0.19, 3, 0.1);
 	public RotationManager rotation, targetRotation, prevRotation;
 	
 	public Scaffold() {
-		this.registerSetting(rotationMode, spoofMode, sprintMode, timer);
+		this.registerSetting(rotationMode, sprintMode);
 	}
 	
 	@Override
 	public void onEnable() {
 		super.onEnable();
-		mc.timer.timerSpeed = timer.getInputToFloat();
-		}		
+	}		
 	
+	@Override
 	public void onDisable() {
 		mc.timer.timerSpeed = 1F;
 	}
