@@ -7,11 +7,9 @@ import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Info;
+import cc.unknown.module.impl.visuals.keystrokes.*;
+import cc.unknown.module.impl.visuals.keystrokes.gui.ConfigGui;
 import cc.unknown.module.setting.impl.BooleanValue;
-import cc.unknown.utils.keystrokes.KeyStroke;
-import cc.unknown.utils.keystrokes.RenderKeys;
-import cc.unknown.utils.keystrokes.RenderMouse;
-import cc.unknown.utils.keystrokes.gui.ConfigGui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 

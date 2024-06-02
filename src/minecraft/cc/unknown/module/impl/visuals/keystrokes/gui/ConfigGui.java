@@ -1,10 +1,9 @@
-package cc.unknown.utils.keystrokes.gui;
+package cc.unknown.module.impl.visuals.keystrokes.gui;
 
 import java.io.IOException;
 
 import cc.unknown.Haru;
-import cc.unknown.utils.keystrokes.KeyStroke;
-import net.minecraft.client.gui.GuiButton;
+import cc.unknown.module.impl.visuals.keystrokes.KeyStroke;
 import net.minecraft.client.gui.GuiScreen;
 
 public class ConfigGui extends GuiScreen {
@@ -58,6 +57,6 @@ public class ConfigGui extends GuiScreen {
 
 	@Override
 	public void onGuiClosed() {
-		Haru.instance.getHudConfig().saveHud();
+		Haru.instance.getHudConfig().savePositionHud();
 	}
 }

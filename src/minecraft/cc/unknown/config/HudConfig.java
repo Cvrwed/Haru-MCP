@@ -12,10 +12,10 @@ import java.util.Scanner;
 import java.util.StringJoiner;
 
 import cc.unknown.Haru;
+import cc.unknown.module.impl.visuals.keystrokes.KeyStroke;
 import cc.unknown.ui.clickgui.impl.CategoryComp;
 import cc.unknown.utils.Loona;
 import cc.unknown.utils.client.FuckUtil;
-import cc.unknown.utils.keystrokes.KeyStroke;
 import net.minecraft.util.MathHelper;
 
 public class HudConfig implements Loona {
@@ -38,7 +38,7 @@ public class HudConfig implements Loona {
 		}
 	}
 
-	public void saveHud() {
+	public void savePositionHud() {
 		List<String> config = new ArrayList<>();
 		config.add("ClickGuiPos:" + getClickGuiPos());
 		
@@ -60,7 +60,7 @@ public class HudConfig implements Loona {
 		}
 	}
 
-	public void applyHud() {
+	public void applyPositionHud() {
 		List<String> config = parseConfigFile();
 		Map<String, Action> cfg = new HashMap<>();
 		cfg.put("ClickGuiPos:", this::loadClickGuiCoords);
@@ -73,7 +73,7 @@ public class HudConfig implements Loona {
 		
 		cfg.put("KeystrokesX:", key -> KeyStroke.instance.setXPosition(Integer.parseInt(key)));
 		cfg.put("KeystrokesY:", key -> KeyStroke.instance.setYPosition(Integer.parseInt(key)));
-
+		
 		for (String line : config) {
 			for (Map.Entry<String, Action> entry : cfg.entrySet()) {
 				if (line.startsWith(entry.getKey())) {

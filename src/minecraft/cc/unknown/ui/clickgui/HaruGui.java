@@ -11,7 +11,6 @@ import cc.unknown.Haru;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.visuals.ClickGuiModule;
 import cc.unknown.ui.clickgui.impl.CategoryComp;
-import cc.unknown.ui.clickgui.impl.theme.Theme;
 import cc.unknown.utils.client.FuckUtil;
 import cc.unknown.utils.client.RenderUtil;
 import net.minecraft.client.gui.GuiScreen;
@@ -21,7 +20,7 @@ import net.minecraft.util.ResourceLocation;
 public class HaruGui extends GuiScreen {
 	private final ArrayList<CategoryComp> categoryList = new ArrayList<>();
 	private final Map<String, ResourceLocation> waifuMap = new HashMap<>();
-
+	
 	private boolean isDragging = false;
 	private AtomicInteger lastMouseX = new AtomicInteger(0);
 	private AtomicInteger lastMouseY = new AtomicInteger(0);
@@ -40,10 +39,10 @@ public class HaruGui extends GuiScreen {
 				.forEach(name -> waifuMap.put(name, new ResourceLocation("haru/img/clickgui/" + name + ".png")));
 	}
 
-	@Override
-	public void initGui() {
-		super.initGui();
-	}
+    @Override
+    public void initGui() {
+        super.initGui();
+    }
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -52,8 +51,7 @@ public class HaruGui extends GuiScreen {
 		ResourceLocation waifuImage = waifuMap.get(cg.waifuMode.getMode().toLowerCase());
 
 		if (cg.backGroundMode.is("Gradient")) {
-			this.drawGradientRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(),
-					getTheme().getMainColor().getRGB(), getTheme().getBackColor().getTransparency());
+			this.drawGradientRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(), getTheme().getMainColor().getRGB(), getTheme().getBackColor().getTransparency());
 		} else if (cg.backGroundMode.is("Normal")) {
 			this.drawGradientRect(0, 0, this.width, this.height, -1072689136, -804253680);
 		}
@@ -139,7 +137,7 @@ public class HaruGui extends GuiScreen {
 		});
 
 		if (Haru.instance.getHudConfig() != null) {
-			Haru.instance.getHudConfig().saveHud();
+			Haru.instance.getHudConfig().savePositionHud();
 		}
 
 		super.mouseReleased(mouseX, mouseY, state);
@@ -166,7 +164,7 @@ public class HaruGui extends GuiScreen {
 	public void onGuiClosed() {
 		ClickGuiModule cg = (ClickGuiModule) Haru.instance.getModuleManager().getModule(ClickGuiModule.class);
 		if (cg != null && cg.isEnabled() && Haru.instance.getHudConfig() != null) {
-			Haru.instance.getHudConfig().saveHud();
+			Haru.instance.getHudConfig().savePositionHud();
 			cg.disable();
 		}
 		

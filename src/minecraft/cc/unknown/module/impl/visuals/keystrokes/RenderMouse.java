@@ -1,4 +1,4 @@
-package cc.unknown.utils.keystrokes;
+package cc.unknown.module.impl.visuals.keystrokes;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
 public class RenderMouse {
-	private static final String[] buttons = new String[] { "LMB", "RMB" };
+	private static final String[] buttons = { "LMB", "RMB" };
 	private final Minecraft b = Minecraft.getMinecraft();
 	private final int c;
 	private final int d;

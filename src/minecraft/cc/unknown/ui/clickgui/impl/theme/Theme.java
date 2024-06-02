@@ -17,14 +17,9 @@ public enum Theme implements ColorUtil {
     // credits to alan
     AUBERGINE("Aubergine", new Color(170, 7, 107), new Color(97, 4, 95), KeyColors.PURPLE, KeyColors.RED),
     AQUA("Aqua", new Color(185, 250, 255), new Color(79, 199, 200), KeyColors.AQUA),
-    BANANA("Banana", new Color(253, 236, 177), new Color(255, 255, 255), KeyColors.YELLOW),
     BLEND("Blend", new Color(71, 148, 253), new Color(71, 253, 160), KeyColors.AQUA, KeyColors.LIME),
-    BLOSSOM("Blossom", new Color(226, 208, 249), new Color(49, 119, 115), KeyColors.PINK, KeyColors.GRAY),
     BUBBLEGUM("Bubblegum", new Color(243, 145, 216), new Color(152, 165, 243), KeyColors.PINK, KeyColors.PURPLE),
-    CANDY_CANE("Candy Cane", new Color(255, 255, 255), new Color(255, 0, 0), KeyColors.RED),
     CHERRY("Cherry", new Color(187, 55, 125), new Color(251, 211, 233), KeyColors.RED, KeyColors.PURPLE, KeyColors.PINK),
-    CHRISTMAS("Christmas", new Color(255, 64, 64), new Color(255, 255, 255), new Color(64, 255, 64), KeyColors.RED, KeyColors.LIME),
-    CORAL("Coral", new Color(244, 168, 150), new Color(52, 133, 151),  KeyColors.PINK, KeyColors.ORANGE, KeyColors.DARK_BLUE),
     DIGITAL_HORIZON("Digital Horizon", new Color(95, 195, 228), new Color(229, 93, 135), KeyColors.AQUA, KeyColors.RED, KeyColors.PINK),
     EXPRESS("Express", new Color(173, 83, 137), new Color(60, 16, 83),  KeyColors.PURPLE, KeyColors.PINK),
     LIME_WATER("Lime Water", new Color(18, 255, 247), new Color(179, 255, 171), KeyColors.AQUA, KeyColors.LIME),
@@ -35,14 +30,11 @@ public enum Theme implements ColorUtil {
     MAY("May", new Color(253, 219, 245), new Color(238, 79, 238), KeyColors.PINK, KeyColors.PURPLE),
     ORANGE_JUICE("Orange Juice", new Color(252, 74, 26), new Color(247, 183, 51), KeyColors.ORANGE, KeyColors.YELLOW),
     PASTEL("Pastel", new Color(243, 155, 178), new Color(207, 196, 243), KeyColors.PINK),
-    PUMPKIN("Pumpkin", new Color(241, 166, 98), new Color(255, 216, 169), new Color(227, 139, 42), KeyColors.ORANGE),
     SATIN("Satin", new Color(215, 60, 67), new Color(140, 23, 39), KeyColors.RED),
     SNOWY_SKY("Snowy Sky", new Color(1, 171, 179), new Color(234, 234, 234), new Color(18, 232, 232), KeyColors.AQUA, KeyColors.GRAY),
-    STEEL_FADE("Steel Fade", new Color(66, 134, 244), new Color(55, 59, 68), KeyColors.DARK_BLUE, KeyColors.GRAY),
     SUNDAE("Sundae", new Color(206, 74, 126), new Color(122, 44, 77), KeyColors.PINK, KeyColors.PURPLE, KeyColors.RED),
     SUNKIST("Sunkist", new Color(242, 201, 76), new Color(242, 153, 74), KeyColors.YELLOW, KeyColors.ORANGE),
-    WATER("Water", new Color(12, 232, 199), new Color(12, 163, 232), KeyColors.AQUA, KeyColors.DARK_BLUE),
-    WINTER("Winter", Color.WHITE, Color.WHITE,KeyColors.GRAY, KeyColors.GRAY);
+    WATER("Water", new Color(12, 232, 199), new Color(12, 163, 232), KeyColors.AQUA, KeyColors.DARK_BLUE);
 
     private final String themeName;
     private final Color firstColor, secondColor, thirdColor;

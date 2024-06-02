@@ -6,6 +6,7 @@ import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Info;
+import cc.unknown.module.setting.impl.BooleanValue;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketUseEntity;
@@ -16,6 +17,12 @@ public class AutoTool extends Module {
 	private int prevItem = 0;
 	private boolean mining = false;
 	private int bestSlot = 0;
+	
+	private BooleanValue sneakOnly = new BooleanValue("Sneak Only", false);
+	
+	public AutoTool() {
+		this.registerSetting(sneakOnly);
+	}
 
 	@EventLink
 	public void onPacket(PacketEvent e) {
@@ -34,6 +41,11 @@ public class AutoTool extends Module {
 			if (!mc.gameSettings.keyBindUseItem.isKeyDown() && mc.gameSettings.keyBindAttack.isKeyDown()
 					&& mc.objectMouseOver != null
 					&& mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+				
+				if (sneakOnly.isToggled() && !mc.player.isSneaking()) {
+					mining = false;
+					return;	
+				}
 
 				int bestSpeed = 0;
 				bestSlot = -1;

@@ -145,7 +145,7 @@ public class HudPosition extends GuiScreen {
     public void onGuiClosed() {
         if (Haru.instance.getHudConfig() != null && Haru.instance.getConfigManager() != null) {
         	Haru.instance.getConfigManager().save();
-        	Haru.instance.getHudConfig().saveHud();
+        	Haru.instance.getHudConfig().savePositionHud();
         }
     }
 }

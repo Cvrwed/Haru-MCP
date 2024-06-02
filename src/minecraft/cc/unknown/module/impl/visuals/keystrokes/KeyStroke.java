@@ -1,4 +1,4 @@
-package cc.unknown.utils.keystrokes;
+package cc.unknown.module.impl.visuals.keystrokes;
 
 public enum KeyStroke {
 	instance;

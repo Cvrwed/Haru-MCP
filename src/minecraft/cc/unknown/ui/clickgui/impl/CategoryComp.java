@@ -46,14 +46,14 @@ public class CategoryComp implements Loona {
 	public void setX(int n) {
 		this.x = n;
 		if (Haru.instance.getHudConfig() != null) {
-			Haru.instance.getHudConfig().saveHud();
+			Haru.instance.getHudConfig().savePositionHud();
 		}
 	}
 
 	public void setY(int y) {
 		this.y = y;
 		if (Haru.instance.getHudConfig() != null) {
-			Haru.instance.getHudConfig().saveHud();
+			Haru.instance.getHudConfig().savePositionHud();
 		}
 	}
 
@@ -68,7 +68,7 @@ public class CategoryComp implements Loona {
 	public void setOpened(boolean on) {
 		this.categoryOpened = on;
 		if (Haru.instance.getHudConfig() != null) {
-			Haru.instance.getHudConfig().saveHud();
+			Haru.instance.getHudConfig().savePositionHud();
 		}
 	}
 

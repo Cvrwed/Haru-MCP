@@ -28,15 +28,17 @@ public class ESP extends Module {
     private ModeValue renderMode = new ModeValue("Render Mode", "Player", "Player", "Chest", "Both");
     private BooleanValue enablePlayerColor = new BooleanValue("Enable Player Color", false);
     private SliderValue playerColorHSB = new SliderValue("Player Color [H/S/B]", 0, 0, 350, 10);
-    private BooleanValue enableChestColor = new BooleanValue("Enable Chest Color", false);
+    public BooleanValue enableChestColor = new BooleanValue("Enable Chest Color", false);
     private SliderValue chestColorHSB = new SliderValue("Chest Color [H/S/B]", 0, 0, 350, 10);
+    public SliderValue chestOpacity = new SliderValue("Chest Opacity", 0, 0, 1, 0.01f);
     private BooleanValue checkInvisibility = new BooleanValue("Check Invisibility", true);
     private BooleanValue checkTeams = new BooleanValue("Check Teams", true);
     private BooleanValue disableIfChestOpened = new BooleanValue("Disable if Chest Opened", false);
 
     public ESP() {
-        this.registerSetting(boxMode, renderMode, enablePlayerColor, playerColorHSB, enableChestColor, chestColorHSB, 
-                checkInvisibility, checkTeams, disableIfChestOpened);
+        this.registerSetting(boxMode, renderMode, enablePlayerColor, playerColorHSB, enableChestColor, 
+        		chestColorHSB, chestOpacity,
+        		checkInvisibility, checkTeams, disableIfChestOpened);
     }
     
     @EventLink
@@ -63,7 +65,7 @@ public class ESP extends Module {
                     if (te instanceof TileEntityChest || te instanceof TileEntityEnderChest) {
                         if (disableIfChestOpened.isToggled() && ((TileEntityChest) te).lidAngle > 0.0f) continue;
                         
-                        RenderUtil.drawChestBox(te.getPos(), chestColorRGB, true);
+                        RenderUtil.drawChestBox(te.getPos(), chestColorRGB);
                     }
                 }
             }

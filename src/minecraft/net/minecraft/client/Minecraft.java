@@ -422,7 +422,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 						} catch (OutOfMemoryError var10) {
 							this.freeMemory();
 							this.displayGuiScreen(new GuiMemoryErrorScreen());
-
+							System.gc();
 						}
 					} else {
 						this.displayCrashReport(this.crashReporter);
@@ -549,7 +549,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		this.checkGLError("Post startup");
 		this.ingameGUI = new GuiIngame(this);
 		Haru.instance.startClient();
-	    new GameEvent.StartEvent().call();
+		new GameEvent.StartEvent().call();
 
 		if (this.serverName != null) {
 			this.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), this, this.serverName, this.serverPort));
@@ -969,6 +969,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 			}
 		}
 
+		System.gc();
 	}
 
 	/**
@@ -1144,11 +1145,13 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		}
 
 		try {
-
+			System.gc();
 			this.loadWorld((WorldClient) null);
 		} catch (Throwable var2) {
 			;
 		}
+
+		System.gc();
 	}
 
 	/**
@@ -1357,30 +1360,32 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	}
 
 	private void sendClickBlockToController(boolean leftClick) {
-        if (!leftClick)
-            this.leftClickCounter = 0;
+		if (!leftClick)
+			this.leftClickCounter = 0;
 
-        if (this.leftClickCounter <= 0) {
-            if (leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                BlockPos blockPos = this.objectMouseOver.getBlockPos();
+		if (this.leftClickCounter <= 0) {
+			if (leftClick && this.objectMouseOver != null
+					&& this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+				BlockPos blockPos = this.objectMouseOver.getBlockPos();
 
-                if (this.world.getBlockState(blockPos).getBlock().getMaterial() != Material.air && this.playerController.onPlayerDamageBlock(blockPos, this.objectMouseOver.sideHit)) {
-                    this.effectRenderer.addBlockHitEffects(blockPos, this.objectMouseOver.sideHit);
-                    this.player.swingItem();
-                }
-            } else {
-                this.playerController.resetBlockRemoving();
-            }
-        }
+				if (this.world.getBlockState(blockPos).getBlock().getMaterial() != Material.air
+						&& this.playerController.onPlayerDamageBlock(blockPos, this.objectMouseOver.sideHit)) {
+					this.effectRenderer.addBlockHitEffects(blockPos, this.objectMouseOver.sideHit);
+					this.player.swingItem();
+				}
+			} else {
+				this.playerController.resetBlockRemoving();
+			}
+		}
 	}
 
 	public void leftClickMouse() {
 		if (this.leftClickCounter <= 0) {
 			new MouseEvent(0).call();
 			CPSHelper.registerClick(CPSHelper.MouseButton.LEFT);
-			
+
 			this.player.swingItem();
-			
+
 			if (this.objectMouseOver == null) {
 				logger.error("Null returned as \'hitResult\', this shouldn\'t happen!");
 
@@ -1555,7 +1560,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	/**
 	 * Runs the current tick.
 	 */
-	public void runTick() throws IOException {		
+	public void runTick() throws IOException {
 		boolean pause = TickBase.publicFreeze && Haru.instance.getModuleManager().getModule(TickBase.class).isEnabled();
 
 		if (this.rightClickDelayTimer > 0) {
@@ -1711,7 +1716,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
 					if (this.currentScreen != null) {
 						this.currentScreen.handleKeyboardInput();
-					} else {						
+					} else {
 						if (k == 1) {
 							this.displayInGameMenu();
 						}
@@ -1895,14 +1900,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
 			new TickEvent().call();
 			++this.joinPlayerCounter;
-			
+
 			if (this.joinPlayerCounter == 30) {
 				this.joinPlayerCounter = 0;
 				this.world.joinEntityInSurroundings(this.player);
 			}
 
 			this.mcProfiler.endStartSection("gameRenderer");
-						
+
 			if (!this.isGamePaused && !pause) {
 				this.entityRenderer.updateRenderer();
 			}

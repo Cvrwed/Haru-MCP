@@ -15,7 +15,7 @@ public class ConfigCommand extends Command {
 	@Override
 	public void onExecute(String[] args) {
 		if (Haru.instance.getHudConfig() != null) {
-	        Haru.instance.getHudConfig().saveHud();
+	        Haru.instance.getHudConfig().savePositionHud();
 	        Haru.instance.getConfigManager().save();
 	    }
 	    

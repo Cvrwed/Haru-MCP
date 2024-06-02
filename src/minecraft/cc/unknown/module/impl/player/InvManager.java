@@ -3,7 +3,7 @@ package cc.unknown.module.impl.player;
 import java.util.ArrayList;
 
 import cc.unknown.event.impl.EventLink;
-import cc.unknown.event.impl.move.MotionEvent;
+import cc.unknown.event.impl.move.UpdateEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
@@ -32,8 +32,8 @@ import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
-import net.minecraft.network.play.client.CPacketCloseWindow;
 import net.minecraft.network.play.client.CPacketClientStatus;
+import net.minecraft.network.play.client.CPacketCloseWindow;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.combat.DamageSource;
 
@@ -74,7 +74,7 @@ public class InvManager extends Module {
 	}
 
 	@EventLink
-	public void onPre(MotionEvent e) {
+	public void onPre(UpdateEvent e) {
 		if (e.isPre()) {
 			if (!timer.reached(delay.getInputToLong())) {
 				closeInventory();

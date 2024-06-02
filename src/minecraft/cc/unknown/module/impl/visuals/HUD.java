@@ -30,7 +30,7 @@ import net.minecraft.client.gui.Gui;
 @Info(name = "HUD", category = Category.Visuals)
 public class HUD extends Module {
 
-	private ModeValue colorMode = new ModeValue("ArrayList Theme", "Static", "Static", "Aubergine", "Aqua", "Banana", "Blend", "Blossom", "Bubblegum", "Candy Cane", "Cherry", "Christmas", "Coral", "Digital Horizon", "Express", "Lime Water", "Lush", "Halogen", "Hyper", "Magic", "May", "Orange Juice", "Pastel", "Pumpkin", "Satin", "Snowy Sky", "Steel Fade", "Sundae", "Sunkist", "Water", "Winter", "Theme");
+	private ModeValue colorMode = new ModeValue("ArrayList Theme", "Static", "Static", "Aubergine", "Aqua", "Blend", "Bubblegum", "Cherry", "Christmas", "Digital Horizon", "Express", "Lime Water", "Lush", "Halogen", "Hyper", "Magic", "May", "Orange Juice", "Pastel", "Satin", "Snowy Sky", "Sundae", "Sunkist", "Water", "Theme");
 	private SliderValue arrayColor = new SliderValue("Array Color [H/S/B]", 0, 0, 350, 10);
 	private SliderValue saturation = new SliderValue("Saturation [H/S/B]", 1.0, 0.0, 1.0, 0.1);
 	private SliderValue brightness = new SliderValue("Brightness [H/S/B]", 1.0, 0.0, 1.0, 0.1);
@@ -127,32 +127,12 @@ public class HUD extends Module {
 					color.set(getTheme().AQUA.getAccentColor().getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
 					break;
-				case "Banana":
-					color.set(getTheme().BANANA.getAccentColor().getRGB());
-					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
-					break;
 				case "Blend":
 					color.set(getTheme().BLEND.getAccentColor().getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
 					break;
-				case "Blossom":
-					color.set(getTheme().BLOSSOM.getAccentColor().getRGB());
-					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
-					break;
-				case "Candy Cane":
-					color.set(getTheme().CANDY_CANE.getAccentColor().getRGB());
-					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
-					break;
 				case "Cherry":
 					color.set(getTheme().CHERRY.getAccentColor().getRGB());
-					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
-					break;
-				case "Christmas":
-					color.set(getTheme().CHRISTMAS.getAccentColor().getRGB());
-					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
-					break;
-				case "Coral":
-					color.set(getTheme().CORAL.getAccentColor().getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
 					break;
 				case "Digital Horizon":
@@ -195,20 +175,12 @@ public class HUD extends Module {
 					color.set(getTheme().PASTEL.getAccentColor().getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
 					break;
-				case "Pumpkin":
-					color.set(getTheme().PUMPKIN.getAccentColor().getRGB());
-					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
-					break;
 				case "Satin":
 					color.set(getTheme().SATIN.getAccentColor().getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
 					break;
 				case "Snowy Sky":
 					color.set(getTheme().SNOWY_SKY.getAccentColor().getRGB());
-					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
-					break;
-				case "Steel Fade":
-					color.set(getTheme().STEEL_FADE.getAccentColor().getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
 					break;
 				case "Sundae":
@@ -221,10 +193,6 @@ public class HUD extends Module {
 					break;
 				case "Water":
 					color.set(getTheme().WATER.getAccentColor().getRGB());
-					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
-					break;
-				case "Winter":
-					color.set(getTheme().WINTER.getAccentColor().getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
 					break;
 				case "Theme":

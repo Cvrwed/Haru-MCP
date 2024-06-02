@@ -30,18 +30,19 @@ import net.minecraft.network.play.server.SPacketPlayerPosLook;
 public class GameCommand extends Command {
 
     private HashMap<String, Item> hashMap = new HashMap<>();
-    private Cold timer = new Cold(0);
     private boolean joining;
     private Item item;
     private int lobby;
-    protected int delay;
     private int stage;
     private boolean foundItem;
-    protected boolean foundGame;
-    protected boolean foundLobby;
 
     public GameCommand() {
-        init();
+        this.hashMap.put("sw", Items.bow);
+        this.hashMap.put("tsw", Items.arrow);
+        this.hashMap.put("bw", Items.bed);
+        this.hashMap.put("tnt", Items.gunpowder);
+        this.hashMap.put("pgames", Items.cake);
+        this.hashMap.put("arena", Items.diamond_sword);
         Haru.instance.getEventBus().register(this);
     }
     
@@ -160,18 +161,6 @@ public class GameCommand extends Command {
         }
     }
 
-    /**
-     * Initializes the hashMap with game names and items.
-     */
-    private void init() {
-        this.hashMap.put("sw", Items.bow);
-        this.hashMap.put("tsw", Items.arrow);
-        this.hashMap.put("bw", Items.bed);
-        this.hashMap.put("tnt", Items.gunpowder);
-        this.hashMap.put("pgames", Items.cake);
-        this.hashMap.put("arena", Items.diamond_sword);
-    }
-
     private String getList() {
         return "\n" +
                 getColor("Green") + " - " + getColor("White") + "sw" + getColor("Gray") + " (Skywars)        \n" +
@@ -193,8 +182,7 @@ public class GameCommand extends Command {
         joining = true;
         item = name;
         lobby = lobbyNumber;
-        delay = 0;
         stage = 0;
-        foundItem = foundGame = foundLobby = false;
+        foundItem = false;
     }
 }

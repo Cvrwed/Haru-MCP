@@ -176,12 +176,10 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 */
     public void onUpdate() {
         if (worldObj.isBlockLoaded(new BlockPos(posX, 0.0D, posZ))) {
-        	UpdateEvent e = new UpdateEvent(Mode.Pre);
-            e.call();
-            if (e.isCancelled()) return;
+        	Haru.instance.getEventBus().post(new UpdateEvent(Mode.Pre));
             super.onUpdate();
+            
             Haru.instance.getEventBus().post(new UpdateEvent(Mode.Post));
-
             if (isRiding()) {
                 sendQueue.sendQueue(new CPacketPlayer.CPacketPlayerLook(rotationYaw, rotationPitch, onGround));
                 sendQueue.sendQueue(new CPacketInput(moveStrafing, moveForward, movementInput.jump, movementInput.sneak));

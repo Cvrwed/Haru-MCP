@@ -11,9 +11,12 @@ import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 
 import java.awt.Color;
+import java.io.File;
 
 import org.lwjgl.opengl.GL11;
 
+import cc.unknown.Haru;
+import cc.unknown.module.impl.visuals.ESP;
 import cc.unknown.utils.Loona;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -252,27 +255,27 @@ public class RenderUtil implements Loona {
         mc.getTextureManager().loadTexture(id, image);
         drawImage(id, x, y, width, height);
     }
+    
+	public static void drawChestBox(BlockPos bp, int color) {
+		ESP esp = (ESP) Haru.instance.getModuleManager().getModule(ESP.class);
 
-	public static void drawChestBox(BlockPos bp, int color, boolean shade) {
 		if (bp != null) {
-			double x = (double) bp.getX() - mc.getRenderManager().viewerPosX;
-			double y = (double) bp.getY() - mc.getRenderManager().viewerPosY;
-			double z = (double) bp.getZ() - mc.getRenderManager().viewerPosZ;
+			double x = bp.getX() - mc.getRenderManager().viewerPosX;
+			double y = bp.getY() - mc.getRenderManager().viewerPosY;
+			double z = bp.getZ() - mc.getRenderManager().viewerPosZ;
 			GL11.glBlendFunc(770, 771);
 			GL11.glEnable(3042);
 			GL11.glLineWidth(2.0F);
 			GL11.glDisable(3553);
 			GL11.glDisable(2929);
 			GL11.glDepthMask(false);
-			float a = (float) (color >> 24 & 255) / 255.0F;
-			float r = (float) (color >> 16 & 255) / 255.0F;
-			float g = (float) (color >> 8 & 255) / 255.0F;
-			float b = (float) (color & 255) / 255.0F;
-			GL11.glColor4d((double) r, (double) g, (double) b, (double) a);
+			float a = (color >> 24 & 255) / 255.0F;
+			float r = (color >> 16 & 255) / 255.0F;
+			float g = (color >> 8 & 255) / 255.0F;
+			float b = (color & 255) / 255.0F;
+			GL11.glColor4d(r, g, b, esp.enableChestColor.isToggled() ? esp.chestOpacity.getInput() / 255.0F : a);
 			RenderGlobal.func_181561_a(new AxisAlignedBB(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D));
-			if (shade) {
-				dbb(new AxisAlignedBB(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D), r, g, b);
-			}
+			dbb(new AxisAlignedBB(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D), r, g, b);
 
 			GL11.glEnable(3553);
 			GL11.glEnable(2929);

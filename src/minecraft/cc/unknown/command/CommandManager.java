@@ -31,6 +31,7 @@ public class CommandManager {
 			new TransactionCommand(),
 			new ClearCommand(),
 			new GameCommand(),
+			new PetCommand(),
 			new PingCommand()
 			);
 	}
