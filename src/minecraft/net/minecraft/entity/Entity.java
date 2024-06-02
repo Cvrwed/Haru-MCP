@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
+import cc.unknown.Haru;
 import cc.unknown.event.impl.move.MoveEvent;
 import cc.unknown.event.impl.player.StrafeEvent;
 import cc.unknown.utils.Loona;

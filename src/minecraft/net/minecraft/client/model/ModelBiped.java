@@ -1,7 +1,7 @@
 package net.minecraft.client.model;
 
-import cc.unknown.utils.player.rotation.RotationManager;
-import net.minecraft.client.Minecraft;
+import cc.unknown.Haru;
+import cc.unknown.utils.Loona;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

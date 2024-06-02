@@ -74,7 +74,7 @@ public class SprintReset extends Module {
 				
 				if (target.getDistanceToEntity(entity) <= tapRange.getInputToInt()) {
 					hitsCount++;
-					if (hitsCount > onceEvery.getInputToInt()) {
+					if (hitsCount >= onceEvery.getInputToInt()) {
 						switch (mode.getMode()) {
 						case "Packet":
 							if (mc.player.isSprinting()) setSprinting(false);

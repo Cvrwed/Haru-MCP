@@ -25,7 +25,7 @@ import net.minecraft.util.MathHelper;
 
 @Info(name = "JumpReset", category = Category.Combat)
 public class JumpReset extends Module {
-	private ModeValue mode = new ModeValue("Mode", "Legit", "Hit", "Tick", "Legit", "Test");
+	private ModeValue mode = new ModeValue("Mode", "Legit", "Hit", "Tick", "Legit");
 	private BooleanValue onlyCombat = new BooleanValue("Enable only during combat", true);
 	private SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
 	private DoubleSliderValue tickTicks = new DoubleSliderValue("Ticks", 0, 0, 0, 20, 1);
@@ -89,19 +89,6 @@ public class JumpReset extends Module {
 			reset = true;
 			++counter;
 			return;
-		}
-		
-		if (mode.is("Jump")) {
-			reset = true;
-		}
-		
-		if (mode.is("Test")) {
-            adjustPlayerMovement(player -> {
-                player.motionY = 0.42;
-                float yawRadians = (float) Math.toRadians(player.rotationYaw);
-                player.motionX -= MathHelper.sin(yawRadians) * 0.1;
-                player.motionZ += MathHelper.cos(yawRadians) * 0.1;
-            });
 		}
 	}
 
@@ -197,8 +184,4 @@ public class JumpReset extends Module {
 
 		return Stream.of(chanceCheck).map(Supplier::get).anyMatch(Boolean.TRUE::equals);
 	}
-	
-    private void adjustPlayerMovement(Consumer<EntityPlayerSP> adjuster) {
-        adjuster.accept(mc.player);
-    }
 }

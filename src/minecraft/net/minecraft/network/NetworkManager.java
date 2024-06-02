@@ -391,26 +391,17 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 			lazyloadbase = CLIENT_NIO_EVENTLOOP;
 		}
 
-		((Bootstrap) ((Bootstrap) ((Bootstrap) (new Bootstrap()).group((EventLoopGroup) lazyloadbase.getValue()))
-				.handler(new ChannelInitializer<Channel>() {
-					protected void initChannel(Channel p_initChannel_1_) throws Exception {
-						try {
-							p_initChannel_1_.config().setOption(ChannelOption.TCP_NODELAY, Boolean.valueOf(true));
-						} catch (ChannelException var3) {
-							;
-						}
-
-						p_initChannel_1_.pipeline()
-								.addLast((String) "timeout", (ChannelHandler) (new ReadTimeoutHandler(30)))
-								.addLast((String) "splitter", (ChannelHandler) (new MessageDeserializer2()))
-								.addLast((String) "decoder",
-										(ChannelHandler) (new MessageDeserializer(PacketDirection.Outbound)))
-								.addLast((String) "prepender", (ChannelHandler) (new MessageSerializer2()))
-								.addLast((String) "encoder",
-										(ChannelHandler) (new MessageSerializer(PacketDirection.Inbound)))
-								.addLast((String) "packet_handler", (ChannelHandler) networkmanager);
+		((Bootstrap) ((Bootstrap) ((Bootstrap) (new Bootstrap()).group((EventLoopGroup) lazyloadbase.getValue())).handler(new ChannelInitializer<Channel>() {
+			protected void initChannel(Channel p_initChannel_1_) throws Exception {
+				try {
+					p_initChannel_1_.config().setOption(ChannelOption.TCP_NODELAY, Boolean.valueOf(true));
+					} catch (ChannelException var3) {
+						;	
 					}
-				})).channel(oclass)).connect(p_181124_0_, p_181124_1_).syncUninterruptibly();
+				p_initChannel_1_.pipeline().addLast((String)"timeout", (ChannelHandler)(new ReadTimeoutHandler(30))).addLast((String)"splitter", (ChannelHandler)(new MessageDeserializer2())).addLast((String)"decoder", (ChannelHandler)(new MessageDeserializer(PacketDirection.Outbound))).addLast((String)"prepender", (ChannelHandler)(new MessageSerializer2())).addLast((String)"encoder", (ChannelHandler)(new MessageSerializer(PacketDirection.Inbound))).addLast((String)"packet_handler", (ChannelHandler)networkmanager);
+			}
+		})).channel(oclass)).connect(p_181124_0_, p_181124_1_).syncUninterruptibly();
+		
 		return networkmanager;
 	}
 

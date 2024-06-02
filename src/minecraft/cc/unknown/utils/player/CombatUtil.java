@@ -15,7 +15,7 @@ public enum CombatUtil implements Loona {
 
 	public boolean canTarget(Entity entity) {
 	    if (entity != null && entity != mc.player) {
-	        boolean isTeam = isTeam(mc.player);
+	        boolean isTeam = isTeam(mc.player, (EntityPlayer) entity);
 
 	        return !(entity instanceof EntityArmorStand) &&
 	               ((entity instanceof EntityPlayer && !isTeam && entity.isInvisible() && !(entity instanceof EntityAnimal)) ||
@@ -26,19 +26,18 @@ public enum CombatUtil implements Loona {
 	    }
 	}
 
-    public boolean isTeam(Entity entity) {
-        if (!(entity instanceof EntityPlayer)) {
-            return false;
-        }
-        EntityPlayer otherPlayer = (EntityPlayer) entity;
-        ScorePlayerTeam otherTeam = (ScorePlayerTeam) otherPlayer.getTeam();
-        ScorePlayerTeam myTeam = (ScorePlayerTeam) mc.player.getTeam();
-
-        if (myTeam != null && otherTeam != null) {
-            return myTeam.equals(otherTeam);
-        }
-        return false;
-    }
+	public boolean isTeam(final EntityPlayer e, final EntityPlayer e2) {
+		if (e2.getTeam() != null && e.getTeam() != null) {
+			Character target = e2.getDisplayName().getFormattedText().charAt(1);
+			Character player = e.getDisplayName().getFormattedText().charAt(1);
+			if (target.equals(player)) {
+				return true;
+			}
+		} else {
+			return true;
+		}
+		return false;
+	}
 
 	public float rotsToFloat(final float[] rots, final int m) {
 		if (m == 1) {

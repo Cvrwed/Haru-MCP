@@ -25,28 +25,15 @@ import net.minecraft.util.enums.EnumChatFormatting;
 @Info(name = "Midclick", category = Category.Other)
 public class MidClick extends Module {
 
-	private ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private AtomicInteger prevSlot = new AtomicInteger(0);
 	private AtomicInteger pearlSlot = new AtomicInteger(4);
-	private AtomicBoolean x = new AtomicBoolean(false);
-	private Robot bot;
-	
+	private AtomicBoolean x = new AtomicBoolean(false);	
 	private ModeValue mode = new ModeValue("Mode", "Add/Remove friend", "Add/Remove friend", "Throw pearl");
 
 	public MidClick() {
 		this.registerSetting(mode);
 	}
 	
-    @Override
-    public void onEnable() {
-        try {
-			this.bot = new Robot();
-		} catch (AWTException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-
 	@EventLink
 	public void onMouse(MouseEvent e) {
 		if (mc.currentScreen != null)
@@ -76,10 +63,7 @@ public class MidClick extends Module {
                     if (item != null && item.getItem() instanceof ItemEnderPearl) {
                         prevSlot.set(mc.player.inventory.currentItem);
                         mc.player.inventory.currentItem = s;
-                        executorService.execute(() -> {
-                            bot.mousePress(InputEvent.BUTTON3_MASK);
-                            bot.mouseRelease(InputEvent.BUTTON3_MASK);
-                        });
+                        mc.playerController.sendUseItem(mc.player, mc.world, mc.player.getHeldItem());
                         pearlSlot.set(0);
                         x.set(true);
                         return;

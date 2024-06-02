@@ -7,11 +7,12 @@ import cc.unknown.event.impl.api.EventBus;
 import cc.unknown.module.ModuleManager;
 import cc.unknown.ui.clickgui.HaruGui;
 import cc.unknown.ui.clickgui.impl.theme.ThemeManager;
+import cc.unknown.utils.Loona;
 import cc.unknown.utils.player.rotation.RotationManager;
 
 public enum Haru {
 	instance;
-	
+
 	private CommandManager commandManager;
 	private ConfigManager configManager;
 	private HudConfig hudConfig;
@@ -23,6 +24,8 @@ public enum Haru {
 	private EventBus eventBus = new EventBus();
 
 	public void startClient() {
+		eventBus.register(this);
+
 		commandManager = new CommandManager();
 		moduleManager = new ModuleManager();
 		rotationManager = new RotationManager();
@@ -31,9 +34,11 @@ public enum Haru {
 		themeManager = new ThemeManager();
 		hudConfig = new HudConfig();
 		hudConfig.applyHud();
+
 	}
-	
+
 	public void stopClient() {
+		eventBus.unregister(this);
 		hudConfig.saveHud();
 	}
 

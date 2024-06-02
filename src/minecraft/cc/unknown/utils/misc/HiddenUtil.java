@@ -24,6 +24,7 @@ public class HiddenUtil {
 	        		HUD.class,
 	        		Nametags.class,
 	        		CpsDisplay.class,
+	        		KeyStrokes.class,
 	        		ESP.class,
 	        		Fullbright.class,
 	        		Nametags.class,
