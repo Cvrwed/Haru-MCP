@@ -4,17 +4,16 @@ import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.move.UpdateEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
-import cc.unknown.module.impl.api.Register;
+import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.ModeValue;
-import cc.unknown.utils.player.rotation.Rotation;
 import cc.unknown.utils.player.rotation.RotationManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-@Register(name = "SelfTrap", category = Category.Other)
+@Info(name = "SelfTrap", category = Category.Other)
 
 public class SelfTrap extends Module{
 	public ModeValue mode = new ModeValue("Mode", "Slow", "Slow", "Normal");
@@ -57,19 +56,7 @@ public class SelfTrap extends Module{
 		mc.rightClickDelayTimer = 0;
 		mc.gameSettings.keyBindUseItem.pressed = true;
 		++ticks;
-		if(mode.equals("Normal"));{
-			if (ticks >= 0 && ticks <=4) {
-				RotationManager.serverRotation.setYaw(mc.player.rotationYaw + 45F);
-				mc.gameSettings.keyBindJump.pressed = true;
-			}
-			if (ticks >= 5 && ticks <=7) {
-				RotationManager.serverRotation.setYaw(mc.player.rotationYaw + 135F);
-				mc.gameSettings.keyBindJump.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindJump);
-			}
-			if (ticks >= 8 && ticks <=10) {
-				RotationManager.serverRotation.setYaw(mc.player.rotationYaw + 225F);
-			}
-		}
+		if(mode.equals("Normal"));{}
 	}
 	
 }

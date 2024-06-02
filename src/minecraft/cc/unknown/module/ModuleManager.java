@@ -79,6 +79,7 @@ public class ModuleManager implements Loona {
 				new Timer(),
 				new NoSlow(),
 				new NoFall(),
+				new Scaffold(),
 				
 				// visuals
 				new Ambience(),
