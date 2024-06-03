@@ -189,9 +189,9 @@ public class Velocity extends Module {
     }
     
     private void adjustKnockBack(KnockBackEvent e, double horizontalFactor, double verticalFactor) {
-        e.setX(e.getX() * horizontalFactor);
-        e.setY(e.getY() * verticalFactor);
-        e.setZ(e.getZ() * horizontalFactor);
+        e.setX(e.getX() * horizontalFactor / 100.0);
+        e.setY(e.getY() * verticalFactor / 100.0);
+        e.setZ(e.getZ() * horizontalFactor / 100.0);
     }
 
 	private boolean isValidMotion(double motion, double min, double max) {
