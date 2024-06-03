@@ -67,8 +67,10 @@ public class Velocity extends Module {
 	            break;
 
 	        case "Packet":
-	            adjustKnockBack(e, horizontal.getInput(), vertical.getInput());
-	            break;
+			e.setX(e.getX() * horizontal.getInput() / 100.0);
+			e.setY(e.getY() * vertical.getInput() / 100.0);
+			e.setZ(e.getZ() * horizontal.getInput() / 100.0);
+		    break;
 
 	        case "Ground Grim":
 	            if (PlayerUtil.isMoving() && mc.player.onGround) {
