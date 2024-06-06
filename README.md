@@ -1,5 +1,7 @@
 ## Forge Version
 - https://github.com/Cvrwed/Haru
+## Discord Updates
+[Click here](https://discord.gg/palestina)
 ## How to Install
 1. Download the latest version
 2. Unzip the file
