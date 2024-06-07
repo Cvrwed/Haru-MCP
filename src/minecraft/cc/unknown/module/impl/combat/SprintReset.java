@@ -130,10 +130,12 @@ public class SprintReset extends Module {
 			if (mode.is("SprintTap")) {
 				switch (tap) {
 				case 2:
-					mc.gameSettings.keyBindSprint.pressed = false;
+					mc.gameSettings.keyBindSprint.pressed = true;
+					mc.gameSettings.keyBindForward.pressed = false;
 					tap--;
 					break;
 				case 1:
+					mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
 					mc.gameSettings.keyBindSprint.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSprint);
 					tap--;
 					break;
