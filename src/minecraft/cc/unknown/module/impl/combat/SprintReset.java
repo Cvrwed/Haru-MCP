@@ -26,23 +26,11 @@ public class SprintReset extends Module {
 	private SliderValue tapRange = new SliderValue("Tap Range", 3.0, 3.0, 6.0, 0.5);
 	private SliderValue chance = new SliderValue("Tap Chance", 100, 0, 100, 1);
 	private final Cold timer = new Cold(0);
-	private int tap = 0;
-	private int hitsCount = 0;
+	private int tap;
+	private int hitsCount;
 
 	public SprintReset() {
 		this.registerSetting(mode, packets, onceEvery, tapRange, chance);
-	}
-
-	@Override
-	public void onEnable() {
-		tap = 0;
-		hitsCount = 0;
-	}
-
-	@Override
-	public void onDisable() {
-		tap = 0;
-		hitsCount = 0;
 	}
 
 	@EventLink

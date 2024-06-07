@@ -25,6 +25,7 @@ import com.google.gson.JsonSyntaxException;
 import cc.unknown.Haru;
 import cc.unknown.event.impl.render.RenderEvent;
 import cc.unknown.event.impl.render.RenderEvent.RenderType;
+import cc.unknown.module.impl.combat.AimAssist;
 import cc.unknown.module.impl.settings.Fixes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
@@ -1141,13 +1142,15 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 		}
 
 		if (this.mc.inGameHasFocus && flag) {
+			AimAssist em = (AimAssist) Haru.instance.getModuleManager().getModule(AimAssist.class);
 			this.mc.mouseHelper.mouseXYChange();
 			float f = this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
+
 			float f1 = f * f * f * 8.0F;
 			float f2 = (float) this.mc.mouseHelper.deltaX * f1;
 			float f3 = (float) this.mc.mouseHelper.deltaY * f1;
 			int i = 1;
-
+			
 			if (this.mc.gameSettings.invertMouse) {
 				i = -1;
 			}

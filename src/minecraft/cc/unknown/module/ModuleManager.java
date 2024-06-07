@@ -54,6 +54,7 @@ public class ModuleManager implements Loona {
 				
 				// move
 				new Speed(),
+				new BlockClutch(),
 				new KeepSprint(),
 				//new Flight(),
 				
@@ -75,6 +76,7 @@ public class ModuleManager implements Loona {
 				new InvManager(),
 				new Stealer(),
 				new FastPlace(),
+				new Scaffold(),
 				new BridgeAssist(),
 				new LegitScaffold(),
 				new Sprint(),
@@ -82,7 +84,6 @@ public class ModuleManager implements Loona {
 				new Timer(),
 				new NoSlow(),
 				new NoFall(),
-				new Scaffold(),
 				
 				// visuals
 				new Ambience(),

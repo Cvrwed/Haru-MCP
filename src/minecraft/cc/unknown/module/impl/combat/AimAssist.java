@@ -15,9 +15,8 @@ import org.lwjgl.input.Mouse;
 import cc.unknown.Haru;
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.move.LivingEvent;
-import cc.unknown.event.impl.player.JumpEvent;
+import cc.unknown.event.impl.move.MotionEvent;
 import cc.unknown.event.impl.player.StrafeEvent;
-import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Info;
@@ -32,10 +31,8 @@ import cc.unknown.utils.player.rotation.RotationManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.BlockPos;
 
 @Info(name = "AimAssist", category = Category.Combat)
@@ -74,7 +71,6 @@ public class AimAssist extends Module {
 		if (mc.player == null || mc.currentScreen != null || !mc.inGameHasFocus) {
 			return;
 		}
-
 		if (disableAimWhileBreakingBlock.isToggled() && mc.objectMouseOver != null) {
 			BlockPos blockPos = mc.objectMouseOver.getBlockPos();
 			if (blockPos != null) {
@@ -122,16 +118,11 @@ public class AimAssist extends Module {
 	}
 
 	@EventLink
-	public void onJump(JumpEvent e) {
+	public void onJump(MotionEvent e) {
 		if (enemy != null && moveFix.isToggled()) {
-			e.setYaw(mc.player.rotationYaw);
-		}
-	}
-
-	@EventLink
-	public void onStrafe(StrafeEvent e) {
-		if (enemy != null && moveFix.isToggled()) {
-			e.setYaw(mc.player.rotationYaw);
+			RotationManager.setStrafeFix(true, false);
+		} else {
+			RotationManager.setStrafeFix(false, false);
 		}
 	}
 

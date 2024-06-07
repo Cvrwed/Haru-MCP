@@ -9,6 +9,7 @@ import org.lwjgl.input.Mouse;
 
 import cc.unknown.Haru;
 import cc.unknown.module.impl.combat.AutoClick;
+import cc.unknown.module.impl.combat.HitSelect;
 import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.Loona;
@@ -19,8 +20,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemBow;
@@ -30,7 +29,6 @@ import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.MovingObjectPosition;
 
 public enum ClickUtil implements Loona {
 	instance;
@@ -59,6 +57,8 @@ public enum ClickUtil implements Loona {
 	
 	public void megumiLeftClick() {
 		AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
+		HitSelect hit = (HitSelect) Haru.instance.getModuleManager().getModule(HitSelect.class);
+
 		
 		double speedLeft1 = 1.0 / ThreadLocalRandom.current().nextGaussian() * clicker.getLeftCPS().getInputMax()
 				+ clicker.getLeftCPS().getInputMax();
@@ -66,7 +66,7 @@ public enum ClickUtil implements Loona {
 				+ clicker.getLeftCPS().getInputMin();
 		Mouse.poll();
 
-		if (mc.currentScreen != null || !mc.inGameHasFocus || checkScreen()) {
+		if (mc.currentScreen != null || !mc.inGameHasFocus || checkScreen() || hit.isEnabled()) {
 			return;
 		}
 
@@ -93,6 +93,7 @@ public enum ClickUtil implements Loona {
 
 	public void kuruLeftClick() {
 		AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
+		HitSelect hit = (HitSelect) Haru.instance.getModuleManager().getModule(HitSelect.class);
 
 		double speedLeft1 = 1.0
 				/ ThreadLocalRandom.current().nextDouble(clicker.getLeftCPS().getInputMin() - 0.2D, clicker.getLeftCPS().getInputMax());
@@ -101,7 +102,7 @@ public enum ClickUtil implements Loona {
 
 		Mouse.poll();
 
-		if (mc.currentScreen != null || !mc.inGameHasFocus || checkScreen()) {
+		if (mc.currentScreen != null || !mc.inGameHasFocus || checkScreen() || hit.isEnabled()) {
 			return;
 		}
 
@@ -129,8 +130,9 @@ public enum ClickUtil implements Loona {
 
 	public void ravenLeftClick() {
 		AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
+		HitSelect hit = (HitSelect) Haru.instance.getModuleManager().getModule(HitSelect.class);
 
-		if (mc.currentScreen != null || !mc.inGameHasFocus || checkScreen()) {
+		if (mc.currentScreen != null || !mc.inGameHasFocus || checkScreen() || hit.isEnabled()) {
 			return;
 		}
 

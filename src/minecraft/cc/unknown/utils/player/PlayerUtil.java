@@ -5,6 +5,7 @@ import org.lwjgl.input.Mouse;
 import cc.unknown.utils.Loona;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
+import net.minecraft.block.BlockSnow;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -69,6 +70,11 @@ public class PlayerUtil implements Loona {
 		double z = ent.posZ - mc.player.posZ;
 		double yaw = Math.atan2(x, z) * 57.2957795D;
 		return (float) (yaw * -1.0D);
+	}
+	
+	public static boolean isAirBlock(final Block block) {
+		return !block.getMaterial().isReplaceable()
+				|| (block instanceof BlockSnow && !(block.getBlockBoundsMaxY() <= 0.125));
 	}
 
 	public static boolean fov(Entity entity, float fov) {

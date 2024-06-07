@@ -11,6 +11,7 @@ import cc.unknown.event.impl.move.UpdateEvent.Mode;
 import cc.unknown.event.impl.network.ChatSendEvent;
 import cc.unknown.event.impl.player.PushEvent;
 import cc.unknown.module.impl.player.NoSlow;
+import cc.unknown.module.impl.player.Scaffold;
 import cc.unknown.module.impl.player.Sprint;
 import cc.unknown.utils.player.MoveUtil;
 import cc.unknown.utils.player.PlayerUtil;

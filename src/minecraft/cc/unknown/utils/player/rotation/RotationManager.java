@@ -26,7 +26,7 @@ public class RotationManager implements Loona {
 		strictStrafeFix = strict;
 	}
 
-	public static void disable() {
+	public static void onDisable() {
 		isEnabled = false;
 		keepRotationTicks = 0;
 		strafeFix = false;
@@ -38,7 +38,7 @@ public class RotationManager implements Loona {
 	}
 
 	public static void setClientRotation(final float[] targetRotation, int keepRotation) {
-		if (!isEnabled || keepRotationTicks <= 0) {
+		if (!isEnabled || keepRotationTicks >= 0) {
 			isEnabled = true;
 			keepRotationTicks = keepRotation;
 			clientRotation = targetRotation;
@@ -225,7 +225,4 @@ public class RotationManager implements Loona {
 				updateRots(from[1], to[1], (float) pitchLimit) };
 	}
 
-	public static EnumFacing getEnumDirection(float yaw) {
-		return EnumFacing.getHorizontal(MathHelper.floor_double((double) (yaw * 4.0F / 360.0F) + 0.5D) & 3);
-	}
 }
