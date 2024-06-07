@@ -24,7 +24,7 @@ import net.minecraft.util.enums.EnumFacing;
 @Info(name = "Velocity", category = Category.Combat)
 public class Velocity extends Module {
 
-	public ModeValue mode = new ModeValue("Mode", "Universocraft", "Packet", "Verus", "Ground Grim", "Polar", "Minemen", "Watchdog Boost",
+	public ModeValue mode = new ModeValue("Mode", "Universocraft", "Packet", "Verus", "Ground Grim", "Minemen", "Watchdog",
 			"Intave", "Universocraft");
 	public SliderValue horizontal = new SliderValue("Horizontal", 90, -100, 100, 1);
 	public SliderValue vertical = new SliderValue("Vertical", 100, -100, 100, 1);
@@ -60,17 +60,17 @@ public class Velocity extends Module {
 		
 	    String mode = this.mode.getMode();
 	    switch (mode) {
-	        case "Watchdog Boost":
+	        case "Watchdog":
 	            if (mc.player.hurtTime == 8) {
 	                MoveUtil.strafe(MoveUtil.getSpeed() * 0.7f);
 	            }
 	            break;
 
 	        case "Packet":
-			e.setX(e.getX() * horizontal.getInput() / 100.0);
-			e.setY(e.getY() * vertical.getInput() / 100.0);
-			e.setZ(e.getZ() * horizontal.getInput() / 100.0);
-		    break;
+	        	e.setX(e.getX() * horizontal.getInput() / 100.0);
+	        	e.setY(e.getY() * vertical.getInput() / 100.0);
+	        	e.setZ(e.getZ() * horizontal.getInput() / 100.0);
+	        	break;
 
 	        case "Ground Grim":
 	            if (PlayerUtil.isMoving() && mc.player.onGround) {
@@ -148,17 +148,6 @@ public class Velocity extends Module {
 	    	            intaveTick = 0;
 	    	        }
 	    	        reset = false;
-	    	    }
-	            break;
-	        case "Polar":
-	    	    if (mc.player.hurtTime >= 1 && mc.player.hurtTime < 6) {
-	    	        double multi = 1.2224324;
-	    	        double min = 0.1;
-	    	        double max = 0.5;
-	    	        if (PlayerUtil.isMoving() && mc.player.onGround && isValidMotion(mc.player.motionX, min, max) && isValidMotion(mc.player.motionZ, min, max)) {
-	    	            mc.player.motionX -= MathHelper.sin((float) multi) * min;
-	    	            mc.player.motionZ += MathHelper.cos((float) multi) * max;
-	    	        }
 	    	    }
 	            break;
 	        default:

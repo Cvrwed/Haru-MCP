@@ -72,9 +72,7 @@ public class CategoryComp implements Loona {
 		}
 	}
 
-	public void render(FontRenderer r) {
-		mc.gameSettings.guiScale = 2;
-				
+	public void render(FontRenderer r) {				
 		this.width = 92;
 		if (!this.modulesInCategory.isEmpty() && this.categoryOpened) {
 			int categoryHeight = 0;

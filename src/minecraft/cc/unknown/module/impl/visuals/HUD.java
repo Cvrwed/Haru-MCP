@@ -131,6 +131,10 @@ public class HUD extends Module {
 					color.set(getTheme().BLEND.getAccentColor().getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
 					break;
+				case "Bubblegum":
+					color.set(getTheme().BUBBLEGUM.getAccentColor().getRGB());
+					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);
+					break;
 				case "Cherry":
 					color.set(getTheme().CHERRY.getAccentColor().getRGB());
 					y.addAndGet(mc.fontRendererObj.FONT_HEIGHT + margin);

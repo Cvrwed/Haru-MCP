@@ -70,7 +70,7 @@ public class BridgeAssist extends Module {
 
 			if (gliding) {
 				float yaw = MathHelper.wrapAngle180(mc.player.rotationYaw).floatValue();
-				float pitch = MathHelper.wrapAngle90(mc.player.rotationPitch).floatValue();
+				float pitch = MathHelper.wrapAngle180(mc.player.rotationPitch).floatValue();
 				double d0 = Math.abs(yaw - speedYaw);
 				double d1 = Math.abs(yaw + speedYaw);
 				double d2 = Math.abs(pitch - speedPitch);
@@ -103,7 +103,7 @@ public class BridgeAssist extends Module {
 			}
 
 			float yaw = MathHelper.wrapAngle180(mc.player.rotationYaw).floatValue();
-			float pitch = MathHelper.wrapAngle90(mc.player.rotationPitch).floatValue();
+			float pitch = MathHelper.wrapAngle180(mc.player.rotationPitch).floatValue();
 			float range = (float) assistChance.getInput();
 
 			float[] positions = null;

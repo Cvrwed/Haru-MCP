@@ -49,7 +49,7 @@ public class ModuleManager implements Loona {
 				new FakeLag(),
 				new TickBase(),
 				new BackTrack(),
-				//new Ping(),
+				new Ping(),
 				
 				// move
 				new Speed(),

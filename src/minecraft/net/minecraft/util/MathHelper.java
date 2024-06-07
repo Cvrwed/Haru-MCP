@@ -372,30 +372,6 @@ public class MathHelper {
 	    }
 	}
 	
-	public static Number wrapAngle90(Number value) {
-		if (value instanceof Float) {
-			float floatValue = ((Float) value) % 90.0F;
-			if (floatValue >= 90.0F) {
-				floatValue -= 90.0F;
-			}
-			if (floatValue < -90.0F) {
-				floatValue += 90.0F;
-			}
-			return floatValue;
-		} else if (value instanceof Double) {
-			double doubleValue = ((Double) value) % 90.0;
-			if (doubleValue >= 90.0) {
-				doubleValue -= 90.0;
-			}
-			if (doubleValue < -90.0) {
-				doubleValue += 90.0;
-			}
-			return doubleValue;
-		} else {
-			throw new IllegalArgumentException("Unsupported Number type");
-		}
-	}
-	
 	/**
 	 * parses the string as integer or returns the second parameter if it fails
 	 */

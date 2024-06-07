@@ -257,8 +257,6 @@ public class RenderUtil implements Loona {
     }
     
 	public static void drawChestBox(BlockPos bp, int color) {
-		ESP esp = (ESP) Haru.instance.getModuleManager().getModule(ESP.class);
-
 		if (bp != null) {
 			double x = bp.getX() - mc.getRenderManager().viewerPosX;
 			double y = bp.getY() - mc.getRenderManager().viewerPosY;
@@ -269,18 +267,20 @@ public class RenderUtil implements Loona {
 			GL11.glDisable(3553);
 			GL11.glDisable(2929);
 			GL11.glDepthMask(false);
-			float a = (color >> 24 & 255) / 255.0F;
+			float a = 228 / 255.0F;
 			float r = (color >> 16 & 255) / 255.0F;
 			float g = (color >> 8 & 255) / 255.0F;
 			float b = (color & 255) / 255.0F;
-			GL11.glColor4d(r, g, b, esp.enableChestColor.isToggled() ? esp.chestOpacity.getInput() / 255.0F : a);
-			RenderGlobal.func_181561_a(new AxisAlignedBB(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D));
-			dbb(new AxisAlignedBB(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D), r, g, b);
+	        GL11.glColor4f(r, g, b, a);
+	        RenderGlobal.func_181561_a(new AxisAlignedBB(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D));
 
-			GL11.glEnable(3553);
-			GL11.glEnable(2929);
-			GL11.glDepthMask(true);
-			GL11.glDisable(3042);
+	        GL11.glColor4f(r, g, b, a * 0.5f);
+	        dbb(new AxisAlignedBB(x, y, z, x + 1.0D, y + 1.0D, z + 1.0D), r, g, b);
+
+	        GL11.glEnable(3553);
+	        GL11.glEnable(2929);
+	        GL11.glDepthMask(true);
+	        GL11.glDisable(3042);
 		}
 	}
 
@@ -424,68 +424,70 @@ public class RenderUtil implements Loona {
     }
     
     private static void dbb(AxisAlignedBB abb, float r, float g, float b) {
-        float a = 0.25F;
+        //float a = 0.25F;
+		ESP esp = (ESP) Haru.instance.getModuleManager().getModule(ESP.class);
+
         Tessellator ts = Tessellator.getInstance();
         WorldRenderer worldRenderer = ts.getWorldRenderer();
         worldRenderer.func_181668_a(7, DefaultVertexFormats.field_181706_f);
-        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
         ts.draw();
         worldRenderer.func_181668_a(7, DefaultVertexFormats.field_181706_f);
-        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
         ts.draw();
         worldRenderer.func_181668_a(7, DefaultVertexFormats.field_181706_f);
-        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
         ts.draw();
         worldRenderer.func_181668_a(7, DefaultVertexFormats.field_181706_f);
-        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
         ts.draw();
         worldRenderer.func_181668_a(7, DefaultVertexFormats.field_181706_f);
-        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
         ts.draw();
         worldRenderer.func_181668_a(7, DefaultVertexFormats.field_181706_f);
-        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.minZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
-        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.maxZ).func_181666_a(r, g, b, a).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.maxY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.minX, abb.minY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.minZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.maxY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
+        worldRenderer.func_181662_b(abb.maxX, abb.minY, abb.maxZ).func_181666_a(r, g, b, 225f).func_181675_d();
         ts.draw();
     }
     

@@ -49,6 +49,7 @@ public class Scaffold extends Module{
 				mc.gameSettings.keyBindSprint.pressed = true;
 				break;
 			}
+			
 			switch(rotationMode.getMode()) {
 			case "Static":
 				

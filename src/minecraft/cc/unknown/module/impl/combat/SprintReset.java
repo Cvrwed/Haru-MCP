@@ -23,7 +23,7 @@ import net.minecraft.network.play.client.CPacketEntityAction;
 @Info(name = "SprintReset", category = Category.Combat)
 public class SprintReset extends Module {
 
-	private ModeValue mode = new ModeValue("Mode", "WTap", "WTap", "STap", "Packet");
+	private ModeValue mode = new ModeValue("Mode", "WTap", "WTap", "STap", "SprintTap", "Packet");
 	private SliderValue packets = new SliderValue("Packets", 2, 0, 10, 2);
 	private SliderValue onceEvery = new SliderValue("Once Every Hits", 0, 0, 10, 1);
 	private SliderValue tapRange = new SliderValue("Tap Range", 3.0, 3.0, 6.0, 0.5);
@@ -31,7 +31,6 @@ public class SprintReset extends Module {
 	private final Cold timer = new Cold(0);
 	private int tap = 0;
 	private int hitsCount = 0;
-	private EntityPlayer target = null;
 
 	public SprintReset() {
 		this.registerSetting(mode, packets, onceEvery, tapRange, chance);
@@ -41,14 +40,12 @@ public class SprintReset extends Module {
 	public void onEnable() {
 		tap = 0;
 		hitsCount = 0;
-		target = null;
 	}
 	
 	@Override
 	public void onDisable() {
 		tap = 0;
 		hitsCount = 0;
-		target = null;
 	}
 
 	@EventLink
@@ -69,10 +66,8 @@ public class SprintReset extends Module {
 			CPacketUseEntity wrapper = (CPacketUseEntity) p;
 			if (wrapper.getAction() == CPacketUseEntity.Mode.ATTACK) {				
 				EntityPlayer entity = (EntityPlayer) wrapper.getEntityFromWorld(mc.world);
-				if (target != null && wrapper.getEntityId() == target.getEntityId()) return;
-				target = entity;
 				
-				if (target.getDistanceToEntity(entity) <= tapRange.getInputToInt()) {
+				if (mc.player.getDistanceToEntity(entity) <= tapRange.getInputToInt()) {
 					hitsCount++;
 					if (hitsCount >= onceEvery.getInputToInt()) {
 						switch (mode.getMode()) {
@@ -116,7 +111,7 @@ public class SprintReset extends Module {
 
 	@EventLink
 	public void onLiving(LivingEvent e) {
-		if (PlayerUtil.inGame() && (PlayerUtil.isMoving() && mode.is("STap"))) {
+		if (PlayerUtil.inGame() && (PlayerUtil.isMoving() && mode.is("STap")) && mc.player.onGround) {
 			if (mode.is("STap")) {
 				switch (tap) {
 				case 2:
@@ -127,6 +122,19 @@ public class SprintReset extends Module {
 				case 1:
 					mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
 					mc.gameSettings.keyBindBack.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindBack);
+					tap--;
+					break;
+				}
+			}
+			
+			if (mode.is("SprintTap")) {
+				switch (tap) {
+				case 2:
+					mc.gameSettings.keyBindSprint.pressed = false;
+					tap--;
+					break;
+				case 1:
+					mc.gameSettings.keyBindSprint.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSprint);
 					tap--;
 					break;
 				}
