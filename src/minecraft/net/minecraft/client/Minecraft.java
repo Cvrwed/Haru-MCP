@@ -547,8 +547,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		GlStateManager.viewport(0, 0, this.displayWidth, this.displayHeight);
 		this.effectRenderer = new EffectRenderer(this.world, this.renderEngine);
 		this.checkGLError("Post startup");
-		this.ingameGUI = new GuiIngame(this);
 		Haru.instance.startClient();
+		this.ingameGUI = new GuiIngame(this);
 		new GameEvent.StartEvent().call();
 
 		if (this.serverName != null) {
@@ -590,7 +590,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
 	private void createDisplay() throws LWJGLException {
 		Display.setResizable(true);
-		Display.setTitle("Minecraft 1.8.9");
+		Display.setTitle("Minecraft 1.5.2");
 
 		try {
 			Display.create((new PixelFormat()).withDepthBits(24));
@@ -969,7 +969,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 			}
 		}
 
-		System.gc();
+		//System.gc();
 	}
 
 	/**
@@ -1145,13 +1145,13 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		}
 
 		try {
-			System.gc();
+			//System.gc();
 			this.loadWorld((WorldClient) null);
 		} catch (Throwable var2) {
 			;
 		}
 
-		System.gc();
+		//System.gc();
 	}
 
 	/**

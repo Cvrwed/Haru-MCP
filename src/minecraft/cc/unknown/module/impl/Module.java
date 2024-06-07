@@ -115,8 +115,12 @@ public class Module implements Loona {
 	}
 
 	public void registerSetting(Setting... s) {
-		this.settings.addAll(Arrays.asList(s));
+		this.getSettings().addAll(Arrays.asList(s));
 	}
+	
+    public void removeSetting(Setting setting) {
+        this.getSettings().remove(setting);
+    }
 
 	public boolean isEnabled() {
 		return this.enabled;

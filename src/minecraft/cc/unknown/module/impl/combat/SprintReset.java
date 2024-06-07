@@ -1,7 +1,7 @@
 package cc.unknown.module.impl.combat;
 
 import cc.unknown.event.impl.EventLink;
-import cc.unknown.event.impl.move.LivingEvent;
+import cc.unknown.event.impl.move.UpdateEvent;
 import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.module.impl.Module;
@@ -10,15 +10,12 @@ import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.client.Cold;
-import cc.unknown.utils.misc.ClickUtil;
-import cc.unknown.utils.network.PacketUtil;
-import cc.unknown.utils.player.CombatUtil;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.network.play.client.CPacketEntityAction;
+import net.minecraft.network.play.client.CPacketUseEntity;
 
 @Info(name = "SprintReset", category = Category.Combat)
 public class SprintReset extends Module {
@@ -35,13 +32,13 @@ public class SprintReset extends Module {
 	public SprintReset() {
 		this.registerSetting(mode, packets, onceEvery, tapRange, chance);
 	}
-	
+
 	@Override
 	public void onEnable() {
 		tap = 0;
 		hitsCount = 0;
 	}
-	
+
 	@Override
 	public void onDisable() {
 		tap = 0;
@@ -54,7 +51,7 @@ public class SprintReset extends Module {
 	}
 
 	@EventLink
-	public void onPacket(PacketEvent e) {		
+	public void onPacket(PacketEvent e) {
 		if (chance.getInput() != 100.0D) {
 			if (Math.random() >= chance.getInput() / 100.0D) {
 				return;
@@ -64,16 +61,17 @@ public class SprintReset extends Module {
 		Packet<?> p = e.getPacket();
 		if (e.isSend() && p instanceof CPacketUseEntity) {
 			CPacketUseEntity wrapper = (CPacketUseEntity) p;
-			if (wrapper.getAction() == CPacketUseEntity.Mode.ATTACK) {				
+			if (wrapper.getAction() == CPacketUseEntity.Mode.ATTACK) {
 				EntityPlayer entity = (EntityPlayer) wrapper.getEntityFromWorld(mc.world);
-				
+
 				if (mc.player.getDistanceToEntity(entity) <= tapRange.getInputToInt()) {
 					hitsCount++;
 					if (hitsCount >= onceEvery.getInputToInt()) {
 						switch (mode.getMode()) {
 						case "Packet":
-							if (mc.player.isSprinting()) setSprinting(false);
-							
+							if (mc.player.isSprinting())
+								setSprinting(false);
+
 							for (int i = 0; i < (packets.getInputToInt() - 2.0); i++) {
 								if (i % 2 == 0) {
 									setSprinting(true);
@@ -81,10 +79,12 @@ public class SprintReset extends Module {
 									setSprinting(false);
 								}
 							}
-							if (mc.player.isSprinting()) setSprinting(true);
+							if (mc.player.isSprinting())
+								setSprinting(true);
 
 							break;
 						case "STap":
+						case "SprintTap":
 						case "WTap":
 							if (timer.reached(500L)) {
 								timer.reset();
@@ -98,60 +98,60 @@ public class SprintReset extends Module {
 			}
 		}
 	}
-	
+
 	private void setSprinting(boolean pacman) {
 		if (pacman) {
-			mc.getNetHandler().sendQueue(
-					new CPacketEntityAction(mc.player, CPacketEntityAction.Mode.START_SPRINTING));
+			mc.getNetHandler().sendQueue(new CPacketEntityAction(mc.player, CPacketEntityAction.Mode.START_SPRINTING));
 		} else {
-			mc.getNetHandler().sendQueue(
-					new CPacketEntityAction(mc.player, CPacketEntityAction.Mode.STOP_SPRINTING));
+			mc.getNetHandler().sendQueue(new CPacketEntityAction(mc.player, CPacketEntityAction.Mode.STOP_SPRINTING));
 		}
 	}
 
 	@EventLink
-	public void onLiving(LivingEvent e) {
-		if (PlayerUtil.inGame() && (PlayerUtil.isMoving() && mode.is("STap")) && mc.player.onGround) {
-			if (mode.is("STap")) {
-				switch (tap) {
-				case 2:
-					mc.gameSettings.keyBindForward.pressed = false;
-					mc.gameSettings.keyBindBack.pressed = true;
-					tap--;
-					break;
-				case 1:
-					mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
-					mc.gameSettings.keyBindBack.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindBack);
-					tap--;
-					break;
+	public void onUpdate(UpdateEvent e) {
+		if (e.isPre()) {
+			if (PlayerUtil.inGame() && (PlayerUtil.isMoving() && mode.is("STap")) && mc.player.onGround) {
+				if (mode.is("STap")) {
+					switch (tap) {
+					case 2:
+						mc.gameSettings.keyBindForward.pressed = false;
+						mc.gameSettings.keyBindBack.pressed = true;
+						tap--;
+						break;
+					case 1:
+						mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
+						mc.gameSettings.keyBindBack.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindBack);
+						tap--;
+						break;
+					}
 				}
-			}
-			
-			if (mode.is("SprintTap")) {
-				switch (tap) {
-				case 2:
-					mc.gameSettings.keyBindSprint.pressed = true;
-					mc.gameSettings.keyBindForward.pressed = false;
-					tap--;
-					break;
-				case 1:
-					mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
-					mc.gameSettings.keyBindSprint.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSprint);
-					tap--;
-					break;
-				}
-			}
 
-			if (mode.is("WTap")) {
-				switch (tap) {
-				case 2:
-					mc.gameSettings.keyBindForward.pressed = false;
-					tap--;
-					break;
-				case 1:
-					mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
-					tap--;
-					break;
+				if (mode.is("SprintTap")) {
+					switch (tap) {
+					case 2:
+						mc.gameSettings.keyBindSprint.pressed = true;
+						mc.gameSettings.keyBindForward.pressed = false;
+						tap--;
+						break;
+					case 1:
+						mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
+						mc.gameSettings.keyBindSprint.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSprint);
+						tap--;
+						break;
+					}
+				}
+
+				if (mode.is("WTap")) {
+					switch (tap) {
+					case 2:
+						mc.gameSettings.keyBindForward.pressed = false;
+						tap--;
+						break;
+					case 1:
+						mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
+						tap--;
+						break;
+					}
 				}
 			}
 		}

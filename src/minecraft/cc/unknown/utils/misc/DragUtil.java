@@ -58,7 +58,11 @@ public class DragUtil implements Loona {
 	}
 
 	public boolean isInside(int x, int y) {
-		return x >= getX() && y >= getY() && x <= getX() + getWidth() && y <= getY() + getHeight();
+		ScaledResolution sr = new ScaledResolution(mc.getMinecraft());
+
+		double width = sr.getScaledWidth();
+		double height = sr.getScaledHeight_double();
+		return x > getX() && y > getY() && x < getX() + width / 1000F * getWidth() && y < getY() + height / 1000F * getHeight();
 	}
 
 	public static double[] setScaledPosition(double x, double y) {

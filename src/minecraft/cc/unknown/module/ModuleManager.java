@@ -36,7 +36,7 @@ public class ModuleManager implements Loona {
 				new AutoBlock(),
 				new Criticals(),
 				new BlockHit(),
-				new KeepSprint(),
+				new HitSelect(),
 				new JumpReset(),
 				new SprintReset(),
 				new Velocity(),
@@ -54,6 +54,7 @@ public class ModuleManager implements Loona {
 				
 				// move
 				new Speed(),
+				new KeepSprint(),
 				//new Flight(),
 				
 				// other

@@ -24,15 +24,19 @@ public class ClickGuiModule extends Module {
 	
     private DescValue a = new DescValue("Color Modes");
     public ModeValue clientTheme = new ModeValue("Color", "Static", "Static", "Aubergine", "Aqua", "Blend", "Bubblegum", "Cherry", "Digital Horizon", "Express", "Lime Water", "Lush", "Halogen",  "Hyper", "Magic", "May", "Orange Juice", "Pastel", "Satin", "Snowy Sky", "Sundae", "Sunkist", "Water");
+    
     private DescValue b = new DescValue("Choose ur perfect waifu");
-    public ModeValue waifuMode = new ModeValue("Waifu", "None", "Uzaki", "Megumin", "Ai", "Mai", "Kiwi", "Astolfo", "Ryo", "Hitori", "None");
+    public ModeValue waifuMode = new ModeValue("Waifu", "Uzaki", "Uzaki", "Megumin", "Ai", "Mai", "Kiwi", "Astolfo", "Ryo", "Hitori", "None");
+    
     private DescValue c = new DescValue("BackGround Modes");
     public ModeValue backGroundMode = new ModeValue("BackGround", "None", "Gradient", "Normal", "None");
+    
     private DescValue d = new DescValue("ClickGui Custom Colors");
 	public SliderValue clickGuiColor = new SliderValue("ClickGui Color [H/S/B]", 0, 0, 350, 10);
 	public SliderValue saturation = new SliderValue("Saturation [H/S/B]", 1.0, 0.0, 1.0, 0.1);
 	public SliderValue brightness = new SliderValue("Brightness [H/S/B]", 1.0, 0.0, 1.0, 0.1);
-    private final KeyBinding[] moveKeys = new KeyBinding[]{mc.gameSettings.keyBindForward, mc.gameSettings.keyBindBack, mc.gameSettings.keyBindRight, mc.gameSettings.keyBindLeft, mc.gameSettings.keyBindJump, mc.gameSettings.keyBindSprint, mc.gameSettings.keyBindSneak};
+    
+	private final KeyBinding[] moveKeys = new KeyBinding[]{mc.gameSettings.keyBindForward, mc.gameSettings.keyBindBack, mc.gameSettings.keyBindRight, mc.gameSettings.keyBindLeft, mc.gameSettings.keyBindJump, mc.gameSettings.keyBindSprint, mc.gameSettings.keyBindSneak};
 
     public ClickGuiModule() {
         this.registerSetting(a, clientTheme, b, waifuMode, c, backGroundMode, d, clickGuiColor, saturation, brightness);

@@ -42,8 +42,8 @@ public class CpsDisplay extends Module {
 	        width.set(screenWidth / 2);
 	        height.set(screenHeight / 100);
 
-	        drawWithBackground(showLeft, CPSHelper.getCPS(MouseButton.LEFT) + " Left CPS", () -> width.get() - 5, height::get, screenWidth, screenHeight);
-	        drawWithBackground(showRight, "Right CPS " + CPSHelper.getCPS(MouseButton.RIGHT), () -> width.get() + 72, height::get, screenWidth, screenHeight);
+	        drawWithBackground(showLeft, CPSHelper.getCPS(MouseButton.LEFT) + " L:", () -> width.get() - 5, height::get, screenWidth, screenHeight);
+	        drawWithBackground(showRight, "R: " + CPSHelper.getCPS(MouseButton.RIGHT), () -> width.get() + 72, height::get, screenWidth, screenHeight);
 	    }
 	}
 
