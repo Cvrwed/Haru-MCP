@@ -6,17 +6,33 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class AttackEvent extends Event {
 
-	private Entity target;
+    /** The target entity of the attack event. */
+    private Entity target;
 
-	public AttackEvent(Entity target) {
-		this.target = target;
-	}
+    /**
+     * Constructs a new {@code AttackEvent} with the specified target entity.
+     *
+     * @param target the target entity of the attack event
+     */
+    public AttackEvent(Entity target) {
+        this.target = target;
+    }
 
-	public Entity getTarget() {
-		return target;
-	}
+    /**
+     * Returns the target entity of the attack event.
+     *
+     * @return the target entity of the attack event
+     */
+    public Entity getTarget() {
+        return target;
+    }
 
-	public void setTarget(Entity target) {
-		this.target = target;
-	}
+    /**
+     * Sets the target entity of the attack event.
+     *
+     * @param target the target entity to set
+     */
+    public void setTarget(Entity target) {
+        this.target = target;
+    }
 }

@@ -54,9 +54,9 @@ public class ModuleManager implements Loona {
 				
 				// move
 				new Speed(),
-				new BlockClutch(),
+				//new BlockClutch(),
 				new KeepSprint(),
-				//new Flight(),
+				new Flight(),
 				
 				// other
 				new Autoplay(),

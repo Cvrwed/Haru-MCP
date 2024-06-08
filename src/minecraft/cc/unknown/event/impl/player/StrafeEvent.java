@@ -75,7 +75,7 @@ public class StrafeEvent extends Event {
         this.friction = friction;
     }
 
-    /**
+	/**
      * Gets the yaw angle.
      *
      * @return The yaw angle.

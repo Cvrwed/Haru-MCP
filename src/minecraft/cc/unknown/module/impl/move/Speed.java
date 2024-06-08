@@ -2,11 +2,13 @@ package cc.unknown.module.impl.move;
 
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.move.MotionEvent;
+import cc.unknown.event.impl.move.MoveEvent;
+import cc.unknown.event.impl.player.JumpEvent;
+import cc.unknown.event.impl.player.StrafeEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.ModeValue;
-import cc.unknown.utils.network.PacketUtil;
 import cc.unknown.utils.player.MoveUtil;
 import cc.unknown.utils.player.PlayerUtil;
 
@@ -24,16 +26,15 @@ public class Speed extends Module {
 	    if (!e.isPre()) {
 	        return;
 	    }
-
-	    if (!PlayerUtil.isMoving()) {
-	        return;
+	    
+	    if (e.isOnGround()) {
+	        mc.player.jump();
 	    }
+
+	    if (!PlayerUtil.isMoving()) return;
 
 	    String mode = this.mode.getMode();
 	    switch (mode) {
-	        case "Strafe":
-	            MoveUtil.strafeY(0);
-	            break;
 	        case "Verus":
 	            MoveUtil.strafe(0.32F);
 	            break;
@@ -43,13 +44,43 @@ public class Speed extends Module {
 	        case "NCP":
 	            MoveUtil.strafe(0.25F);
 	            break;
-	        default:
-	            // Handle unexpected modes if necessary
-	            return;
 	    }
+	}
+	
+	@EventLink
+    public void onStrafe(StrafeEvent e) {
+	    switch (mode.getMode()) {
+        case "Strafe":
+        	if(!mc.player.isSprinting()) {
+        		e.setFriction(e.getFriction() * 1.3F);	
+        	}
 
-	    if (e.isOnGround()) {
-	        mc.player.jump();
+            if(mc.player.onGround && !mc.gameSettings.keyBindJump.isKeyDown()) {
+                mc.player.jump();
+            }
+            break;
+            
 	    }
+    }
+	
+	@EventLink
+    public void onJump(JumpEvent e) {
+        switch (mode.getMode()) {
+            case "Strafe":
+            	e.setYaw(MoveUtil.getPlayerDirection());
+                break;
+        }
+    }
+	
+	@EventLink
+	public void onMove(MoveEvent e) {
+        switch (mode.getMode()) {
+        case "Strafe":
+            if(mc.player.hurtTime <= 10) {
+                MoveUtil.strafe(e);
+            }
+            break;
+            
+        }
 	}
 }

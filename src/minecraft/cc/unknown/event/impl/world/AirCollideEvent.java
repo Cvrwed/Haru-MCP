@@ -8,101 +8,238 @@ import net.minecraft.util.vec.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class AirCollideEvent extends Event {
-	private AxisAlignedBB returnValue;
-	private World worldIn;
-	private BlockPos pos;
-	private IBlockState state;
-	private double minX, minY, minZ, maxX, maxY, maxZ;
 
-	public AirCollideEvent(World worldIn, BlockPos pos, IBlockState state, double minX, double minY, double minZ,
-			double maxX, double maxY, double maxZ) {
-		this.worldIn = worldIn;
-		this.pos = pos;
-		this.state = state;
-		this.minX = minX;
-		this.minY = minY;
-		this.minZ = minZ;
-		this.maxX = maxX;
-		this.maxY = maxY;
-		this.maxZ = maxZ;
-	}
+    /** The return value indicating the collision area. */
+    private AxisAlignedBB returnValue;
 
-	public AxisAlignedBB getReturnValue() {
-		return returnValue;
-	}
+    /** The world in which the collision occurs. */
+    private World worldIn;
 
-	public void setReturnValue(AxisAlignedBB returnValue) {
-		this.returnValue = returnValue;
-	}
+    /** The position of the collision. */
+    private BlockPos pos;
 
-	public World getWorldIn() {
-		return worldIn;
-	}
+    /** The block state at the collision position. */
+    private IBlockState state;
 
-	public void setWorldIn(World worldIn) {
-		this.worldIn = worldIn;
-	}
+    /** The minimum x-coordinate of the collision area. */
+    private double minX;
 
-	public BlockPos getPos() {
-		return pos;
-	}
+    /** The minimum y-coordinate of the collision area. */
+    private double minY;
 
-	public void setPos(BlockPos pos) {
-		this.pos = pos;
-	}
+    /** The minimum z-coordinate of the collision area. */
+    private double minZ;
 
-	public IBlockState getState() {
-		return state;
-	}
+    /** The maximum x-coordinate of the collision area. */
+    private double maxX;
 
-	public void setState(IBlockState state) {
-		this.state = state;
-	}
+    /** The maximum y-coordinate of the collision area. */
+    private double maxY;
 
-	public double getMinX() {
-		return minX;
-	}
+    /** The maximum z-coordinate of the collision area. */
+    private double maxZ;
 
-	public void setMinX(double minX) {
-		this.minX = minX;
-	}
+    /**
+     * Constructs a new {@code AirCollideEvent} with the specified parameters.
+     *
+     * @param worldIn the world in which the collision occurs
+     * @param pos the position of the collision
+     * @param state the block state at the collision position
+     * @param minX the minimum x-coordinate of the collision area
+     * @param minY the minimum y-coordinate of the collision area
+     * @param minZ the minimum z-coordinate of the collision area
+     * @param maxX the maximum x-coordinate of the collision area
+     * @param maxY the maximum y-coordinate of the collision area
+     * @param maxZ the maximum z-coordinate of the collision area
+     */
+    public AirCollideEvent(World worldIn, BlockPos pos, IBlockState state, double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+        this.worldIn = worldIn;
+        this.pos = pos;
+        this.state = state;
+        this.minX = minX;
+        this.minY = minY;
+        this.minZ = minZ;
+        this.maxX = maxX;
+        this.maxY = maxY;
+        this.maxZ = maxZ;
+    }
 
-	public double getMinY() {
-		return minY;
-	}
+    /**
+     * Returns the return value indicating the collision area.
+     *
+     * @return the collision area
+     */
+    public AxisAlignedBB getReturnValue() {
+        return returnValue;
+    }
 
-	public void setMinY(double minY) {
-		this.minY = minY;
-	}
+    /**
+     * Sets the return value indicating the collision area.
+     *
+     * @param returnValue the collision area to set
+     */
+    public void setReturnValue(AxisAlignedBB returnValue) {
+        this.returnValue = returnValue;
+    }
 
-	public double getMinZ() {
-		return minZ;
-	}
+    /**
+     * Returns the world in which the collision occurs.
+     *
+     * @return the world in which the collision occurs
+     */
+    public World getWorldIn() {
+        return worldIn;
+    }
 
-	public void setMinZ(double minZ) {
-		this.minZ = minZ;
-	}
+    /**
+     * Sets the world in which the collision occurs.
+     *
+     * @param worldIn the world to set
+     */
+    public void setWorldIn(World worldIn) {
+        this.worldIn = worldIn;
+    }
 
-	public double getMaxX() {
-		return maxX;
-	}
+    /**
+     * Returns the position of the collision.
+     *
+     * @return the position of the collision
+     */
+    public BlockPos getPos() {
+        return pos;
+    }
 
-	public void setMaxX(double maxX) {
-		this.maxX = maxX;
-	}
+    /**
+     * Sets the position of the collision.
+     *
+     * @param pos the position to set
+     */
+    public void setPos(BlockPos pos) {
+        this.pos = pos;
+    }
 
-	public double getMaxY() {
-		return maxY;
-	}
+    /**
+     * Returns the block state at the collision position.
+     *
+     * @return the block state at the collision position
+     */
+    public IBlockState getState() {
+        return state;
+    }
 
-	public void setMaxY(double maxY) {
-		this.maxY = maxY;
-	}
+    /**
+     * Sets the block state at the collision position.
+     *
+     * @param state the block state to set
+     */
+    public void setState(IBlockState state) {
+        this.state = state;
+    }
 
-	public double getMaxZ() {
-		return maxZ;
-	}
+    /**
+     * Returns the minimum x-coordinate of the collision area.
+     *
+     * @return the minimum x-coordinate of the collision area
+     */
+    public double getMinX() {
+        return minX;
+    }
 
+    /**
+     * Sets the minimum x-coordinate of the collision area.
+     *
+     * @param minX the minimum x-coordinate to set
+     */
+    public void setMinX(double minX) {
+        this.minX = minX;
+    }
+
+    /**
+     * Returns the minimum y-coordinate of the collision area.
+     *
+     * @return the minimum y-coordinate of the collision area
+     */
+    public double getMinY() {
+        return minY;
+    }
+
+    /**
+     * Sets the minimum y-coordinate of the collision area.
+     *
+     * @param minY the minimum y-coordinate to set
+     */
+    public void setMinY(double minY) {
+        this.minY = minY;
+    }
+
+    /**
+     * Returns the minimum z-coordinate of the collision area.
+     *
+     * @return the minimum z-coordinate of the collision area
+     */
+    public double getMinZ() {
+        return minZ;
+    }
+
+    /**
+     * Sets the minimum z-coordinate of the collision area.
+     *
+     * @param minZ the minimum z-coordinate to set
+     */
+    public void setMinZ(double minZ) {
+        this.minZ = minZ;
+    }
+
+    /**
+     * Returns the maximum x-coordinate of the collision area.
+     *
+     * @return the maximum x-coordinate of the collision area
+     */
+    public double getMaxX() {
+        return maxX;
+    }
+
+    /**
+     * Sets the maximum x-coordinate of the collision area.
+     *
+     * @param maxX the maximum x-coordinate to set
+     */
+    public void setMaxX(double maxX) {
+        this.maxX = maxX;
+    }
+
+    /**
+     * Returns the maximum y-coordinate of the collision area.
+     *
+     * @return the maximum y-coordinate of the collision area
+     */
+    public double getMaxY() {
+        return maxY;
+    }
+
+    /**
+     * Sets the maximum y-coordinate of the collision area.
+     *
+     * @param maxY the maximum y-coordinate to set
+     */
+    public void setMaxY(double maxY) {
+        this.maxY = maxY;
+    }
+
+    /**
+     * Returns the maximum z-coordinate of the collision area.
+     *
+     * @return the maximum z-coordinate of the collision area
+     */
+    public double getMaxZ() {
+        return maxZ;
+    }
+
+    /**
+     * Sets the maximum z-coordinate of the collision area.
+     *
+     * @param maxZ the maximum z-coordinate to set
+     */
 	public void setMaxZ(double maxZ) {
 		this.maxZ = maxZ;
 	}

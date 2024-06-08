@@ -41,6 +41,10 @@ public class Cold {
     public boolean firstFinish() {
         return checkAndSetFinish(() -> System.currentTimeMillis() >= (time + lastMs));
     }
+    
+    public boolean elapsed(long ms) {
+    	return (System.currentTimeMillis() - this.lastMs > ms);
+    }
 
     /**
      * Sets the cooldown time to a specified duration.

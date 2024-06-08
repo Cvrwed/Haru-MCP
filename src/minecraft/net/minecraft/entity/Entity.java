@@ -562,9 +562,9 @@ public abstract class Entity implements ICommandSender, Loona {
 		MoveEvent e = new MoveEvent(x, y, z);
 		if (this instanceof EntityPlayerSP) {
 			e.call();
-			x = e.getMotionX();
-			y = e.getMotionY();
-			z = e.getMotionZ();
+			x = e.getX();
+			y = e.getY();
+			z = e.getZ();
 			if (e.isCancelled()) {
 				return;
 			}

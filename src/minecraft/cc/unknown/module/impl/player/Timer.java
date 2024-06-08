@@ -35,15 +35,11 @@ public class Timer extends Module {
 	private BooleanValue onlyOnGround = new BooleanValue("Only on ground", false);
 	private BooleanValue speedOnly = new BooleanValue("Only Speed Potion", false);
 	private BooleanValue onlyForward = new BooleanValue("Only Forward", false);
-	private BooleanValue noCombo = new BooleanValue("No Combo", false);
-
-	private BooleanValue blink = new BooleanValue("Blink", false);
 	
 	private LinkedList<Packet> packets = new LinkedList<Packet>();
 
 	public Timer() {
-		this.registerSetting(mode, spid, variation, weaponOnly, onlyOnGround, speedOnly, onlyForward, noCombo,
-				blink);
+		this.registerSetting(mode, spid, variation, weaponOnly, onlyOnGround, speedOnly, onlyForward);
 	}
 
 	@Override
@@ -69,19 +65,6 @@ public class Timer extends Module {
 	    }
 
 	    mc.timer.timerSpeed = timerSpeed;
-	}
-	
-	@EventLink
-	public void onPacket(PacketEvent e) {
-	    Packet<?> p = e.getPacket();
-
-	    if (e.isSend() && p instanceof CPacketPlayer) {
-	        if (blink.isToggled()) {
-	            mc.timer.timerSpeed = 1.0f;
-	            e.setCancelled(true);
-	            packets.add(p);
-	        }
-	    }
 	}
 	
 	private float calculateConstantTimer() {
@@ -124,11 +107,7 @@ public class Timer extends Module {
 	    if (onlyForward.isToggled() && !mc.gameSettings.keyBindForward.pressed || getDistancePrediction() > mc.player.getDistanceToEntity(mc.player) + 0.08) {
 	    	return 1.0f;	
 	    }
-	    
-	    if (noCombo.isToggled() && mc.player.getDistance(mc.player.posX, mc.player.posY, mc.player.posZ) < mc.player.getDistance(0, 0, 0)) {
-	    	return 1.0f;	
-	    }
-	    
+
 	    return timer;
 	}
 }

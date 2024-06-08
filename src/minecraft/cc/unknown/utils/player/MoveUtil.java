@@ -1,5 +1,8 @@
 package cc.unknown.utils.player;
 
+import org.lwjgl.input.Keyboard;
+
+import cc.unknown.event.impl.move.MoveEvent;
 import cc.unknown.event.impl.move.MoveInputEvent;
 import cc.unknown.utils.Loona;
 import net.minecraft.client.settings.GameSettings;
@@ -24,16 +27,16 @@ public class MoveUtil implements Loona {
 
 		return new float[] { forward, strafe };
 	}
-	
-    public static void correctInput(MoveInputEvent e, float yaw) {
-        float f1 = MathHelper.sin((mc.player.rotationYaw - yaw) * (float) Math.PI / 180.0F);
-        float f2 = MathHelper.cos((mc.player.rotationYaw - yaw) * (float) Math.PI / 180.0F);
-        float x = e.getStrafe() * f2 - e.getForward() * f1;
-        float z = e.getForward() * f2 + e.getStrafe() * f1;
 
-        e.setStrafe(Math.round(x));
-        e.setForward(Math.round(z));
-    }
+	public static void correctInput(MoveInputEvent e, float yaw) {
+		float f1 = MathHelper.sin((mc.player.rotationYaw - yaw) * (float) Math.PI / 180.0F);
+		float f2 = MathHelper.cos((mc.player.rotationYaw - yaw) * (float) Math.PI / 180.0F);
+		float x = e.getStrafe() * f2 - e.getForward() * f1;
+		float z = e.getForward() * f2 + e.getStrafe() * f1;
+
+		e.setStrafe(Math.round(x));
+		e.setForward(Math.round(z));
+	}
 
 	public static float getPlayerDirection() {
 		float direction = mc.player.rotationYaw;
@@ -70,6 +73,10 @@ public class MoveUtil implements Loona {
 	public static float direction(float rotationYaw) {
 		return direction(rotationYaw, mc.player.moveForward, mc.player.moveStrafing);
 	}
+	
+	public static double getHypot() {
+		return Math.hypot(mc.player.motionX, mc.player.motionZ);
+	}
 
 	public static float direction(float rotationYaw, float forward, float strafe) {
 		return (float) Math.toRadians(directionYaw(rotationYaw, forward, strafe));
@@ -99,12 +106,28 @@ public class MoveUtil implements Loona {
 		strafe(direction(), speed);
 	}
 
+	public static void strafe(MoveEvent e) {
+		strafe(e, getHypot());
+	}
+
 	public static void strafeY(float speed) {
 		strafe(direction(), speed);
 		if (mc.player.onGround) {
 			mc.player.jump();
 		}
 	}
+
+    public static void strafe(MoveEvent event, double speed) {
+        float direction = (float) Math.toRadians(getPlayerDirection());
+
+        if (PlayerUtil.isMoving()) {
+            event.setX(mc.player.motionX = -Math.sin(direction) * speed);
+            event.setZ(mc.player.motionZ = Math.cos(direction) * speed);
+        } else {
+            event.setX(mc.player.motionX = 0);
+            event.setZ(mc.player.motionZ = 0);
+        }
+    }
 
 	public static boolean isOnGround(double height) {
 		if (!mc.world.getCollidingBoundingBoxes((Entity) mc.player,
@@ -123,12 +146,13 @@ public class MoveUtil implements Loona {
 		return (float) Math.sqrt(motionX * motionX + motionZ * motionZ);
 	}
 
-    public static void updateBinds() {
-        updateBinds(true);
-    }
+	public static void updateBinds() {
+		updateBinds(true);
+	}
 
-    public static void updateBinds(boolean checkGui) {
-        if (checkGui && mc.currentScreen != null) return;
+	public static void updateBinds(boolean checkGui) {
+		if (checkGui && mc.currentScreen != null)
+			return;
 		mc.gameSettings.keyBindJump.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindJump);
 		mc.gameSettings.keyBindSprint.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSprint);
 		mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);

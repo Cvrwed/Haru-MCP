@@ -2656,6 +2656,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		playerSnooper.addStatToSnooper("gl_max_texture_size", Integer.valueOf(getGLMaximumTextureSize()));
 	}
 
+	public void setTimer(Timer timer) {
+		this.timer = timer;
+	}
+
 	/**
 	 * Used in the usage snooper.
 	 */

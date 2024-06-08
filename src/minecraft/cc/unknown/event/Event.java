@@ -1,8 +1,9 @@
 package cc.unknown.event;
 
 import cc.unknown.Haru;
+import cc.unknown.utils.Loona;
 
-public class Event {
+public class Event implements Loona {
 	
 	private boolean cancelled;
 	

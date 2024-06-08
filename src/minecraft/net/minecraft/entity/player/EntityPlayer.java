@@ -10,6 +10,7 @@ import com.mojang.authlib.GameProfile;
 
 import cc.unknown.Haru;
 import cc.unknown.event.impl.move.HitSlowDownEvent;
+import cc.unknown.event.impl.player.PreJumpEvent;
 import cc.unknown.utils.Loona;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
@@ -86,8 +87,8 @@ public abstract class EntityPlayer extends EntityLivingBase {
 	/** Inventory of the player */
 	public InventoryPlayer inventory = new InventoryPlayer(this);
 	private InventoryEnderChest theInventoryEnderChest = new InventoryEnderChest();
-    private final ItemStack[] mainInventory = new ItemStack[36];
-    private final ItemStack[] armorInventory = new ItemStack[4];
+	private final ItemStack[] mainInventory = new ItemStack[36];
+	private final ItemStack[] armorInventory = new ItemStack[4];
 
 	/**
 	 * The Container for the player's inventory (which opens when they press E)
@@ -1188,15 +1189,18 @@ public abstract class EntityPlayer extends EntityLivingBase {
 					boolean flag2 = targetEntity.attackEntityFrom(DamageSource.causePlayerDamage(this), f);
 
 					if (flag2) {
-                        if (i > 0) {
-                            targetEntity.addVelocity(-MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F) * (float)i * 0.5F, 0.1D, MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F) * (float)i * 0.5F);
+						if (i > 0) {
+							targetEntity.addVelocity(
+									-MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F,
+									0.1D,
+									MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F);
 
-                            HitSlowDownEvent e = new HitSlowDownEvent(0.6, false);
-                            Haru.instance.getEventBus().post(e);
-                            this.motionX *= e.getSlowDown();
-                            this.motionZ *= e.getSlowDown();
-                            this.setSprinting(e.isSprint());
-                        }
+							HitSlowDownEvent e = new HitSlowDownEvent(0.6, false);
+							Haru.instance.getEventBus().post(e);
+							this.motionX *= e.getSlowDown();
+							this.motionZ *= e.getSlowDown();
+							this.setSprinting(e.isSprint());
+						}
 
 						if (targetEntity instanceof EntityPlayerMP && targetEntity.velocityChanged) {
 							((EntityPlayerMP) targetEntity).playerNetServerHandler
@@ -1553,10 +1557,12 @@ public abstract class EntityPlayer extends EntityLivingBase {
 	/**
 	 * Causes this entity to do an upwards motion (jumping).
 	 */
+
 	public void jump() {
+		if ((new PreJumpEvent()).call().isCancelled())
+			return;
 		super.jump();
 		this.triggerAchievement(StatList.jumpStat);
-
 		if (this.isSprinting()) {
 			this.addExhaustion(0.8F);
 		} else {
@@ -2012,8 +2018,8 @@ public abstract class EntityPlayer extends EntityLivingBase {
 	public IChatComponent getDisplayName() {
 		IChatComponent ichatcomponent = new ChatComponentText(
 				ScorePlayerTeam.formatPlayerName(this.getTeam(), this.getName()));
-		ichatcomponent.getChatStyle().setChatClickEvent(
-				new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + this.getName() + " "));
+		ichatcomponent.getChatStyle()
+				.setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + this.getName() + " "));
 		ichatcomponent.getChatStyle().setChatHoverEvent(this.getHoverEvent());
 		ichatcomponent.getChatStyle().setInsertion(this.getName());
 		return ichatcomponent;
