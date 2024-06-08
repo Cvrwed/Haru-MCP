@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 
 import de.florianmichael.vialoadingbase.ViaLoadingBase;
+import de.florianmichael.viamcp.ViaMCP;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.INetHandlerPlayServer;
@@ -43,7 +44,7 @@ public class CPacketConfirmTransaction implements Packet<INetHandlerPlayServer> 
 	 * Writes the raw packet data to the data stream.
 	 */
 	public void writePacketData(PacketBuffer buf) throws IOException {
-	    if (ViaLoadingBase.getInstance().getTargetVersion().isNewerThanOrEqualTo(ProtocolVersion.v1_17)) {
+	    if (ViaMCP.INSTANCE.newerThanOrEqualsTo1_17()) {
 	        buf.writeInt(this.windowId);
 	    } else {
 	        buf.writeByte(this.windowId);

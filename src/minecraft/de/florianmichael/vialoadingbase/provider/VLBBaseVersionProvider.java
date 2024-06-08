@@ -20,13 +20,15 @@ package de.florianmichael.vialoadingbase.provider;
 
 import com.viaversion.viaversion.api.connection.UserConnection;
 import com.viaversion.viaversion.protocols.base.BaseVersionProvider;
+
+import cc.unknown.utils.Loona;
 import de.florianmichael.vialoadingbase.ViaLoadingBase;
 
 public class VLBBaseVersionProvider extends BaseVersionProvider {
 
     @Override
     public int getClosestServerProtocol(UserConnection connection) throws Exception {
-        if (connection.isClientSide()) {
+        if (connection.isClientSide() && !Loona.mc.isIntegratedServerRunning()) {
             return ViaLoadingBase.getInstance().getTargetVersion().getVersion();
         }
         return super.getClosestServerProtocol(connection);

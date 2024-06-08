@@ -2,6 +2,10 @@ package net.minecraft.block;
 
 import java.util.List;
 
+import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
+
+import de.florianmichael.vialoadingbase.ViaLoadingBase;
+import de.florianmichael.viamcp.ViaMCP;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -35,9 +39,19 @@ public class BlockLilyPad extends BlockBush {
 	}
 
 	public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
-		return new AxisAlignedBB((double) pos.getX() + this.minX, (double) pos.getY() + this.minY,
-				(double) pos.getZ() + this.minZ, (double) pos.getX() + this.maxX, (double) pos.getY() + this.maxY,
-				(double) pos.getZ() + this.maxZ);
+		boolean client = ViaMCP.INSTANCE.newerThan1_8();
+
+		if (client) {
+			return new AxisAlignedBB((double) pos.getX() + 0.0625D, (double) pos.getY() + 0.0D,
+					(double) pos.getZ() + 0.0625D, (double) pos.getX() + 0.9375D, (double) pos.getY() + 0.09375D,
+					(double) pos.getZ() + 0.9375D);
+
+		} else {
+			return new AxisAlignedBB((double) pos.getX() + this.minX, (double) pos.getY() + this.minY,
+					(double) pos.getZ() + this.minZ, (double) pos.getX() + this.maxX, (double) pos.getY() + this.maxY,
+					(double) pos.getZ() + this.maxZ);
+
+		}
 
 	}
 

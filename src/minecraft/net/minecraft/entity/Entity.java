@@ -5,12 +5,16 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
+import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
+
 import cc.unknown.Haru;
 import cc.unknown.event.impl.move.MoveEvent;
 import cc.unknown.event.impl.player.StrafeEvent;
 import cc.unknown.utils.Loona;
 import cc.unknown.utils.player.MoveUtil;
 import cc.unknown.utils.player.rotation.RotationManager;
+import de.florianmichael.vialoadingbase.ViaLoadingBase;
+import de.florianmichael.viamcp.ViaMCP;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;
@@ -1876,7 +1880,8 @@ public abstract class Entity implements ICommandSender, Loona {
 	}
 
 	public float getCollisionBorderSize() {
-		return 0.1F;
+		boolean client = ViaMCP.INSTANCE.newerThan1_8();
+		return client ? 0.0F : 0.1F;
 	}
 
 	/**

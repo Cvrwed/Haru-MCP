@@ -12,6 +12,7 @@ import cc.unknown.Haru;
 import cc.unknown.event.impl.move.HitSlowDownEvent;
 import cc.unknown.event.impl.player.PreJumpEvent;
 import cc.unknown.utils.Loona;
+import de.florianmichael.viamcp.ViaMCP;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockDirectional;
@@ -753,6 +754,22 @@ public abstract class EntityPlayer extends EntityLivingBase {
 	}
 
 	public EntityItem dropItem(ItemStack droppedItem, boolean dropAround, boolean traceItem) {
+        for (int i = 0; i < this.mainInventory.length; ++i) {
+            if (ViaMCP.INSTANCE.newerThanOrEqualsTo1_16())
+                Loona.mc.getNetHandler().sendQueue(new CPacketAnimation());
+            if (this.mainInventory[i] != null) {
+                this.mainInventory[i] = null;
+            }
+        }
+
+        for (int j = 0; j < this.armorInventory.length; ++j) {
+            if (ViaMCP.INSTANCE.newerThanOrEqualsTo1_16())
+            	Loona.mc.getNetHandler().sendQueue(new CPacketAnimation());
+            if (this.armorInventory[j] != null) {
+                this.armorInventory[j] = null;
+            }
+        }
+        
 		if (droppedItem == null) {
 			return null;
 		} else if (droppedItem.stackSize == 0) {

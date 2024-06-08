@@ -1,5 +1,9 @@
 package net.minecraft.block;
 
+import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
+
+import de.florianmichael.vialoadingbase.ViaLoadingBase;
+import de.florianmichael.viamcp.ViaMCP;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -35,9 +39,10 @@ public class BlockLadder extends Block {
 
 	public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos) {
 		IBlockState iblockstate = worldIn.getBlockState(pos);
+		boolean client = ViaMCP.INSTANCE.newerThan1_8();
 
 		if (iblockstate.getBlock() == this) {
-			float f = 0.125F;
+			float f = client ? 0.1875F : 0.125F;
 
 			switch ((EnumFacing) iblockstate.getValue(FACING)) {
 			case NORTH:

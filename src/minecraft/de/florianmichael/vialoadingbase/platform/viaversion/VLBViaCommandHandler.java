@@ -24,7 +24,6 @@ import de.florianmichael.vialoadingbase.command.impl.LeakDetectSubCommand;
 public class VLBViaCommandHandler extends ViaCommandHandler {
 
     public VLBViaCommandHandler() {
-        super();
         this.registerVLBDefaults();
     }
 

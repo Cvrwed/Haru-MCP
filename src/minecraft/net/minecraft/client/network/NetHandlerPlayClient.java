@@ -25,6 +25,7 @@ import cc.unknown.event.impl.network.KnockBackEvent;
 import cc.unknown.ui.clickgui.HaruGui;
 import cc.unknown.utils.Loona;
 import de.florianmichael.vialoadingbase.ViaLoadingBase;
+import de.florianmichael.viamcp.ViaMCP;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
 import net.minecraft.client.ClientBrandRetriever;
@@ -1084,7 +1085,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	public void handleConfirmTransaction(SPacketConfirmTransaction packetIn) {
 		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
 		
-		if (ViaLoadingBase.getInstance().getTargetVersion().isNewerThanOrEqualTo(ProtocolVersion.v1_17)) {
+		if (ViaMCP.INSTANCE.newerThanOrEqualsTo1_17()) {
 		    this.sendQueue(new CPacketConfirmTransaction(packetIn.getWindowId(), (short) 0, false));
 		    return;
 		}

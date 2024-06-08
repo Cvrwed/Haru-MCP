@@ -28,7 +28,7 @@ import net.minecraft.util.vec.AxisAlignedBB;
 @Info(name = "NoFall", category = Category.Player)
 public class NoFall extends Module {
 	private boolean handling;
-	private ModeValue mode = new ModeValue("Mode", "Legit", "Legit", "Packet");
+	private ModeValue mode = new ModeValue("Mode", "Legit", "Legit", "Packet", "Grim");
 
 	public NoFall() {
 		this.registerSetting(mode);

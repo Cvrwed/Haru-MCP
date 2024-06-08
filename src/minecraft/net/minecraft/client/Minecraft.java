@@ -68,6 +68,7 @@ import cc.unknown.utils.Loona;
 import cc.unknown.utils.helpers.CPSHelper;
 import cc.unknown.utils.player.PlayerUtil;
 import cc.unknown.utils.player.rotation.RotationManager;
+import de.florianmichael.viamcp.ViaMCP;
 import de.florianmichael.viamcp.fixes.AttackOrder;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -1365,12 +1366,13 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 			this.leftClickCounter = 0;
 
 		if (this.leftClickCounter <= 0) {
-			if (leftClick && this.objectMouseOver != null
-					&& this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+			if (leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
 				BlockPos blockPos = this.objectMouseOver.getBlockPos();
+				
+                if (this.player.isUsingItem() && ViaMCP.INSTANCE.newerThanOrEqualsTo1_8())
+                    return;
 
-				if (this.world.getBlockState(blockPos).getBlock().getMaterial() != Material.air
-						&& this.playerController.onPlayerDamageBlock(blockPos, this.objectMouseOver.sideHit)) {
+				if (this.world.getBlockState(blockPos).getBlock().getMaterial() != Material.air && this.playerController.onPlayerDamageBlock(blockPos, this.objectMouseOver.sideHit)) {
 					this.effectRenderer.addBlockHitEffects(blockPos, this.objectMouseOver.sideHit);
 					this.player.swingItem();
 				}

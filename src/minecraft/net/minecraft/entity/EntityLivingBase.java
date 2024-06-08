@@ -10,6 +10,7 @@ import java.util.UUID;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
+import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 
 import cc.unknown.Haru;
 import cc.unknown.event.impl.player.JumpEvent;
@@ -17,6 +18,8 @@ import cc.unknown.module.impl.settings.Fixes;
 import cc.unknown.module.impl.visuals.Animations;
 import cc.unknown.module.impl.visuals.Fullbright;
 import cc.unknown.utils.player.rotation.RotationManager;
+import de.florianmichael.vialoadingbase.ViaLoadingBase;
+import de.florianmichael.viamcp.ViaMCP;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -1754,15 +1757,17 @@ public abstract class EntityLivingBase extends Entity {
 			this.motionZ *= 0.98D;
 		}
 		
-		if (Math.abs(this.motionX) < 0.005D) {
+		boolean client = ViaMCP.INSTANCE.newerThan1_8();
+		
+		if (Math.abs(this.motionX) < (client ? 0.003D : 0.005D)) {
 			this.motionX = 0.0D;
 		}
 
-		if (Math.abs(this.motionY) < 0.005D) {
+		if (Math.abs(this.motionY) < (client ? 0.003D : 0.005D)) {
 			this.motionY = 0.0D;
 		}
 
-		if (Math.abs(this.motionZ) < 0.005D) {
+		if (Math.abs(this.motionZ) < (client ? 0.003D : 0.005D)) {
 			this.motionZ = 0.0D;
 		}
 
