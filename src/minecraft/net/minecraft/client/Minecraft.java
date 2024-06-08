@@ -68,6 +68,7 @@ import cc.unknown.utils.Loona;
 import cc.unknown.utils.helpers.CPSHelper;
 import cc.unknown.utils.player.PlayerUtil;
 import cc.unknown.utils.player.rotation.RotationManager;
+import de.florianmichael.viamcp.fixes.AttackOrder;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.audio.MusicTicker;
@@ -1384,8 +1385,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 			new MouseEvent(0).call();
 			CPSHelper.registerClick(CPSHelper.MouseButton.LEFT);
 
-			this.player.swingItem();
-
+			//this.player.swingItem();
+			AttackOrder.sendConditionalSwing(this.objectMouseOver);
+			
 			if (this.objectMouseOver == null) {
 				logger.error("Null returned as \'hitResult\', this shouldn\'t happen!");
 
@@ -1395,7 +1397,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 			} else {
 				switch (this.objectMouseOver.typeOfHit) {
 				case ENTITY:
-					this.playerController.attackEntity(this.player, this.objectMouseOver.entityHit);
+					AttackOrder.sendFixedAttack(this.player, this.objectMouseOver.entityHit);
+					//this.playerController.attackEntity(this.player, this.objectMouseOver.entityHit);
 					break;
 
 				case BLOCK:

@@ -16,7 +16,7 @@ import net.minecraft.util.vec.AxisAlignedBB;
 @Info(name = "Flight", category = Category.Move)
 public class Flight extends Module {
 
-	private ModeValue mode = new ModeValue("Mode", "Verus", "Verus", "Vanilla", "AirJump");
+	private ModeValue mode = new ModeValue("Mode", "Verus", "Verus", "Vanilla");
 	private double y;
 
 	public Flight() {
@@ -25,8 +25,8 @@ public class Flight extends Module {
 
 	@Override
 	public void onEnable() {
-		super.onEnable();
 		y = mc.player.posY;
+		super.onEnable();
 	}
 
 	@EventLink
@@ -53,38 +53,13 @@ public class Flight extends Module {
 		if (e.isPre()) {
 			switch (mode.getMode()) {
 			case "Vanilla":
-				e.setOnGround(true); 
+				e.setOnGround(true);
 				break;
 			case "Verus":
 				double moveForward = mc.player.movementInput.moveForward;
 				if (moveForward > 0.0f)
 					mc.player.setSprinting(true);
 				break;
-            case "AirJump": 
-                MoveUtil.strafe((float) MoveUtil.getHypot());
-                if (!mc.gameSettings.keyBindSneak.isKeyDown()) {
-                    if (mc.gameSettings.keyBindJump.isKeyDown()) {
-                        if (mc.player.ticksExisted % 2 == 0)
-                            mc.player.motionY = 0.42F;
-                    } else {
-                        if (mc.player.onGround) {
-                            mc.player.jump();
-                        }
-
-                        if (mc.player.fallDistance > 1) {
-                            mc.player.motionY = -((mc.player.posY) - Math.floor(mc.player.posY));
-                        }
-
-                        if (mc.player.motionY == 0) {
-                            mc.player.jump();
-
-                            mc.player.onGround = true;
-                            mc.player.fallDistance = 0;
-                            e.setOnGround(true);
-                        }
-                    }
-                }
-                break;
 			}
 		}
 	}
@@ -94,7 +69,7 @@ public class Flight extends Module {
 		switch (mode.getMode()) {
 		case "Verus":
 			if (e.getState().getBlock() instanceof BlockAir && e.getPos().getY() <= y) {
-			    e.setReturnValue(AxisAlignedBB.fromBounds(e.getPos().getX(), e.getPos().getY(), e.getPos().getZ(), (e.getPos().getX() + 1), y, (e.getPos().getZ() + 1))); 
+				e.setBoundingBox(AxisAlignedBB.fromBounds(e.getPos().getX(), e.getPos().getY(), e.getPos().getZ(), (e.getPos().getX() + 1), y, (e.getPos().getZ() + 1)));
 			}
 			break;
 		}

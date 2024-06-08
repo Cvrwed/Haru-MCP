@@ -52,7 +52,7 @@ public class Speed extends Module {
 	    switch (mode.getMode()) {
         case "Strafe":
         	if(!mc.player.isSprinting()) {
-        		e.setFriction(e.getFriction() * 1.3F);	
+        		e.setFriction(e.getFriction() * 1.3F);
         	}
 
             if(mc.player.onGround && !mc.gameSettings.keyBindJump.isKeyDown()) {

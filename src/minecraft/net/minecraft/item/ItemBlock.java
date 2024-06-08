@@ -2,8 +2,8 @@ package net.minecraft.item;
 
 import java.util.List;
 
+import de.florianmichael.viamcp.fixes.FixedSoundEngine;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,7 +38,7 @@ public class ItemBlock extends Item {
 	 * @param side The side being right-clicked
 	 */
 	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-		IBlockState iblockstate = worldIn.getBlockState(pos);
+		/*IBlockState iblockstate = worldIn.getBlockState(pos);
 		Block block = iblockstate.getBlock();
 
 		if (!block.isReplaceable(worldIn, pos)) {
@@ -70,7 +70,8 @@ public class ItemBlock extends Item {
 			return true;
 		} else {
 			return false;
-		}
+		}*/
+		return FixedSoundEngine.onItemUse(this, stack, playerIn, worldIn, pos, side, hitX, hitY, hitZ);
 	}
 
 	public static boolean setTileEntityNBT(World worldIn, EntityPlayer pos, BlockPos stack, ItemStack p_179224_3_) {

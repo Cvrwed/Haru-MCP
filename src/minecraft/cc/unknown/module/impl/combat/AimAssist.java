@@ -71,6 +71,7 @@ public class AimAssist extends Module {
 		if (mc.player == null || mc.currentScreen != null || !mc.inGameHasFocus) {
 			return;
 		}
+		
 		if (disableAimWhileBreakingBlock.isToggled() && mc.objectMouseOver != null) {
 			BlockPos blockPos = mc.objectMouseOver.getBlockPos();
 			if (blockPos != null) {
@@ -118,7 +119,7 @@ public class AimAssist extends Module {
 	}
 
 	@EventLink
-	public void onJump(MotionEvent e) {
+	public void onMotion(MotionEvent e) {
 		if (enemy != null && moveFix.isToggled()) {
 			RotationManager.setStrafeFix(true, false);
 		} else {
@@ -132,8 +133,7 @@ public class AimAssist extends Module {
 			return null;
 		List<EntityPlayer> targets = new ArrayList<>();
 
-		for (Entity entity : mc.world.getLoadedEntityList().stream().filter(Objects::nonNull)
-				.collect(Collectors.toList())) {
+		for (Entity entity : mc.world.getLoadedEntityList().stream().filter(Objects::nonNull).collect(Collectors.toList())) {
 			if (entity instanceof EntityPlayer) {
 				EntityPlayer player = (EntityPlayer) entity;
 				if (player == mc.player) continue;

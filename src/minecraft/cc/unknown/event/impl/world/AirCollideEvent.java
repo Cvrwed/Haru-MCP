@@ -9,8 +9,8 @@ import net.minecraft.world.World;
 
 public class AirCollideEvent extends Event {
 
-    /** The return value indicating the collision area. */
-    private AxisAlignedBB returnValue;
+    /** The boundingBox indicating the collision area. */
+    private AxisAlignedBB boundingBox;
 
     /** The world in which the collision occurs. */
     private World worldIn;
@@ -69,8 +69,8 @@ public class AirCollideEvent extends Event {
      *
      * @return the collision area
      */
-    public AxisAlignedBB getReturnValue() {
-        return returnValue;
+    public AxisAlignedBB getBoundingBox() {
+        return boundingBox;
     }
 
     /**
@@ -78,8 +78,8 @@ public class AirCollideEvent extends Event {
      *
      * @param returnValue the collision area to set
      */
-    public void setReturnValue(AxisAlignedBB returnValue) {
-        this.returnValue = returnValue;
+    public void setBoundingBox(AxisAlignedBB boundingBox) {
+        this.boundingBox = boundingBox;
     }
 
     /**

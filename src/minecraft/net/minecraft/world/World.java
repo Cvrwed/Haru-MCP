@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import cc.unknown.module.impl.exploit.TickBase;
+import de.florianmichael.viamcp.fixes.FixedSoundEngine;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockLiquid;
@@ -379,7 +380,7 @@ public abstract class World implements IBlockAccess {
 	 * drops
 	 */
 	public boolean destroyBlock(BlockPos pos, boolean dropBlock) {
-		IBlockState iblockstate = this.getBlockState(pos);
+		/*IBlockState iblockstate = this.getBlockState(pos);
 		Block block = iblockstate.getBlock();
 
 		if (block.getMaterial() == Material.air) {
@@ -392,7 +393,9 @@ public abstract class World implements IBlockAccess {
 			}
 
 			return this.setBlockState(pos, Blocks.air.getDefaultState(), 3);
-		}
+		}*/
+		return FixedSoundEngine.destroyBlock(this, pos, dropBlock);
+
 	}
 
 	/**

@@ -32,7 +32,7 @@ public class BlockAir extends Block {
 		if (airCollideEvent.isCancelled())
 			return null;
 
-		return airCollideEvent.getReturnValue();
+		return airCollideEvent.getBoundingBox();
 	}
 
 	/**
