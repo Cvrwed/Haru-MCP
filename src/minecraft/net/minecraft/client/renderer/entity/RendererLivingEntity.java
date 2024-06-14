@@ -582,15 +582,15 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 	}
 
 	public void renderName(T entity, double x, double y, double z) {
-		RenderEvent e = new RenderEvent(RenderType.RenderLabel, entity, x, y, z);
-		Haru.instance.getEventBus().post(e);
-		if (e.isCancelled())
-			return;
-
 		if (!Reflector.RenderLivingEvent_Specials_Pre_Constructor.exists()
 				|| !Reflector.postForgeBusEvent(Reflector.RenderLivingEvent_Specials_Pre_Constructor,
 						new Object[] { entity, this, Double.valueOf(x), Double.valueOf(y), Double.valueOf(z) })) {
 			if (this.canRenderName(entity)) {
+				RenderEvent e = new RenderEvent(RenderType.RenderLabel, entity, x, y, z);
+				Haru.instance.getEventBus().post(e);
+				if (e.isCancelled())
+					return;
+				
 				double d0 = entity.getDistanceSqToEntity(this.renderManager.livingPlayer);
 				float f = entity.isSneaking() ? NAME_TAG_RANGE_SNEAK : NAME_TAG_RANGE;
 

@@ -1,12 +1,7 @@
 package cc.unknown.module.impl.combat;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.move.MotionEvent;
@@ -17,31 +12,29 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
-import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.misc.ClickUtil;
-import net.minecraft.client.gui.GuiScreen;
 
 @Info(name = "AutoClick", category = Category.Combat)
 public class AutoClick extends Module {
 
 	private ModeValue clickMode = new ModeValue("Click Mode", "Left", "Left", "Right", "Both");
 
-	private final DoubleSliderValue leftCPS = new DoubleSliderValue("Left Click Speed", 16, 19, 1, 80, 0.05);
+	private final SliderValue leftCPS = new SliderValue("Left Click Speed", 19, 1, 80, 0.05);
 	private final BooleanValue weaponOnly = new BooleanValue("Only Use Weapons", false);
 	private final BooleanValue breakBlocks = new BooleanValue("Break Blocks", false);
 	private BooleanValue invClicker = new BooleanValue("Auto-Click in Inventory", false);
 	private ModeValue invMode = new ModeValue("Inventory Click Mode", "Pre", "Pre", "Post");
 	private SliderValue invDelay = new SliderValue("Click Tick Delay", 5, 0, 10, 1);
 
-	private final DoubleSliderValue rightCPS = new DoubleSliderValue("Right Click Speed", 12, 16, 1, 80, 0.05);
+	private final SliderValue rightCPS = new SliderValue("Right Click Speed", 16, 1, 80, 0.05);
 	private final BooleanValue onlyBlocks = new BooleanValue("Only Use Blocks", false);
 	private final BooleanValue allowEat = new BooleanValue("Allow Eating & Drinking", true);
 	private final BooleanValue allowBow = new BooleanValue("Allow Using Bow", true);
 
 	private ModeValue clickEvent = new ModeValue("Click Event", "Render", "Render", "Render 2", "Tick");
-	private ModeValue clickStyle = new ModeValue("Click Style", "Raven", "Raven", "Kuru", "Megumi");
+	private ModeValue clickStyle = new ModeValue("Click Style", "Raven", "Raven", "Kuru");
 
 	public AutoClick() {
 		this.registerSetting(clickMode, leftCPS, weaponOnly, breakBlocks, invClicker,
@@ -54,9 +47,9 @@ public class AutoClick extends Module {
 		AtomicReference<String> suffixRef = new AtomicReference<>();
 
 		if (clickMode.is("Left")) {
-			suffixRef.set("- [" + leftCPS.getInputMinToInt() + ", " + leftCPS.getInputMaxToInt() + "]");
+			suffixRef.set("- [" + leftCPS.getMin() + ", " + leftCPS.getMax() + "]");
 		} else if (clickMode.is("Right")) {
-			suffixRef.set("- [" + rightCPS.getInputMinToInt() + ", " + rightCPS.getInputMaxToInt() + "]");
+			suffixRef.set("- [" + rightCPS.getMin() + ", " + rightCPS.getMax() + "]");
 		}
 
 		this.setSuffix(suffixRef.get());
@@ -120,10 +113,6 @@ public class AutoClick extends Module {
 				ClickUtil.instance.kuruLeftClick();
 				ClickUtil.instance.kuruRightClick();
 				break;
-			case "Megumi":
-				ClickUtil.instance.megumiLeftClick();
-				ClickUtil.instance.megumiRightClick();
-				break;
 			}
 		} else if (clickMode.is("Left")) {
 			switch (clickStyle.getMode()) {
@@ -133,9 +122,6 @@ public class AutoClick extends Module {
 			case "Kuru":
 				ClickUtil.instance.kuruLeftClick();
 				break;
-			case "Megumi":
-				ClickUtil.instance.megumiLeftClick();
-				break;
 			}
 		} else if (clickMode.is("Right")) {
 			switch (clickStyle.getMode()) {
@@ -144,9 +130,6 @@ public class AutoClick extends Module {
 				break;
 			case "Kuru":
 				ClickUtil.instance.kuruRightClick();
-				break;
-			case "Megumi":
-				ClickUtil.instance.megumiRightClick();
 				break;
 			}
 		}
@@ -160,7 +143,7 @@ public class AutoClick extends Module {
 		return clickStyle;
 	}
 
-	public DoubleSliderValue getLeftCPS() {
+	public SliderValue getLeftCPS() {
 		return leftCPS;
 	}
 
@@ -176,7 +159,7 @@ public class AutoClick extends Module {
 		return invDelay;
 	}
 
-	public DoubleSliderValue getRightCPS() {
+	public SliderValue getRightCPS() {
 		return rightCPS;
 	}
 

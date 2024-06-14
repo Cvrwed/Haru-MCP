@@ -9,7 +9,6 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
-import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.client.Cold;
 import cc.unknown.utils.player.PlayerUtil;
@@ -19,8 +18,8 @@ import net.minecraft.item.EnumAction;
 
 @Info(name = "AutoBlock", category = Category.Combat)
 public class AutoBlock extends Module {
-	private DoubleSliderValue duration = new DoubleSliderValue("Block duration", 20, 100, 1, 500, 1);
-	private DoubleSliderValue distance = new DoubleSliderValue("Distance to player", 0, 3, 0, 6, 0.01);
+	private SliderValue duration = new SliderValue("Block duration", 100, 1, 500, 1);
+	private SliderValue distance = new SliderValue("Distance to player", 3, 0, 6, 0.01);
 	private BooleanValue forceBlock = new BooleanValue("Force Block Animation", true);
 	private SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
 	
@@ -39,7 +38,7 @@ public class AutoBlock extends Module {
 				return;
 
 			if (block) {
-				if ((blockTime.hasFinished() || !Mouse.isButtonDown(0)) && duration.getInputMin() <= blockTime.getTime()) {
+				if ((blockTime.hasFinished() || !Mouse.isButtonDown(0)) && duration.getInput() <= blockTime.getTime()) {
 					block = false;
 					release();
 				}
@@ -47,12 +46,12 @@ public class AutoBlock extends Module {
 			}
 
 			if (Mouse.isButtonDown(0) && mc.objectMouseOver != null && mc.objectMouseOver.entityHit != null
-					&& mc.player.getDistanceToEntity(mc.objectMouseOver.entityHit) >= distance.getInputMin()
+					&& mc.player.getDistanceToEntity(mc.objectMouseOver.entityHit) >= distance.getInput()
 					&& mc.objectMouseOver.entityHit != null
-					&& mc.player.getDistanceToEntity(mc.objectMouseOver.entityHit) <= distance.getInputMax()
+					&& mc.player.getDistanceToEntity(mc.objectMouseOver.entityHit) <= distance.getInput()
 					&& (chance.getInput() == 100 || Math.random() <= chance.getInput() / 100)) {
 				block = true;
-				blockTime.setCooldown(duration.getInputMaxToLong());
+				blockTime.setCooldown(duration.getInputToLong());
 				blockTime.start();
 				press();
 			}

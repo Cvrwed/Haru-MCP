@@ -38,7 +38,6 @@ import net.minecraft.util.BlockPos;
 @Info(name = "AimAssist", category = Category.Combat)
 public class AimAssist extends Module {
 
-	private ModeValue mode = new ModeValue("Priority", "Low Health", "Low Health", "Distance", "Angle", "Armor");
 	private SliderValue horizontalAimSpeed = new SliderValue("Horizontal Aim Speed", 45, 5, 100, 1);
 	private SliderValue horizontalAimFineTuning = new SliderValue("Horizontal Aim Fine-tuning", 15, 2, 97, 1);
 	private BooleanValue horizontalRandomization = new BooleanValue("Horizontal Randomization", false);
@@ -63,7 +62,7 @@ public class AimAssist extends Module {
 	private EntityPlayer enemy = null; // fixed
 
 	public AimAssist() {
-		this.registerSetting(mode, horizontalAimSpeed, horizontalAimFineTuning, horizontalRandomization, horizontalRandomizationAmount, fieldOfView, enemyDetectionRange, verticalAlignmentCheck, verticalRandomization, verticalRandomizationAmount, verticalAimSpeed, verticalAimFineTuning, clickAim, centerAim, moveFix, ignoreFriendlyEntities, ignoreTeammates, aimAtInvisibleEnemies, lineOfSightCheck, disableAimWhileBreakingBlock, weaponOnly);
+		this.registerSetting(horizontalAimSpeed, horizontalAimFineTuning, horizontalRandomization, horizontalRandomizationAmount, fieldOfView, enemyDetectionRange, verticalAlignmentCheck, verticalRandomization, verticalRandomizationAmount, verticalAimSpeed, verticalAimFineTuning, clickAim, centerAim, moveFix, ignoreFriendlyEntities, ignoreTeammates, aimAtInvisibleEnemies, lineOfSightCheck, disableAimWhileBreakingBlock, weaponOnly);
 	}
 
 	@EventLink
@@ -147,32 +146,6 @@ public class AimAssist extends Module {
 				targets.add(player);
 			}
 		}
-
-		switch (mode.getMode()) {
-		case "Distance": {
-			targets.sort(Comparator.comparingDouble(entity -> mc.player.getDistanceToEntity(entity)));
-		}
-			break;
-		case "Angle": {
-			targets.sort((entity1, entity2) -> {
-				float[] rot1 = RotationManager.getRotations(entity1);
-				float[] rot2 = RotationManager.getRotations(entity2);
-				return (int) ((mc.player.rotationYaw - rot1[0]) - (mc.player.rotationYaw - rot2[0]));
-			});
-		}
-			break;
-		case "Armor": {
-			targets.sort(Comparator.comparingInt(
-					entity -> (entity instanceof EntityPlayer ? ((EntityPlayer) entity).inventory.getTotalArmorValue()
-							: (int) entity.getHealth())));
-		}
-			break;
-		case "Low Health": {
-			targets.sort(Comparator.comparingDouble(entity -> ((EntityPlayer) entity).getHealth()).reversed());
-		}
-			break;
-		}
-
 		return targets.isEmpty() ? null : targets.get(0);
 	}
 

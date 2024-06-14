@@ -10,11 +10,8 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.setting.Setting;
 import cc.unknown.module.setting.impl.BooleanValue;
 import cc.unknown.module.setting.impl.DescValue;
-import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
-import cc.unknown.ui.clickgui.impl.theme.Theme;
-import net.minecraft.client.Minecraft;
 
 public class ModuleComp extends Component {
 	public Module mod;
@@ -46,7 +43,7 @@ public class ModuleComp extends Component {
 
 		for (Component c : this.settings) {
 			c.setOffset(y);
-			if (c instanceof SliderComp || c instanceof DoubleSliderComp) {
+			if (c instanceof SliderComp) {
 				y += 16;
 			} else if (c instanceof BooleanComp || c instanceof DescComp || c instanceof ModeComp
 					|| c instanceof BindComp) {
@@ -116,7 +113,7 @@ public class ModuleComp extends Component {
 			int h = 16;
 
 			for (Component c : this.settings) {
-				if (c instanceof SliderComp || c instanceof DoubleSliderComp) {
+				if (c instanceof SliderComp) {
 					h += 16;
 				} else if (c instanceof BooleanComp || c instanceof DescComp || c instanceof ModeComp
 						|| c instanceof BindComp) {
@@ -175,14 +172,12 @@ public class ModuleComp extends Component {
 			this.settings.add(new BooleanComp(mod, (BooleanValue) setting, this, y));
 		} else if (setting instanceof DescValue) {
 			this.settings.add(new DescComp((DescValue) setting, this, y));
-		} else if (setting instanceof DoubleSliderValue) {
-			this.settings.add(new DoubleSliderComp((DoubleSliderValue) setting, this, y));
 		} else if (setting instanceof ModeValue) {
 			this.settings.add(new ModeComp((ModeValue) setting, this, y));
 		}
 	}
 
 	private int getOffset(Setting setting) {
-		return (setting instanceof SliderValue || setting instanceof DoubleSliderValue) ? 16 : 12;
+		return (setting instanceof SliderValue) ? 16 : 12;
 	}
 }

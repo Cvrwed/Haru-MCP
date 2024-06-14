@@ -8,7 +8,7 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
-import cc.unknown.module.setting.impl.DoubleSliderValue;
+import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.init.Items;
@@ -21,7 +21,7 @@ import net.minecraft.potion.PotionEffect;
 @Info(name = "AutoRefill", category = Category.Other)
 public class AutoRefill extends Module {
 
-	private DoubleSliderValue delay = new DoubleSliderValue("Delay", 0, 0, 0, 500, 1);
+	private SliderValue delay = new SliderValue("Delay", 0, 0, 500, 1);
 	private BooleanValue pots = new BooleanValue("Pots", true);
 	private BooleanValue soup = new BooleanValue("Soup", true);
 
@@ -117,7 +117,7 @@ public class AutoRefill extends Module {
 	}
 
 	private void newDelay() {
-		delay1 = (long) (delay.getInputMin() + (Math.random() * (delay.getInputMax() - delay.getInputMin())));
+		delay1 = (long) (delay.getInput() + (Math.random() * (delay.getInput() - delay.getInput())));
 	}
 
 	private boolean isValidStack(ItemStack stack) {

@@ -12,7 +12,6 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
-import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.misc.ClickUtil;
 import cc.unknown.utils.player.PlayerUtil;
@@ -22,14 +21,13 @@ import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.init.Blocks;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.vec.AxisAlignedBB;
 import net.minecraft.util.vec.Vec3;
 
 @Info(name = "Reach", category = Category.Combat)
 public class Reach extends Module {
-	private DoubleSliderValue rangeCombat = new DoubleSliderValue("Range", 3, 3, 3.0, 6, 0.01);
+	private SliderValue rangeCombat = new SliderValue("Range", 3, 3.0, 6, 0.01);
 	private SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
 	private BooleanValue weapon_only = new BooleanValue("Only Weapon", false);
 	private BooleanValue moving_only = new BooleanValue("Only Move", false);
@@ -43,7 +41,7 @@ public class Reach extends Module {
 	
 	@EventLink
 	public void onGui(ClickGuiEvent e) {
-		this.setSuffix("- [" + rangeCombat.getInputMin() + ", " + rangeCombat.getInputMax() + "]");
+		this.setSuffix("- [" + rangeCombat.getMin() + ", " + rangeCombat.getMax() + "]");
 	}
 		
 	@EventLink
@@ -55,8 +53,8 @@ public class Reach extends Module {
 	}
 	
 	public double getReach() {
-	    double min = Math.min(rangeCombat.getInputMin(), rangeCombat.getInputMax());
-	    double max = Math.max(rangeCombat.getInputMin(), rangeCombat.getInputMax());
+	    double min = Math.min(rangeCombat.getInput(), rangeCombat.getInput());
+	    double max = Math.max(rangeCombat.getInput(), rangeCombat.getInput());
 	    return Math.random() * (max - min) + min;
 	}
 

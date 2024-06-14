@@ -92,12 +92,10 @@ public class Velocity extends Module {
 	            break;
 
 	        case "Universocraft":
-	            adjustPlayerMovement(player -> {
-	                player.motionY = 0.42;
-	                float yawRadians = (float) Math.toRadians(/*player.rotationYaw*/ 1.2224324);
-	                player.motionX -= MathHelper.sin(yawRadians) * 0.0000001;
-	                player.motionZ += MathHelper.cos(yawRadians) * 0.0000001;
-	            });
+				float radians = (float) Math.toDegrees(/* player.rotationYaw */ 1.2224324);
+				mc.player.motionX -= MathHelper.sin(radians) * 0.0000001;
+				mc.player.motionY -= MathHelper.sin(radians) * 0.0000001;
+				mc.player.motionZ -= MathHelper.sin(radians) * 0.0000001;
 	            break;
 
 	        default:

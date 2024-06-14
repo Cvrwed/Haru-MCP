@@ -68,6 +68,14 @@ public class AntiVoid extends Module {
 					wait = false;
 				}
 			}
+
+			if (mode.is("Polar")) {
+				if (e.getPacket() instanceof CPacketPlayer) {
+					if (mc.player.fallDistance > 7 && isOverVoid()) {
+						e.setCancelled(true);
+					}
+				}
+			}
 		}
 
 		if (e.isReceive()) {
@@ -80,16 +88,6 @@ public class AntiVoid extends Module {
 					mc.timer.timerSpeed = 0.2f;
 				}
 			}
-		}
-	}
-
-	@EventLink
-	public void onMove(MoveEvent e) {
-		if (!mc.player.onGround && mc.player.fallDistance > fall.getInput() && mode.is("Polar")) {
-			mc.player.motionY = 0;
-			e.setCancelled(true);
-			shouldStuck = true;
-
 		}
 	}
 
@@ -166,4 +164,11 @@ public class AntiVoid extends Module {
 			this.disable();
 		}
 	}
+	
+    private boolean isOverVoid() {
+        return mc.world.rayTraceBlocks(
+                new Vec3(mc.player.posX, mc.player.posY, mc.player.posZ),
+                new Vec3(mc.player.posX, mc.player.posY - 40, mc.player.posZ),
+                true, true, false) == null;
+    }
 }

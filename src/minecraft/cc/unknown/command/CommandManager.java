@@ -11,7 +11,6 @@ import cc.unknown.event.impl.network.ChatSendEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.setting.Setting;
 import cc.unknown.module.setting.impl.BooleanValue;
-import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.player.PlayerUtil;
@@ -66,9 +65,6 @@ public class CommandManager {
 	                                    ((BooleanValue) setting).setEnabled(Boolean.parseBoolean(arguments[2]));
 	                                } else if (setting instanceof SliderValue) {
 	                                    ((SliderValue) setting).setValue(Double.parseDouble(arguments[2]));
-	                                } else if (setting instanceof DoubleSliderValue) {
-	                                    ((DoubleSliderValue) setting).setValueMin(Double.parseDouble(arguments[2]));
-	                                    ((DoubleSliderValue) setting).setValueMax(Double.parseDouble(arguments[3]));
 	                                } else if (setting instanceof ModeValue) {
 	                                    ((ModeValue) setting).setMode(arguments[2]);
 	                                }

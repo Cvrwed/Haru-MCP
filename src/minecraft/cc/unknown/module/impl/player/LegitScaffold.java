@@ -12,7 +12,6 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
-import cc.unknown.module.setting.impl.DoubleSliderValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.client.Cold;
 import cc.unknown.utils.player.PlayerUtil;
@@ -26,7 +25,7 @@ import net.minecraft.world.WorldSettings;
 public class LegitScaffold extends Module {
 	private SliderValue shiftTime = new SliderValue("Shift Time", 140, 5, 200, 5);
 	private BooleanValue pitchCheck = new BooleanValue("Pitch Check", false);
-	private DoubleSliderValue pitchRange = new DoubleSliderValue("Pitch Range", 70, 85, 0, 90, 1);
+	private SliderValue pitchRange = new SliderValue("Pitch Range", 85, 0, 90, 1);
 	private BooleanValue onlyGround = new BooleanValue("Only Ground", false);
 	private BooleanValue holdShift = new BooleanValue("Hold Shift", false);
 	private BooleanValue slotSwap = new BooleanValue("Block Switching", true);
@@ -132,8 +131,8 @@ public class LegitScaffold extends Module {
 
 	private boolean shouldPitchCheck() {
 		return ((BooleanSupplier) () -> {
-			boolean maxPitch = mc.player.rotationPitch > pitchRange.getInputMax();
-			boolean minPitch = mc.player.rotationPitch < pitchRange.getInputMin();
+			boolean maxPitch = mc.player.rotationPitch > pitchRange.getInput();
+			boolean minPitch = mc.player.rotationPitch < pitchRange.getInput();
 			return (maxPitch || minPitch);
 		}).getAsBoolean();
 	}

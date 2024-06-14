@@ -99,7 +99,7 @@ public class SliderValue extends Setting {
 	}
 	
     private <T extends Number> T getInputValue(Class<T> returnType) {
-        double roundedValue = round(this.value, 2);
+        double roundedValue = round(this.value, 1);
         if (returnType == Double.class) {
             return (T) Double.valueOf(roundedValue);
         } else if (returnType == Float.class) {

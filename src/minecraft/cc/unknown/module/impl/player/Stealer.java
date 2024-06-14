@@ -19,7 +19,7 @@ import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
-import cc.unknown.module.setting.impl.DoubleSliderValue;
+import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.client.Cold;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.client.gui.inventory.GuiChest;
@@ -38,10 +38,10 @@ import net.minecraft.item.ItemSword;
 @Info(name = "Stealer", category = Category.Player)
 public class Stealer extends Module {
 
-	private final DoubleSliderValue openDelay = new DoubleSliderValue("Open Delay", 125, 150, 25, 1000, 25);
-	private final DoubleSliderValue stealDelay = new DoubleSliderValue("Steal Delay", 125, 150, 25, 1000, 25);
+	private final SliderValue openDelay = new SliderValue("Open Delay", 125, 25, 1000, 25);
+	private final SliderValue stealDelay = new SliderValue("Steal Delay", 125, 25, 1000, 25);
 	private final BooleanValue autoClose = new BooleanValue("Auto Close", true);
-	private final DoubleSliderValue closeDelay = new DoubleSliderValue("Close Delay", 0, 0, 0, 1000, 1);
+	private final SliderValue closeDelay = new SliderValue("Close Delay", 0, 0, 1000, 1);
 
 	private final AtomicReference<ArrayList<Slot>> sortedSlots = new AtomicReference<>();
 	private final AtomicReference<ContainerChest> chest = new AtomicReference<>();
@@ -57,7 +57,7 @@ public class Stealer extends Module {
 	
 	@EventLink
 	public void onGui(ClickGuiEvent e) {
-		this.setSuffix("- [" + openDelay.getInputMinToInt() + ", " + openDelay.getInputMaxToInt() + " ms]");
+		this.setSuffix("- [" + openDelay.getInputToInt() + ", " + openDelay.getInputToInt() + " ms]");
 	}
 
 	@EventLink
@@ -68,8 +68,8 @@ public class Stealer extends Module {
 					&& (mc.currentScreen instanceof GuiChest)) {
 				if (!inChest.get()) {
 					chest.set((ContainerChest) mc.player.openContainer);
-					delayTimer.setCooldown((long) ThreadLocalRandom.current().nextDouble(openDelay.getInputMin(),
-							openDelay.getInputMax() + 0.01));
+					delayTimer.setCooldown((long) ThreadLocalRandom.current().nextDouble(openDelay.getInput(),
+							openDelay.getInput() + 0.01));
 					delayTimer.start();
 					generatePath(chest.get());
 					inChest.set(true);
@@ -78,8 +78,8 @@ public class Stealer extends Module {
 				if (inChest.get() && sortedSlots.get() != null && !sortedSlots.get().isEmpty()) {
 					if (delayTimer.hasFinished()) {
 						clickSlot(sortedSlots.get().get(0).s);
-						delayTimer.setCooldown((long) ThreadLocalRandom.current().nextDouble(stealDelay.getInputMin(),
-								stealDelay.getInputMax() + 0.01));
+						delayTimer.setCooldown((long) ThreadLocalRandom.current().nextDouble(stealDelay.getInput(),
+								stealDelay.getInput() + 0.01));
 						delayTimer.start();
 						sortedSlots.get().remove(0);
 					}
@@ -90,8 +90,8 @@ public class Stealer extends Module {
 						mc.player.closeScreen();
 						inChest.set(false);
 					} else {
-						closeTimer.setCooldown((long) ThreadLocalRandom.current().nextDouble(closeDelay.getInputMin(),
-								closeDelay.getInputMax() + 0.01));
+						closeTimer.setCooldown((long) ThreadLocalRandom.current().nextDouble(closeDelay.getInput(),
+								closeDelay.getInput() + 0.01));
 						closeTimer.start();
 					}
 				}
