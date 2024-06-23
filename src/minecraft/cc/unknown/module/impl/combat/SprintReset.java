@@ -1,7 +1,7 @@
 package cc.unknown.module.impl.combat;
 
 import cc.unknown.event.impl.EventLink;
-import cc.unknown.event.impl.move.UpdateEvent;
+import cc.unknown.event.impl.move.LivingEvent;
 import cc.unknown.event.impl.network.PacketEvent;
 import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.module.impl.Module;
@@ -96,50 +96,48 @@ public class SprintReset extends Module {
 	}
 
 	@EventLink
-	public void onUpdate(UpdateEvent e) {
-		if (e.isPre()) {
-			if (PlayerUtil.inGame() && (PlayerUtil.isMoving() && mode.is("STap")) && mc.player.onGround) {
-				if (mode.is("STap")) {
-					switch (tap) {
-					case 2:
-						mc.gameSettings.keyBindForward.pressed = false;
-						mc.gameSettings.keyBindBack.pressed = true;
-						tap--;
-						break;
-					case 1:
-						mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
-						mc.gameSettings.keyBindBack.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindBack);
-						tap--;
-						break;
-					}
+	public void onUpdate(LivingEvent e) {
+		if (PlayerUtil.inGame() && (PlayerUtil.isMoving() && mode.is("STap")) && mc.player.onGround) {
+			if (mode.is("STap")) {
+				switch (tap) {
+				case 2:
+					mc.gameSettings.keyBindForward.pressed = false;
+					mc.gameSettings.keyBindBack.pressed = true;
+					tap--;
+					break;
+				case 1:
+					mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
+					mc.gameSettings.keyBindBack.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindBack);
+					tap--;
+					break;
 				}
+			}
 
-				if (mode.is("SprintTap")) {
-					switch (tap) {
-					case 2:
-						mc.gameSettings.keyBindSprint.pressed = true;
-						mc.gameSettings.keyBindForward.pressed = false;
-						tap--;
-						break;
-					case 1:
-						mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
-						mc.gameSettings.keyBindSprint.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSprint);
-						tap--;
-						break;
-					}
+			if (mode.is("SprintTap")) {
+				switch (tap) {
+				case 2:
+					mc.gameSettings.keyBindSprint.pressed = true;
+					mc.gameSettings.keyBindForward.pressed = false;
+					tap--;
+					break;
+				case 1:
+					mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
+					mc.gameSettings.keyBindSprint.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSprint);
+					tap--;
+					break;
 				}
+			}
 
-				if (mode.is("WTap")) {
-					switch (tap) {
-					case 2:
-						mc.gameSettings.keyBindForward.pressed = false;
-						tap--;
-						break;
-					case 1:
-						mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
-						tap--;
-						break;
-					}
+			if (mode.is("WTap")) {
+				switch (tap) {
+				case 2:
+					mc.gameSettings.keyBindForward.pressed = false;
+					tap--;
+					break;
+				case 1:
+					mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
+					tap--;
+					break;
 				}
 			}
 		}

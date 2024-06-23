@@ -18,7 +18,7 @@ import net.minecraft.network.play.client.CPacketHeldItemChange;
 
 @Info(name = "NoSlow", category = Category.Player)
 public class NoSlow extends Module {
-	public ModeValue mode = new ModeValue("Mode", "Old Grim", "Old Grim", "Vanilla", "No Item Release", "Vulcan");
+	public ModeValue mode = new ModeValue("Mode", "Old Grim", "Old Grim", "Vanilla", "No Item Release", "C08 Tick");
 	public SliderValue vForward = new SliderValue("Vanilla forward", 1.0, 0.2, 1.0, 0.1);
 	public SliderValue vStrafe = new SliderValue("Vanilla strafe", 1.0, 0.2, 1.0, 0.1);
 
@@ -42,7 +42,7 @@ public class NoSlow extends Module {
 			mc.player.movementInput.moveForward *= vForward.getInputToFloat();
 			mc.player.movementInput.moveStrafe *= vStrafe.getInputToFloat();
 			break;
-		case "Vulcan":
+		case "C08 Tick":
 			if (mc.player.ticksExisted % 3 == 0) {
 				mc.getNetHandler().sendQueue(new CPacketPlayerBlockPlacement(mc.player.getHeldItem()));
 			}

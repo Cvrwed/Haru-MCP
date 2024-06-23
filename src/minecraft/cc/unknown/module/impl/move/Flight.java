@@ -26,7 +26,7 @@ import net.minecraft.util.vec.AxisAlignedBB;
 @Info(name = "Flight", category = Category.Move)
 public class Flight extends Module {
 
-	private ModeValue mode = new ModeValue("Mode", "Verus", "Verus", "Vanilla", "Polar");
+	private ModeValue mode = new ModeValue("Mode", "Verus", "Verus", "Vanilla", "Polar 1.9");
 	private final LinkedHashSet<TimedPacket> packetsCatch = new LinkedHashSet<>();
 	private double y;
 	private int ticks = 0;

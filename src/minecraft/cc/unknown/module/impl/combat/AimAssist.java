@@ -50,7 +50,6 @@ public class AimAssist extends Module {
 	private SliderValue verticalAimSpeed = new SliderValue("Vertical Aim Speed", 10, 1, 15, 1);
 	private SliderValue verticalAimFineTuning = new SliderValue("Vertical Aim Fine-tuning", 5, 1, 10, 1);
 	private BooleanValue clickAim = new BooleanValue("Auto Aim on Click", true);
-	private BooleanValue centerAim = new BooleanValue("Instant Aim Centering", false);
 	private BooleanValue moveFix = new BooleanValue("Movement Fix", false);
 	private BooleanValue ignoreFriendlyEntities = new BooleanValue("Ignore Friendly Entities", false);
 	private BooleanValue ignoreTeammates = new BooleanValue("Ignore Teammates", false);
@@ -62,7 +61,7 @@ public class AimAssist extends Module {
 	private EntityPlayer enemy = null; // fixed
 
 	public AimAssist() {
-		this.registerSetting(horizontalAimSpeed, horizontalAimFineTuning, horizontalRandomization, horizontalRandomizationAmount, fieldOfView, enemyDetectionRange, verticalAlignmentCheck, verticalRandomization, verticalRandomizationAmount, verticalAimSpeed, verticalAimFineTuning, clickAim, centerAim, moveFix, ignoreFriendlyEntities, ignoreTeammates, aimAtInvisibleEnemies, lineOfSightCheck, disableAimWhileBreakingBlock, weaponOnly);
+		this.registerSetting(horizontalAimSpeed, horizontalAimFineTuning, horizontalRandomization, horizontalRandomizationAmount, fieldOfView, enemyDetectionRange, verticalAlignmentCheck, verticalRandomization, verticalRandomizationAmount, verticalAimSpeed, verticalAimFineTuning, clickAim, moveFix, ignoreFriendlyEntities, ignoreTeammates, aimAtInvisibleEnemies, lineOfSightCheck, disableAimWhileBreakingBlock, weaponOnly);
 	}
 
 	@EventLink
@@ -86,10 +85,6 @@ public class AimAssist extends Module {
 			if ((clickAim.isToggled() && ClickUtil.instance.isClicking()) || (Mouse.isButtonDown(0) && clicker != null && !clicker.isEnabled()) || !clickAim.isToggled()) {
 				enemy = getEnemy();
 				if (enemy != null) {
-					if (centerAim.isToggled()) {
-						CombatUtil.instance.aim(enemy, 0.0f);
-					}
-
 					double fovEntity = PlayerUtil.fovFromEntity(enemy);
 					double pitchEntity = PlayerUtil.PitchFromEntity(enemy, 0);
 
@@ -127,28 +122,60 @@ public class AimAssist extends Module {
 	}
 
 	public EntityPlayer getEnemy() {
-		int fov = (int) fieldOfView.getInput();
-		if (mc.player == null || mc.world == null)
-			return null;
-		List<EntityPlayer> targets = new ArrayList<>();
+		int fov = fieldOfView.getInputToInt();
+	    List<EntityPlayer> playerList = new ArrayList<>(mc.world.playerEntities);
 
-		for (Entity entity : mc.world.getLoadedEntityList().stream().filter(Objects::nonNull).collect(Collectors.toList())) {
-			if (entity instanceof EntityPlayer) {
-				EntityPlayer player = (EntityPlayer) entity;
-				if (player == mc.player) continue;
+		playerList.sort(new Comparator<EntityPlayer>() {
+		    @Override
+		    public int compare(EntityPlayer player1, EntityPlayer player2) {
+		        // Compara si los jugadores están cerca dentro de una distancia de 3 blocks
+		        boolean p1IsClose = isClose(player1, 3);
+		        boolean p2IsClose = isClose(player2, 3);
+		        if (p1IsClose != p2IsClose) {
+		            return p1IsClose ? -1 : 1;
+		        }
 
-				if (mc.player.getDistanceToEntity(player) > enemyDetectionRange.getInput()) continue;
-				if (ignoreFriendlyEntities.isToggled() && FriendUtil.instance.friends.contains(player.getName())) continue;
-				if (!mc.player.canEntityBeSeen(player) && lineOfSightCheck.isToggled()) continue;
-				if (CombatUtil.instance.isTeam(mc.player, player) && ignoreTeammates.isToggled()) continue;
-				if (!aimAtInvisibleEnemies.isToggled() && player.isInvisible()) continue;
-				if (!centerAim.isToggled() && fov != 360 && !isWithinFOV(player, fov)) continue;
-				targets.add(player);
+		        // Compara la distancia de los jugadores respecto al jugador principal
+		        float distanceToP1 = mc.player.getDistanceToEntity(player1);
+		        float distanceToP2 = mc.player.getDistanceToEntity(player2);
+		        
+		        return Double.compare(distanceToP1, distanceToP2);
+		    }
+		});
+		
+		for (EntityPlayer enemy : playerList) {
+			if (enemy != mc.player && enemy.deathTime == 0) {
+				if (FriendUtil.instance.friends.contains(enemy.getName()) && ignoreFriendlyEntities.isToggled()) {
+					continue;
+				}
+
+				if (!mc.player.canEntityBeSeen(enemy) && lineOfSightCheck.isToggled()) {
+					continue;
+				}
+
+				if (CombatUtil.instance.isTeam(mc.player, enemy) && ignoreTeammates.isToggled()) {
+					continue;
+				}
+
+				if (!aimAtInvisibleEnemies.isToggled() && enemy.isInvisible()) {
+					continue;
+				}
+
+				if (mc.player.getDistanceToEntity(enemy) > enemyDetectionRange.getInput()) {
+					continue;
+				}
+
+				if (fov != 360 && !isWithinFOV(enemy, fov)) {
+					continue;
+				}
+
+				return enemy;
 			}
 		}
-		return targets.isEmpty() ? null : targets.get(0);
-	}
 
+		return null;
+	}
+	
 	private boolean isWithinFOV(EntityPlayer player, int fieldOfView) {
 		return PlayerUtil.fov(player, (float) fieldOfView);
 	}
@@ -156,4 +183,8 @@ public class AimAssist extends Module {
 	private boolean isAirOrLiquidBlock(Block block) {
 		return block == Blocks.air || block instanceof BlockLiquid;
 	}
+	
+    private boolean isClose(EntityPlayer player, double range) {
+    	return mc.player.getDistanceToEntity(player) <= range;
+    }
 }

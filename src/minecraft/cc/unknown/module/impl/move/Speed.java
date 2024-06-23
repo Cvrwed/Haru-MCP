@@ -15,7 +15,7 @@ import cc.unknown.utils.player.PlayerUtil;
 @Info(name = "Speed", category = Category.Move)
 public class Speed extends Module {
 
-	private ModeValue mode = new ModeValue("Mode", "Verus", "Verus", "Strafe", "Watchdog", "NCP");
+	private ModeValue mode = new ModeValue("Mode", "Verus", "Verus", "Strafe", "NCP");
 
 	public Speed() {
 		this.registerSetting(mode);
@@ -37,9 +37,6 @@ public class Speed extends Module {
 	    switch (mode) {
 	        case "Verus":
 	            MoveUtil.strafe(0.32F);
-	            break;
-	        case "Watchdog":
-	            MoveUtil.strafe(MoveUtil.getSpeed());
 	            break;
 	        case "NCP":
 	            MoveUtil.strafe(0.25F);

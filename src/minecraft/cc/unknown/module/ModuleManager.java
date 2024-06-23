@@ -76,7 +76,6 @@ public class ModuleManager implements Loona {
 				new InvManager(),
 				new Stealer(),
 				new FastPlace(),
-				new Scaffold(),
 				new BridgeAssist(),
 				new LegitScaffold(),
 				new Sprint(),
