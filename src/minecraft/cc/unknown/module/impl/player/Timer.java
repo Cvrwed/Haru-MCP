@@ -27,19 +27,14 @@ import net.minecraft.util.MathHelper;
 @Info(name = "Timer", category = Category.Player)
 public class Timer extends Module {
 	
-	private ModeValue mode = new ModeValue("Mode", "Constant", "Constant", "Random", "Ground");
+	private ModeValue mode = new ModeValue("Mode", "Constant", "Constant", "Random");
 	private SliderValue spid = new SliderValue("Speed", 1.5, 0.05, 25, 0.05);
 	private SliderValue variation = new SliderValue("Randomness", 15, 0.05, 50, 0.05);
-	
-	private BooleanValue weaponOnly = new BooleanValue("Only Use Weapons", false);
-	private BooleanValue onlyOnGround = new BooleanValue("Only on ground", false);
-	private BooleanValue speedOnly = new BooleanValue("Only Speed Potion", false);
-	private BooleanValue onlyForward = new BooleanValue("Only Forward", false);
 	
 	private LinkedList<Packet> packets = new LinkedList<Packet>();
 
 	public Timer() {
-		this.registerSetting(mode, spid, variation, weaponOnly, onlyOnGround, speedOnly, onlyForward);
+		this.registerSetting(mode, spid, variation);
 	}
 
 	@Override
@@ -69,7 +64,7 @@ public class Timer extends Module {
 	
 	private float calculateConstantTimer() {
 		float speed = spid.getInputToFloat();
-		return applyConditionals(speed);	
+		return speed;	
 	}
 
 	private double getDistancePrediction() { 
@@ -86,28 +81,6 @@ public class Timer extends Module {
 	    int variationHalf = variation.getInputToInt() / 2;
 	    float randomFactor = ThreadLocalRandom.current().nextFloat() * (variationHalf * 2) - variationHalf;
 	    float adjustedSpeed = Math.max(speed + randomFactor, 1.0f);
-	    return applyConditionals(adjustedSpeed);
-	}
-	
-	private float applyConditionals(float timer) {
-
-	    if (weaponOnly.isToggled() && !PlayerUtil.isHoldingWeapon()) {
-	        return 1.0f;
-	    }
-
-	    if (onlyOnGround.isToggled() && !mc.player.onGround) {
-	        return 1.0f;
-	    }
-
-	    if (speedOnly.isToggled() && !mc.player.isPotionActive(Potion.moveSpeed)) {
-	        return 1.0f;
-	    }
-	    
-	    double predictedDistance = getDistancePrediction();
-	    if (onlyForward.isToggled() && !mc.gameSettings.keyBindForward.pressed || getDistancePrediction() > mc.player.getDistanceToEntity(mc.player) + 0.08) {
-	    	return 1.0f;	
-	    }
-
-	    return timer;
+	    return adjustedSpeed;
 	}
 }

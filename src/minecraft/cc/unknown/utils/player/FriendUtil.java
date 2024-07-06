@@ -8,9 +8,8 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
-public enum FriendUtil implements Loona {
-	instance;
+public class FriendUtil {
 
-	public CopyOnWriteArrayList<String> friends = new CopyOnWriteArrayList<String>();
+	public static CopyOnWriteArrayList<String> friends = new CopyOnWriteArrayList<String>();
 
 }

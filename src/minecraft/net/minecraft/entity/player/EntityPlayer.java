@@ -174,7 +174,7 @@ public abstract class EntityPlayer extends EntityLivingBase {
 	 * This field starts off equal to getMaxItemUseDuration and is decremented on
 	 * each tick
 	 */
-	private int itemInUseCount;
+	public int itemInUseCount;
 	protected float speedOnGround = 0.1F;
 	protected float speedInAir = 0.02F;
 	private int lastXPSound;

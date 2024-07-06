@@ -17,8 +17,12 @@ import cc.unknown.utils.client.Cold;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
+import net.minecraft.network.play.client.CPacketInput;
+import net.minecraft.network.play.client.CPacketPlayerBlockPlacement;
 import net.minecraft.world.WorldSettings;
 
 @Info(name = "LegitScaffold", category = Category.Player)

@@ -24,8 +24,8 @@ import net.minecraft.util.enums.EnumFacing;
 @Info(name = "Velocity", category = Category.Combat)
 public class Velocity extends Module {
 
-	public ModeValue mode = new ModeValue("Mode", "Universocraft", "Packet", "Verus", "Ground Grim", "Minemen", "Watchdog",
-			"Intave", "Universocraft");
+	public ModeValue mode = new ModeValue("Mode", "Packet", "Verus", "Ground Grim", "Minemen",
+			"Intave", "Packet");
 	public SliderValue horizontal = new SliderValue("Horizontal", 90, -100, 100, 1);
 	public SliderValue vertical = new SliderValue("Vertical", 100, -100, 100, 1);
 	public SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
@@ -60,12 +60,6 @@ public class Velocity extends Module {
 		
 	    String mode = this.mode.getMode();
 	    switch (mode) {
-	        case "Watchdog":
-	            if (mc.player.hurtTime == 8) {
-	                MoveUtil.strafe(MoveUtil.getSpeed() * 0.7f);
-	            }
-	            break;
-
 	        case "Packet":
 	        	e.setX(e.getX() * horizontal.getInput() / 100.0);
 	        	e.setY(e.getY() * vertical.getInput() / 100.0);
@@ -90,16 +84,7 @@ public class Velocity extends Module {
 	                ticks = 0;
 	            }
 	            break;
-
-	        case "Universocraft":
-				float radians = (float) Math.toDegrees(/* player.rotationYaw */ 1.2224324);
-				mc.player.motionX -= MathHelper.sin(radians) * 0.0000001;
-				mc.player.motionY -= MathHelper.sin(radians) * 0.0000001;
-				mc.player.motionZ -= MathHelper.sin(radians) * 0.0000001;
-	            break;
-
 	        default:
-	            // Handle unexpected modes if necessary
 	            break;
 	    }
 	}
@@ -147,9 +132,6 @@ public class Velocity extends Module {
 	    	        }
 	    	        reset = false;
 	    	    }
-	            break;
-	        default:
-	        	// Handle unexpected modes if necessary
 	            break;
 	    }
 	}

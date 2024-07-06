@@ -26,7 +26,7 @@ public class FriendCommand extends Command {
 	            this.sendChat(getColor("Red") + "Nick invalid or incorrect.");
 	            return;
 	        }
-	        FriendUtil.instance.friends.remove(args[1]);
+	        FriendUtil.friends.remove(args[1]);
 	        this.sendChat(getColor("Red") + "Removed friend " + args[1]);
 	    } else if (args[0].equalsIgnoreCase("list")) {
 	        this.sendChat(getFriendList());
@@ -43,21 +43,21 @@ public class FriendCommand extends Command {
 	    }
 
 	    String playerName = player.getName();
-	    if (FriendUtil.instance.friends.contains(playerName)) {
+	    if (FriendUtil.friends.contains(playerName)) {
 	        this.sendChat(getColor("Gray") + playerName + " is already your friend");
 	    } else {
-	        FriendUtil.instance.friends.add(playerName);
+	        FriendUtil.friends.add(playerName);
 	        this.sendChat(getColor("Green") + "Added friend " + playerName);
 	    }
 	}
 
 	private String getFriendList() {
-	    if (FriendUtil.instance.friends.isEmpty()) {
+	    if (FriendUtil.friends.isEmpty()) {
 	        return getColor("Gray") + "Your friend list is empty.";
 	    }
 
 	    StringBuilder message = new StringBuilder(getColor("Green") + "Friend list:\n");
-	    for (String friend : FriendUtil.instance.friends) {
+	    for (String friend : FriendUtil.friends) {
 	        message.append("- ").append(friend).append("\n");
 	    }
 	    return message.toString();

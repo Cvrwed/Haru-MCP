@@ -18,21 +18,6 @@ public class MusicPlayer extends Module {
 	public static RadioPlayer radioPlayer = new RadioPlayer();
 	private static final Map<String, String> Urls = new HashMap<>();
 
-	static {
-		Urls.put("Casual", "https://streams.ilovemusic.de/iloveradio1.mp3");
-		Urls.put("Dance", "https://streams.ilovemusic.de/iloveradio36.mp3");
-		Urls.put("Chill Hop", "https://streams.ilovemusic.de/iloveradio17.mp3");
-		Urls.put("Greatest Hits", "https://streams.ilovemusic.de/iloveradio16.mp3");
-		Urls.put("Hard Style", "https://streams.ilovemusic.de/iloveradio21.mp3");
-		Urls.put("Hip Hop", "https://streams.ilovemusic.de/iloveradio35.mp3");
-		Urls.put("Mashup", "https://streams.ilovemusic.de/iloveradio5.mp3");
-		Urls.put("The Club", "https://streams.ilovemusic.de/iloveradio20.mp3");
-		Urls.put("Rap", "https://streams.ilovemusic.de/iloveradio13.mp3");
-		Urls.put("Bass", "https://streams.ilovemusic.de/iloveradio29.mp3");
-		Urls.put("Party Hard", "https://streams.ilovemusic.de/iloveradio14.mp3");
-		Urls.put("The Sun", "https://streams.ilovemusic.de/iloveradio15.mp3");
-	}
-
 	private ModeValue mode = new ModeValue("Mode", "The Sun", "Casual", "Dance", "Chill Hop", "Greatest Hits",
 			"Hard Style", "Hip Hop", "Mashup", "The Club", "Rap", "Bass", "Party Hard", "The Sun");
 	
@@ -77,5 +62,20 @@ public class MusicPlayer extends Module {
 	@EventLink
 	public void onStartGame(GameEvent.StartEvent e) {
 		this.disable();
+	}
+
+	static {
+		Urls.put("Casual", "https://streams.ilovemusic.de/iloveradio1.mp3");
+		Urls.put("Dance", "https://streams.ilovemusic.de/iloveradio36.mp3");
+		Urls.put("Chill Hop", "https://streams.ilovemusic.de/iloveradio17.mp3");
+		Urls.put("Greatest Hits", "https://streams.ilovemusic.de/iloveradio16.mp3");
+		Urls.put("Hard Style", "https://streams.ilovemusic.de/iloveradio21.mp3");
+		Urls.put("Hip Hop", "https://streams.ilovemusic.de/iloveradio35.mp3");
+		Urls.put("Mashup", "https://streams.ilovemusic.de/iloveradio5.mp3");
+		Urls.put("The Club", "https://streams.ilovemusic.de/iloveradio20.mp3");
+		Urls.put("Rap", "https://streams.ilovemusic.de/iloveradio13.mp3");
+		Urls.put("Bass", "https://streams.ilovemusic.de/iloveradio29.mp3");
+		Urls.put("Party Hard", "https://streams.ilovemusic.de/iloveradio14.mp3");
+		Urls.put("The Sun", "https://streams.ilovemusic.de/iloveradio15.mp3");
 	}
 }

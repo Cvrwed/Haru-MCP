@@ -100,39 +100,34 @@ public class AutoClick extends Module {
 		if (clickEvent.is("Tick")) {
 			onClick();
 		}
+		//mc.player.itemInUseCount = 1;
 	}
 
 	private void onClick() {
-		if (clickMode.is("Both")) {
-			switch (clickStyle.getMode()) {
+		String mode = clickMode.getMode();
+		String style = clickStyle.getMode();
+		Runnable runnable = () -> {
+			switch (style) {
 			case "Raven":
-				ClickUtil.instance.ravenLeftClick();
-				ClickUtil.instance.ravenRightClick();
+				if (mode.equals("Both") || mode.equals("Left")) {
+					ClickUtil.instance.ravenLeftClick();
+				}
+				if (mode.equals("Both") || mode.equals("Right")) {
+					ClickUtil.instance.ravenRightClick();
+				}
 				break;
 			case "Kuru":
-				ClickUtil.instance.kuruLeftClick();
-				ClickUtil.instance.kuruRightClick();
+				if (mode.equals("Both") || mode.equals("Left")) {
+					ClickUtil.instance.kuruLeftClick();
+				}
+				if (mode.equals("Both") || mode.equals("Right")) {
+					ClickUtil.instance.kuruRightClick();
+				}
 				break;
 			}
-		} else if (clickMode.is("Left")) {
-			switch (clickStyle.getMode()) {
-			case "Raven":
-				ClickUtil.instance.ravenLeftClick();
-				break;
-			case "Kuru":
-				ClickUtil.instance.kuruLeftClick();
-				break;
-			}
-		} else if (clickMode.is("Right")) {
-			switch (clickStyle.getMode()) {
-			case "Raven":
-				ClickUtil.instance.ravenRightClick();
-				break;
-			case "Kuru":
-				ClickUtil.instance.kuruRightClick();
-				break;
-			}
-		}
+		};
+
+		runnable.run();
 	}
 
 	public ModeValue getClickMode() {

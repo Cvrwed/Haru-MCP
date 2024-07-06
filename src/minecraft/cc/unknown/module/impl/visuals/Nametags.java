@@ -52,53 +52,59 @@ public class Nametags extends Module {
 
 	@EventLink
 	public void onRender(RenderEvent e) {
-		if (e.isLabel()) {
-			String playerName = e.getTarget().getDisplayName().getFormattedText();
+		try {
+			if (e.isLabel()) {
+				String playerName = e.getTarget().getDisplayName().getFormattedText();
 
-			if (playerName == null || playerName.isEmpty()) {
-				return;
-			}
-
-			if (!CombatUtil.instance.canTarget(e.getTarget())) {
-				return;
-			}
-
-			double playerDistance = mc.player.getDistanceToEntity(e.getTarget());
-			if (!(playerDistance <= range.getInput() || range.getInput() == 0.0D)) {
-				return;
-			}
-
-			e.setCancelled(true);
-		}
-		
-		if (e.is3D()) {
-			ArrayList<EntityLivingBase> players = new ArrayList<>();
-			mc.world.playerEntities.forEach(entity -> {
-				double distance = mc.player.getDistanceToEntity(entity);
-
-				if ((range.getInput() != 0.0D && distance > range.getInput())
-						|| entity.getName().matches(".*[-/|<>\\u0e22\\u0e07].*") || entity.getName().isEmpty()
-						|| (!showInvis.isToggled() && entity.isInvisible())) {
+				if (playerName == null || playerName.isEmpty()) {
 					return;
 				}
 
-				players.add(entity);
-				if (players.size() >= 100) {
+				if (!CombatUtil.instance.canTarget(e.getTarget())) {
 					return;
 				}
-			});
-			RenderManager renderManager = mc.getRenderManager();
 
-			players.stream().filter(player -> CombatUtil.instance.canTarget(player)).forEach(player -> {
-				player.setAlwaysRenderNameTag(false);
-				_x = (float) (player.lastTickPosX + (player.posX - player.lastTickPosX) * mc.timer.renderPartialTicks
-						- renderManager.viewerPosX);
-				_y = (float) (player.lastTickPosY + (player.posY - player.lastTickPosY) * mc.timer.renderPartialTicks
-						- renderManager.viewerPosY);
-				_z = (float) (player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * mc.timer.renderPartialTicks
-						- renderManager.viewerPosZ);
-				this.renderNametag((EntityPlayer) player, _x, _y, _z);
-			});
+				double playerDistance = mc.player.getDistanceToEntity(e.getTarget());
+				if (!(playerDistance <= range.getInput() || range.getInput() == 0.0D)) {
+					return;
+				}
+
+				e.setCancelled(true);
+			}
+
+			if (e.is3D()) {
+				ArrayList<EntityLivingBase> players = new ArrayList<>();
+				mc.world.playerEntities.forEach(entity -> {
+					double distance = mc.player.getDistanceToEntity(entity);
+
+					if ((range.getInput() != 0.0D && distance > range.getInput())
+							|| entity.getName().matches(".*[-/|<>\\u0e22\\u0e07].*") || entity.getName().isEmpty()
+							|| (!showInvis.isToggled() && entity.isInvisible())) {
+						return;
+					}
+
+					players.add(entity);
+					if (players.size() >= 100) {
+						return;
+					}
+				});
+				RenderManager renderManager = mc.getRenderManager();
+
+				players.stream().filter(player -> CombatUtil.instance.canTarget(player)).forEach(player -> {
+					player.setAlwaysRenderNameTag(false);
+					_x = (float) (player.lastTickPosX
+							+ (player.posX - player.lastTickPosX) * mc.timer.renderPartialTicks
+							- renderManager.viewerPosX);
+					_y = (float) (player.lastTickPosY
+							+ (player.posY - player.lastTickPosY) * mc.timer.renderPartialTicks
+							- renderManager.viewerPosY);
+					_z = (float) (player.lastTickPosZ
+							+ (player.posZ - player.lastTickPosZ) * mc.timer.renderPartialTicks
+							- renderManager.viewerPosZ);
+					this.renderNametag((EntityPlayer) player, _x, _y, _z);
+				});
+			}
+		} catch (NullPointerException | ClassCastException ignored) {
 		}
 	}
 

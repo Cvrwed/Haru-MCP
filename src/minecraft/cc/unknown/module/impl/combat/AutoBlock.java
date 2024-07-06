@@ -21,14 +21,13 @@ public class AutoBlock extends Module {
 	private SliderValue duration = new SliderValue("Block duration", 100, 1, 500, 1);
 	private SliderValue distance = new SliderValue("Distance to player", 3, 0, 6, 0.01);
 	private BooleanValue forceBlock = new BooleanValue("Force Block Animation", true);
-	private SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
 	
 	private boolean block;
 	private final Cold blockTime = new Cold(0);
 	private EntityPlayer target = null;
 
 	public AutoBlock() {
-		this.registerSetting(duration, distance, forceBlock, chance);
+		this.registerSetting(duration, distance, forceBlock);
 	}
 
 	@EventLink
@@ -45,15 +44,15 @@ public class AutoBlock extends Module {
 				return;
 			}
 
-			if (Mouse.isButtonDown(0) && mc.objectMouseOver != null && mc.objectMouseOver.entityHit != null
-					&& mc.player.getDistanceToEntity(mc.objectMouseOver.entityHit) >= distance.getInput()
-					&& mc.objectMouseOver.entityHit != null
-					&& mc.player.getDistanceToEntity(mc.objectMouseOver.entityHit) <= distance.getInput()
-					&& (chance.getInput() == 100 || Math.random() <= chance.getInput() / 100)) {
-				block = true;
-				blockTime.setCooldown(duration.getInputToLong());
-				blockTime.start();
-				press();
+			if (PlayerUtil.isHoldingWeapon() && Mouse.isButtonDown(0) && mc.objectMouseOver != null && mc.objectMouseOver.entityHit != null) {
+	            float distance = mc.player.getDistanceToEntity(mc.objectMouseOver.entityHit);
+	            Double minDistance = this.distance.getInput();
+	            if (distance < minDistance) {
+					block = true;
+					blockTime.setCooldown(duration.getInputToLong());
+					blockTime.start();
+					press();
+	            }
 			}
 		}
 	}

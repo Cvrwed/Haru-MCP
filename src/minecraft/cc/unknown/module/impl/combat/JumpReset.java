@@ -22,7 +22,7 @@ import net.minecraft.util.MathHelper;
 
 @Info(name = "JumpReset", category = Category.Combat)
 public class JumpReset extends Module {
-	private ModeValue mode = new ModeValue("Mode", "Legit", "Hit", "Tick", "Legit");
+	private ModeValue mode = new ModeValue("Mode", "Hit", "Tick", "Hit");
 	private BooleanValue onlyCombat = new BooleanValue("Enable only during combat", true);
 	private SliderValue chance = new SliderValue("Chance", 100, 0, 100, 1);
 	private SliderValue tickTicks = new SliderValue("Ticks", 0, 0, 20, 1);
@@ -52,10 +52,10 @@ public class JumpReset extends Module {
 	}
 
 	@EventLink
-	public void onLiving(LivingEvent e) {
+	public void onLiving(KnockBackEvent e) {
 		if (PlayerUtil.inGame()) {
 			if (mode.is("Tick") || mode.is("Hit")) {
-				double direction = Math.atan2(mc.player.motionX, mc.player.motionZ);
+				double direction = Math.atan2(e.getX(), e.getZ());
 				double degreePlayer = PlayerUtil.getDirection();
 				double degreePacket = Math.floorMod((int) Math.toDegrees(direction), 360);
 				double angle = Math.abs(degreePacket + degreePlayer);
@@ -66,48 +66,6 @@ public class JumpReset extends Module {
 					reset = true;
 				}
 			}
-		}
-	}
-
-	@EventLink
-	public void onKnockBack(KnockBackEvent e) {
-		if (checkLiquids() || !applyChance())
-			return;
-		
-		if (mode.is("Legit")) {
-			if (!mc.player.onGround || !(e.getY() > 0.0) || mc.currentScreen != null)
-				return;
-			;
-			double velocityDist = Math.hypot(e.getX(), e.getZ());
-			if (counter >= 4 && (velocityDist < 0.6 || counter >= 7)) {
-				counter = 0;
-				return;
-			}
-			reset = true;
-			++counter;
-			return;
-		}
-	}
-
-	@EventLink
-	public void onInput(TickEvent.Input e) {
-		if (mode.is("Legit")) {
-			if (!reset)
-				return;
-			mc.gameSettings.keyBindJump.pressed = true;
-			mc.gameSettings.keyBindForward.pressed = true;
-			mc.gameSettings.keyBindSprint.pressed = true;
-		}
-	}
-
-	@EventLink
-	public void onMotion(MotionEvent e) {
-		if (mode.is("Legit") && e.isPre()) {
-			if (!reset)
-				return;
-			KeybindUtil.instance.resetKeybindings(mc.gameSettings.keyBindJump, mc.gameSettings.keyBindForward,
-					mc.gameSettings.keyBindSprint);
-			reset = false;
 		}
 	}
 

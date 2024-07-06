@@ -5,10 +5,8 @@ import static org.apache.commons.lang3.RandomUtils.nextFloat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 import org.lwjgl.input.Mouse;
 
@@ -16,12 +14,10 @@ import cc.unknown.Haru;
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.move.LivingEvent;
 import cc.unknown.event.impl.move.MotionEvent;
-import cc.unknown.event.impl.player.StrafeEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Info;
 import cc.unknown.module.setting.impl.BooleanValue;
-import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.misc.ClickUtil;
 import cc.unknown.utils.player.CombatUtil;
@@ -30,10 +26,10 @@ import cc.unknown.utils.player.PlayerUtil;
 import cc.unknown.utils.player.rotation.RotationManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.vec.Vec3;
 
 @Info(name = "AimAssist", category = Category.Combat)
 public class AimAssist extends Module {
@@ -103,7 +99,6 @@ public class AimAssist extends Module {
 							float pitchChange = random.nextBoolean() ? -nextFloat(0F, verticalRandomizationAmount.getInputToFloat()) : nextFloat(0F, verticalRandomizationAmount.getInputToFloat());
 							float pitchAdjustment = (float) (verticalRandomization.isToggled() ? pitchChange : resultVertical);
 							float newPitch = mc.player.rotationPitch + pitchAdjustment;
-							mc.player.rotationPitch += pitchAdjustment;
 							mc.player.rotationPitch = newPitch >= 90f ? newPitch - 360f : newPitch <= -90f ? newPitch + 360f : newPitch;
 						}
 					}
@@ -124,6 +119,9 @@ public class AimAssist extends Module {
 	public EntityPlayer getEnemy() {
 		int fov = fieldOfView.getInputToInt();
 	    List<EntityPlayer> playerList = new ArrayList<>(mc.world.playerEntities);
+	    
+	    EntityPlayer enemy = null;
+	    double enemyDistance = Double.MAX_VALUE;
 
 		playerList.sort(new Comparator<EntityPlayer>() {
 		    @Override
@@ -143,30 +141,36 @@ public class AimAssist extends Module {
 		    }
 		});
 		
-		for (EntityPlayer enemy : playerList) {
-			if (enemy != mc.player && enemy.deathTime == 0) {
-				if (FriendUtil.instance.friends.contains(enemy.getName()) && ignoreFriendlyEntities.isToggled()) {
+		for (final EntityPlayer player : playerList) {
+			if (player != mc.player && player.deathTime == 0) {
+				if (FriendUtil.friends.contains(player.getName()) && ignoreFriendlyEntities.isToggled()) {
 					continue;
 				}
 
-				if (!mc.player.canEntityBeSeen(enemy) && lineOfSightCheck.isToggled()) {
+				if (!mc.player.canEntityBeSeen(player) && lineOfSightCheck.isToggled()) {
 					continue;
 				}
 
-				if (CombatUtil.instance.isTeam(mc.player, enemy) && ignoreTeammates.isToggled()) {
+				if (CombatUtil.instance.isTeam(mc.player, player) && ignoreTeammates.isToggled()) {
 					continue;
 				}
 
-				if (!aimAtInvisibleEnemies.isToggled() && enemy.isInvisible()) {
+				if (!aimAtInvisibleEnemies.isToggled() && player.isInvisible()) {
 					continue;
 				}
 
-				if (mc.player.getDistanceToEntity(enemy) > enemyDetectionRange.getInput()) {
+				if (mc.player.getDistanceToEntity(player) > enemyDetectionRange.getInput()) {
 					continue;
 				}
 
-				if (fov != 360 && !isWithinFOV(enemy, fov)) {
+				if (fov != 360 && !isWithinFOV(player, fov)) {
 					continue;
+				}
+				
+				double x = new Vec3(player.posX, player.posY, player.posZ).distanceTo(mc.player.getLookVec());
+				if (x < enemyDistance) {
+					enemy = player;
+					enemyDistance = x;
 				}
 
 				return enemy;

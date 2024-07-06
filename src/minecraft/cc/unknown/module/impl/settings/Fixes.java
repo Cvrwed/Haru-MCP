@@ -14,7 +14,7 @@ import net.java.games.input.Mouse;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.chat.ChatComponentText;
 
-@Info(name = "Fixes", category = Category.Settings)
+@Info(name = "Tweaks", category = Category.Settings)
 public class Fixes extends Module {
 	private BooleanValue noClickDelay = new BooleanValue("No Click Delay", true);
 	private BooleanValue noJumpDelay = new BooleanValue("No Jump Delay", true);
