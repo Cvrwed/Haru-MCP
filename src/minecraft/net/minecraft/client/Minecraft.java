@@ -67,7 +67,6 @@ import cc.unknown.ui.clickgui.HaruGui;
 import cc.unknown.utils.Loona;
 import cc.unknown.utils.helpers.CPSHelper;
 import cc.unknown.utils.player.PlayerUtil;
-import cc.unknown.utils.player.rotation.RotationManager;
 import de.florianmichael.viamcp.ViaMCP;
 import de.florianmichael.viamcp.fixes.AttackOrder;
 import net.minecraft.block.Block;
@@ -1585,7 +1584,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
 		if (!this.isGamePaused && this.world != null) {
 			this.playerController.updateController();
-			RotationManager.updateStrafeFixBinds();
 		}
 
 		this.mcProfiler.endStartSection("textures");

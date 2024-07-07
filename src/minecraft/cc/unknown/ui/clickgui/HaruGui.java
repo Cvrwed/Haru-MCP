@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import cc.unknown.Haru;
-import cc.unknown.module.impl.Category;
+import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.visuals.ClickGuiModule;
 import cc.unknown.ui.clickgui.impl.CategoryComp;
 import cc.unknown.utils.client.FuckUtil;

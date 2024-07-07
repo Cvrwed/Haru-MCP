@@ -22,7 +22,6 @@ import com.viaversion.viaversion.protocol.ProtocolPipelineImpl;
 
 import cc.unknown.Haru;
 import cc.unknown.event.impl.network.PacketEvent;
-import cc.unknown.utils.player.rotation.RotationManager;
 import de.florianmichael.vialoadingbase.ViaLoadingBase;
 import de.florianmichael.vialoadingbase.netty.event.CompressionReorderEvent;
 import de.florianmichael.viamcp.MCPVLBPipeline;
@@ -52,7 +51,6 @@ import io.netty.handler.timeout.TimeoutException;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.CryptManager;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ITickable;
@@ -246,14 +244,6 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 		final ConnectionState enumconnectionstate = ConnectionState.getFromPacket(packetIn);
 		final ConnectionState enumconnectionstate1 = this.channel.attr(attrKeyConnectionState).get();
 
-		if (packetIn instanceof CPacketPlayer) {
-			if (RotationManager.isEnabled) {
-				CPacketPlayer wrapper = (CPacketPlayer) packetIn;
-				wrapper.yaw = RotationManager.clientRotation[0];
-				wrapper.pitch = RotationManager.clientRotation[1];
-			}
-		}
-
 		if (enumconnectionstate1 != enumconnectionstate) {
 			logger.debug("Disabled auto read");
 			this.channel.config().setAutoRead(false);
@@ -294,13 +284,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 			final GenericFutureListener<? extends Future<? super Void>>[] futureListeners) {
 		final ConnectionState connectionstate = ConnectionState.getFromPacket(packetIn);
 		final ConnectionState connectionstate1 = (ConnectionState) channel.attr(attrKeyConnectionState).get();
-		if (packetIn instanceof CPacketPlayer) {
-			if (RotationManager.isEnabled) {
-				CPacketPlayer wrapper = (CPacketPlayer) packetIn;
-				wrapper.yaw = RotationManager.clientRotation[0];
-				wrapper.pitch = RotationManager.clientRotation[1];
-			}
-		}
+
 		if (connectionstate1 != connectionstate) {
 			logger.debug("Disabled auto read");
 			channel.config().setAutoRead(false);

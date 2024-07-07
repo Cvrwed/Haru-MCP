@@ -15,7 +15,6 @@ import cc.unknown.Haru;
 import cc.unknown.event.impl.player.JumpEvent;
 import cc.unknown.module.impl.visuals.Animations;
 import cc.unknown.module.impl.visuals.Fullbright;
-import cc.unknown.utils.player.rotation.RotationManager;
 import de.florianmichael.viamcp.ViaMCP;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -1395,9 +1394,6 @@ public abstract class EntityLivingBase extends Entity {
 	 */
 	protected void jump() {
 		float yaw = this.rotationYaw;
-		if (RotationManager.isEnabled && RotationManager.strafeFix) {
-			yaw = RotationManager.clientRotation[0];
-		}
 		JumpEvent e = new JumpEvent(yaw);
 		if (this == Minecraft.getMinecraft().player && e.call().isCancelled())
 			return;

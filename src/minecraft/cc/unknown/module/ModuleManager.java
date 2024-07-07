@@ -38,7 +38,7 @@ public class ModuleManager implements Loona {
 				//new BlockHit(),
 				//new HitSelect(),
 				new JumpReset(),
-				new SprintReset(),
+				new WTap(),
 				new Velocity(),
 				new Reach(),
 				
@@ -68,10 +68,8 @@ public class ModuleManager implements Loona {
 				new MidClick(),
 				new MusicPlayer(),
 				new Inventory(),
-				new SelfTrap(),
 				
 				// player
-				new AntiFireBall(),
 				new AntiVoid(),
 				new InvManager(),
 				new Stealer(),

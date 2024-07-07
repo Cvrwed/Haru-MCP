@@ -2,7 +2,6 @@ package cc.unknown.module.impl.combat;
 
 import static org.apache.commons.lang3.RandomUtils.nextFloat;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
@@ -13,7 +12,6 @@ import org.lwjgl.input.Mouse;
 import cc.unknown.Haru;
 import cc.unknown.event.impl.EventLink;
 import cc.unknown.event.impl.move.LivingEvent;
-import cc.unknown.event.impl.move.MotionEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.Info;
@@ -23,7 +21,6 @@ import cc.unknown.utils.misc.ClickUtil;
 import cc.unknown.utils.player.CombatUtil;
 import cc.unknown.utils.player.FriendUtil;
 import cc.unknown.utils.player.PlayerUtil;
-import cc.unknown.utils.player.rotation.RotationManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,7 +43,6 @@ public class AimAssist extends Module {
 	private SliderValue verticalAimSpeed = new SliderValue("Vertical Aim Speed", 10, 1, 15, 1);
 	private SliderValue verticalAimFineTuning = new SliderValue("Vertical Aim Fine-tuning", 5, 1, 10, 1);
 	private BooleanValue clickAim = new BooleanValue("Auto Aim on Click", true);
-	private BooleanValue moveFix = new BooleanValue("Movement Fix", false);
 	private BooleanValue ignoreFriendlyEntities = new BooleanValue("Ignore Friendly Entities", false);
 	private BooleanValue ignoreTeammates = new BooleanValue("Ignore Teammates", false);
 	private BooleanValue aimAtInvisibleEnemies = new BooleanValue("Aim at Invisible Enemies", false);
@@ -57,7 +53,7 @@ public class AimAssist extends Module {
 	private EntityPlayer enemy = null; // fixed
 
 	public AimAssist() {
-		this.registerSetting(horizontalAimSpeed, horizontalAimFineTuning, horizontalRandomization, horizontalRandomizationAmount, fieldOfView, enemyDetectionRange, verticalAlignmentCheck, verticalRandomization, verticalRandomizationAmount, verticalAimSpeed, verticalAimFineTuning, clickAim, moveFix, ignoreFriendlyEntities, ignoreTeammates, aimAtInvisibleEnemies, lineOfSightCheck, disableAimWhileBreakingBlock, weaponOnly);
+		this.registerSetting(horizontalAimSpeed, horizontalAimFineTuning, horizontalRandomization, horizontalRandomizationAmount, fieldOfView, enemyDetectionRange, verticalAlignmentCheck, verticalRandomization, verticalRandomizationAmount, verticalAimSpeed, verticalAimFineTuning, clickAim, ignoreFriendlyEntities, ignoreTeammates, aimAtInvisibleEnemies, lineOfSightCheck, disableAimWhileBreakingBlock, weaponOnly);
 	}
 
 	@EventLink
@@ -107,33 +103,19 @@ public class AimAssist extends Module {
 		}
 	}
 
-	@EventLink
-	public void onMotion(MotionEvent e) {
-		if (enemy != null && moveFix.isToggled()) {
-			RotationManager.setStrafeFix(true, false);
-		} else {
-			RotationManager.setStrafeFix(false, false);
-		}
-	}
-
 	public EntityPlayer getEnemy() {
 		int fov = fieldOfView.getInputToInt();
-	    List<EntityPlayer> playerList = new ArrayList<>(mc.world.playerEntities);
+	    List<EntityPlayer> playerList = mc.world.playerEntities;
 	    
-	    EntityPlayer enemy = null;
-	    double enemyDistance = Double.MAX_VALUE;
-
 		playerList.sort(new Comparator<EntityPlayer>() {
 		    @Override
 		    public int compare(EntityPlayer player1, EntityPlayer player2) {
-		        // Compara si los jugadores están cerca dentro de una distancia de 3 blocks
 		        boolean p1IsClose = isClose(player1, 3);
 		        boolean p2IsClose = isClose(player2, 3);
 		        if (p1IsClose != p2IsClose) {
 		            return p1IsClose ? -1 : 1;
 		        }
 
-		        // Compara la distancia de los jugadores respecto al jugador principal
 		        float distanceToP1 = mc.player.getDistanceToEntity(player1);
 		        float distanceToP2 = mc.player.getDistanceToEntity(player2);
 		        
@@ -167,13 +149,7 @@ public class AimAssist extends Module {
 					continue;
 				}
 				
-				double x = new Vec3(player.posX, player.posY, player.posZ).distanceTo(mc.player.getLookVec());
-				if (x < enemyDistance) {
-					enemy = player;
-					enemyDistance = x;
-				}
-
-				return enemy;
+				return player;
 			}
 		}
 

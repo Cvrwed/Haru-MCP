@@ -5,15 +5,9 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
-import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
-
-import cc.unknown.Haru;
 import cc.unknown.event.impl.move.MoveEvent;
 import cc.unknown.event.impl.player.StrafeEvent;
 import cc.unknown.utils.Loona;
-import cc.unknown.utils.player.MoveUtil;
-import cc.unknown.utils.player.rotation.RotationManager;
-import de.florianmichael.vialoadingbase.ViaLoadingBase;
 import de.florianmichael.viamcp.ViaMCP;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
@@ -1132,35 +1126,9 @@ public abstract class Entity implements ICommandSender, Loona {
 	/**
 	 * Used in both water and by flying objects
 	 */
-	public void moveFlying(float strafe, float forward, float friction)     {
+	public void moveFlying(float strafe, float forward, float friction) {
         float movingYaw = this.rotationYaw;
-        if (RotationManager.isEnabled) {
-            if (RotationManager.strafeFix) {
-                movingYaw = RotationManager.clientRotation[0];
-                if (!RotationManager.strictStrafeFix) {
-                    if (MoveUtil.isBindsMoving()) {
-                        int strafeYaw = Math.round((RotationManager.clientRotation[0] - MoveUtil.getBindsDirection(mc.player.rotationYaw)) / 45);
-                        if (strafeYaw > 4) {
-                            strafeYaw -= 8;
-                        }
-                        if (strafeYaw < -4) {
-                            strafeYaw += 8;
-                        }
-                        mc.gameSettings.keyBindForward.pressed = Math.abs(strafeYaw) <= 1;
-                        mc.gameSettings.keyBindLeft.pressed = strafeYaw >= 1 && strafeYaw <= 3;
-                        mc.gameSettings.keyBindBack.pressed = Math.abs(strafeYaw) >= 3;
-                        mc.gameSettings.keyBindRight.pressed = strafeYaw >= -3 && strafeYaw <= -1;
-                    } else {
-                        mc.gameSettings.keyBindForward.pressed = false;
-                        mc.gameSettings.keyBindRight.pressed = false;
-                        mc.gameSettings.keyBindBack.pressed = false;
-                        mc.gameSettings.keyBindLeft.pressed = false;
-                    }
-                }
-            } else {
-                movingYaw = mc.player.rotationYaw;
-            }
-        }
+
         StrafeEvent e = new StrafeEvent(strafe, forward, friction, movingYaw);
         if(this == mc.player) e.call();
         if(e.isCancelled()) return;

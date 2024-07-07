@@ -1,7 +1,5 @@
 package net.minecraft.client.entity;
 
-import java.util.Random;
-
 import cc.unknown.Haru;
 import cc.unknown.event.impl.move.LivingEvent;
 import cc.unknown.event.impl.move.MotionEvent;
@@ -12,9 +10,7 @@ import cc.unknown.event.impl.network.ChatSendEvent;
 import cc.unknown.event.impl.player.PushEvent;
 import cc.unknown.module.impl.player.NoSlow;
 import cc.unknown.module.impl.player.Sprint;
-import cc.unknown.utils.player.MoveUtil;
 import cc.unknown.utils.player.PlayerUtil;
-import cc.unknown.utils.player.rotation.RotationManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -198,31 +194,6 @@ public class EntityPlayerSP extends AbstractClientPlayer {
     public void onUpdateWalkingPlayer() {
         final float realYaw = rotationYaw;
         final float realPitch = rotationPitch;
-        if (RotationManager.isEnabled) {
-            rotationYaw = RotationManager.clientRotation[0];
-            rotationPitch = RotationManager.clientRotation[1];
-            rotationYaw += (new Random()).nextFloat() * RotationManager.randomizeAmount;
-            rotationPitch += (new Random()).nextFloat() * RotationManager.randomizeAmount;
-
-            float[] gcdFix = RotationManager.applyGCD(new float[]{rotationYaw, rotationPitch}, new float[] {lastReportedYaw, lastReportedPitch});
-            rotationYaw = gcdFix[0];
-            rotationPitch = gcdFix[1];
-
-            if (RotationManager.keepRotationTicks <= 0) {
-                RotationManager.isEnabled = false;
-                if (RotationManager.strafeFix) {
-                    MoveUtil.updateBinds(false);
-                    RotationManager.strafeFix = false;
-                }
-            } else {
-                RotationManager.keepRotationTicks--;
-            }
-        } else {
-            RotationManager.clientRotation[0] = rotationYaw;
-            RotationManager.clientRotation[1] = rotationPitch;
-            RotationManager.keepRotationTicks = 0;
-            RotationManager.randomizeAmount = 0F;
-        }
         
         final MotionEvent motionEvent = new MotionEvent(MotionType.Pre, posX, posY, posZ, rotationYaw, rotationPitch, lastReportedYaw, lastReportedPitch, onGround, mc.player);
         Haru.instance.getEventBus().post(motionEvent);
