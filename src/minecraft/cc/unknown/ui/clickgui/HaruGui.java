@@ -8,16 +8,16 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import cc.unknown.Haru;
-import cc.unknown.module.impl.api.Category;
+import cc.unknown.module.impl.Category;
 import cc.unknown.module.impl.visuals.ClickGuiModule;
 import cc.unknown.ui.clickgui.impl.CategoryComp;
 import cc.unknown.utils.client.FuckUtil;
 import cc.unknown.utils.client.RenderUtil;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
 
-public class HaruGui extends GuiScreen {
+public class HaruGui extends CustomGuiScreen {
 	private final ArrayList<CategoryComp> categoryList = new ArrayList<>();
 	private final Map<String, ResourceLocation> waifuMap = new HashMap<>();
 	
@@ -34,18 +34,18 @@ public class HaruGui extends GuiScreen {
 			topOffset += 20;
 		}
 
-		String[] waifuNames = { "uzaki", "megumin", "ai", "mai", "kiwi", "astolfo", "ryo", "hitori" };
+		String[] waifuNames = { "uzaki", "megumin", "ai", "mai", "kiwi", "astolfo", "ryo", "hitori", "elma" };
 		Arrays.stream(waifuNames)
 				.forEach(name -> waifuMap.put(name, new ResourceLocation("haru/img/clickgui/" + name + ".png")));
 	}
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
     }
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void draw(int mouseX, int mouseY, float partialTicks) {
 		ScaledResolution sr = new ScaledResolution(mc);
 		ClickGuiModule cg = (ClickGuiModule) Haru.instance.getModuleManager().getModule(ClickGuiModule.class);
 		ResourceLocation waifuImage = waifuMap.get(cg.waifuMode.getMode().toLowerCase());
@@ -73,12 +73,10 @@ public class HaruGui extends GuiScreen {
 			lastMouseX.set(mouseX);
 			lastMouseY.set(mouseY);
 		}
-		
-		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
 	@Override
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+	public void click(int mouseX, int mouseY, int mouseButton) {
 		ScaledResolution sr = new ScaledResolution(mc);
 		
 		categoryList.forEach(c -> {
@@ -111,12 +109,10 @@ public class HaruGui extends GuiScreen {
 				}
 			}
 		});
-		
-		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
-	public void mouseReleased(int mouseX, int mouseY, int state) {
+	public void release(int mouseX, int mouseY, int state) {
 		ScaledResolution sr = new ScaledResolution(mc);
 
 		categoryList.forEach(c -> {
@@ -139,8 +135,6 @@ public class HaruGui extends GuiScreen {
 		if (Haru.instance.getHudConfig() != null) {
 			Haru.instance.getHudConfig().savePositionHud();
 		}
-
-		super.mouseReleased(mouseX, mouseY, state);
 	}
 
 	@Override
@@ -170,6 +164,11 @@ public class HaruGui extends GuiScreen {
 		
 		super.onGuiClosed();
 	}
+	
+    @Override
+    public void onResize(Minecraft mcIn, int p_175273_2_, int p_175273_3_) {
+        super.onResize(mcIn, p_175273_2_, p_175273_3_);
+    }
 
 	@Override
 	public boolean doesGuiPauseGame() {

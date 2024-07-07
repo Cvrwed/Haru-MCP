@@ -1,14 +1,16 @@
 package cc.unknown;
 
-import cc.unknown.command.CommandManager;
-import cc.unknown.config.ConfigManager;
+import java.util.ArrayList;
+import java.util.List;
+
 import cc.unknown.config.HudConfig;
 import cc.unknown.event.impl.api.EventBus;
-import cc.unknown.module.ModuleManager;
+import cc.unknown.managers.CommandManager;
+import cc.unknown.managers.ConfigManager;
+import cc.unknown.managers.ModuleManager;
+import cc.unknown.managers.PacketManager;
 import cc.unknown.ui.clickgui.HaruGui;
 import cc.unknown.ui.clickgui.impl.theme.ThemeManager;
-import cc.unknown.utils.network.PacketManager;
-import cc.unknown.utils.player.rotation.RotationManager;
 import de.florianmichael.viamcp.ViaMCP;
 
 public enum Haru {
@@ -17,30 +19,35 @@ public enum Haru {
 	private CommandManager commandManager;
 	private ConfigManager configManager;
 	private HudConfig hudConfig;
-	private RotationManager rotationManager;
 	private PacketManager packetManager;
 	private ModuleManager moduleManager;
 	private ThemeManager themeManager;
 
 	private HaruGui haruGui;
 	private EventBus eventBus = new EventBus();
-
-	public void startClient() {
-		commandManager = new CommandManager();
-		moduleManager = new ModuleManager();
-		rotationManager = new RotationManager();
-		packetManager = new PacketManager();
-		haruGui = new HaruGui();
-		configManager = new ConfigManager();
-		themeManager = new ThemeManager();
-		hudConfig = new HudConfig();
-		hudConfig.applyPositionHud();
+	
+	private final List<Loader> components = new ArrayList<>();
+	
+	{
+		components.add(() -> commandManager = new CommandManager());
+		components.add(() -> moduleManager = new ModuleManager());
+		components.add(() -> themeManager = new ThemeManager());
+		components.add(() -> configManager = new ConfigManager());
+		components.add(() -> haruGui = new HaruGui());
+		components.add(() -> {
+			hudConfig = new HudConfig();
+			hudConfig.applyPositionHud();
+		});
 		
 		try {
 		    ViaMCP.INSTANCE.initAsyncSlider();
 		 } catch (Exception e) {
 		    e.printStackTrace();
 		}
+	}
+
+	public void startClient() {
+		components.forEach(Loader::init);
 	}
 
 	public void stopClient() {
