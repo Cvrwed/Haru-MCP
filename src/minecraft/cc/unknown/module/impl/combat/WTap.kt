@@ -6,7 +6,6 @@ import cc.unknown.event.impl.player.TickEvent
 import cc.unknown.module.impl.Module
 import cc.unknown.module.impl.api.Category
 import cc.unknown.module.impl.api.Info
-import cc.unknown.module.setting.impl.ModeValue
 import net.minecraft.network.play.client.CPacketUseEntity
 
 @Info(name = "WTap", category = Category.Combat)
