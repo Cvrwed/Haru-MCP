@@ -62,7 +62,6 @@ import cc.unknown.event.impl.other.MouseEvent;
 import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.event.impl.world.ChangeWorldEvent;
 import cc.unknown.module.impl.Module;
-import cc.unknown.module.impl.exploit.TickBase;
 import cc.unknown.ui.clickgui.HaruGui;
 import cc.unknown.utils.Loona;
 import cc.unknown.utils.helpers.CPSHelper;
@@ -1565,8 +1564,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	 * Runs the current tick.
 	 */
 	public void runTick() throws IOException {
-		boolean pause = TickBase.publicFreeze && Haru.instance.getModuleManager().getModule(TickBase.class).isEnabled();
-
 		if (this.rightClickDelayTimer > 0) {
 			--this.rightClickDelayTimer;
 		}
@@ -1911,19 +1908,19 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
 			this.mcProfiler.endStartSection("gameRenderer");
 
-			if (!this.isGamePaused && !pause) {
+			if (!this.isGamePaused) {
 				this.entityRenderer.updateRenderer();
 			}
 
 			this.mcProfiler.endStartSection("levelRenderer");
 
-			if (!this.isGamePaused && !pause) {
+			if (!this.isGamePaused) {
 				this.renderGlobal.updateClouds();
 			}
 
 			this.mcProfiler.endStartSection("level");
 
-			if (!this.isGamePaused && !pause) {
+			if (!this.isGamePaused) {
 				if (this.world.getLastLightningBolt() > 0) {
 					this.world.setLastLightningBolt(this.world.getLastLightningBolt() - 1);
 				}
@@ -1961,7 +1958,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
 			this.mcProfiler.endStartSection("animateTick");
 
-			if (!this.isGamePaused && !pause && this.world != null) {
+			if (!this.isGamePaused && this.world != null) {
 				this.world.doVoidFogParticles(MathHelper.floor_double(this.player.posX),
 						MathHelper.floor_double(this.player.posY), MathHelper.floor_double(this.player.posZ));
 			}

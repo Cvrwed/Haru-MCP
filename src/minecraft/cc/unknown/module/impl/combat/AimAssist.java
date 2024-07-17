@@ -26,7 +26,7 @@ import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.vec.Vec3;
+import net.minecraft.util.MovingObjectPosition;
 
 @Info(name = "AimAssist", category = Category.Combat)
 public class AimAssist extends Module {
@@ -47,13 +47,14 @@ public class AimAssist extends Module {
 	private BooleanValue ignoreTeammates = new BooleanValue("Ignore Teammates", false);
 	private BooleanValue aimAtInvisibleEnemies = new BooleanValue("Aim at Invisible Enemies", false);
 	private BooleanValue lineOfSightCheck = new BooleanValue("Line of Sight Check", true);
+	private BooleanValue mouseOverEntity = new BooleanValue("Mouse Over Entity", false);
 	private BooleanValue disableAimWhileBreakingBlock = new BooleanValue("Disable Aim While Breaking Block", false);
 	private BooleanValue weaponOnly = new BooleanValue("Weapon Only Aim", false);
 	private Random random = new Random();
 	private EntityPlayer enemy = null; // fixed
 
 	public AimAssist() {
-		this.registerSetting(horizontalAimSpeed, horizontalAimFineTuning, horizontalRandomization, horizontalRandomizationAmount, fieldOfView, enemyDetectionRange, verticalAlignmentCheck, verticalRandomization, verticalRandomizationAmount, verticalAimSpeed, verticalAimFineTuning, clickAim, ignoreFriendlyEntities, ignoreTeammates, aimAtInvisibleEnemies, lineOfSightCheck, disableAimWhileBreakingBlock, weaponOnly);
+		this.registerSetting(horizontalAimSpeed, horizontalAimFineTuning, horizontalRandomization, horizontalRandomizationAmount, fieldOfView, enemyDetectionRange, verticalAlignmentCheck, verticalRandomization, verticalRandomizationAmount, verticalAimSpeed, verticalAimFineTuning, clickAim, ignoreFriendlyEntities, ignoreTeammates, aimAtInvisibleEnemies, lineOfSightCheck, mouseOverEntity, disableAimWhileBreakingBlock, weaponOnly);
 	}
 
 	@EventLink
@@ -77,16 +78,21 @@ public class AimAssist extends Module {
 			if ((clickAim.isToggled() && ClickUtil.instance.isClicking()) || (Mouse.isButtonDown(0) && clicker != null && !clicker.isEnabled()) || !clickAim.isToggled()) {
 				enemy = getEnemy();
 				if (enemy != null) {
-					double fovEntity = PlayerUtil.fovFromEntity(enemy);
-					double pitchEntity = PlayerUtil.PitchFromEntity(enemy, 0);
+					
+					if (mouseOverEntity.isToggled() && mc.objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY) {
+						return;
+					}
+					
+					double yawFov = PlayerUtil.fovFromEntity(enemy);
+					double pitchFov = PlayerUtil.PitchFromEntity(enemy, 0);
 
-					double horizontalRandomOffset = ThreadLocalRandom.current().nextDouble(horizontalAimFineTuning.getInput() - 1.47328, horizontalAimFineTuning.getInput() + 2.48293)/ 100;
-					float resultHorizontal = (float) (-(fovEntity * horizontalRandomOffset + fovEntity / (101.0D - (float) ThreadLocalRandom.current().nextDouble(horizontalAimSpeed.getInput() - 4.723847, horizontalAimSpeed.getInput()))));
+					double horizontalOffset = ThreadLocalRandom.current().nextDouble(horizontalAimFineTuning.getInput() - 1.47328, horizontalAimFineTuning.getInput() + 2.48293)/ 100;
+					float resultHorizontal = (float) (-(yawFov * horizontalOffset + yawFov / (101.0D - (float) ThreadLocalRandom.current().nextDouble(horizontalAimSpeed.getInput() - 4.723847, horizontalAimSpeed.getInput()))));
 
-					double verticalRandomOffset = ThreadLocalRandom.current().nextDouble(verticalAimFineTuning.getInput() - 1.47328, verticalAimFineTuning.getInput() + 2.48293) / 100;
-					float resultVertical = (float) (-(pitchEntity * verticalRandomOffset + pitchEntity / (101.0D - (float) ThreadLocalRandom.current().nextDouble(verticalAimSpeed.getInput() - 4.723847, verticalAimSpeed.getInput()))));
+					double verticalOffset = ThreadLocalRandom.current().nextDouble(verticalAimFineTuning.getInput() - 1.47328, verticalAimFineTuning.getInput() + 2.48293) / 100;
+					float resultVertical = (float) (-(pitchFov * verticalOffset + pitchFov / (101.0D - (float) ThreadLocalRandom.current().nextDouble(verticalAimSpeed.getInput() - 4.723847, verticalAimSpeed.getInput()))));
 
-					if (fovEntity > 1.0D || fovEntity < -1.0D) {
+					if (yawFov > 1.0D || yawFov < -1.0D) {
 						float yawChange = random.nextBoolean() ? -nextFloat(0F, horizontalRandomizationAmount.getInputToFloat()) : nextFloat(0F, horizontalRandomizationAmount.getInputToFloat());
 						float yawAdjustment = (float) (horizontalRandomization.isToggled() ? yawChange : resultHorizontal);
 						mc.player.rotationYaw += yawAdjustment;

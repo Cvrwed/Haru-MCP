@@ -181,11 +181,6 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 	}
 
 	public void sendPacket(Packet packetIn) {
-		PacketEvent e = new PacketEvent(PacketDirection.Outbound, packetIn);
-		Haru.instance.getEventBus().post(e);
-		if (e.isCancelled())
-			return;
-
 		if (isChannelOpen()) {
 			flushOutboundQueue();
 			dispatchPacket(packetIn, (GenericFutureListener<? extends Future<? super Void>>[]) null);
@@ -193,7 +188,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 			readWriteLock.writeLock().lock();
 			try {
 				outboundPacketsQueue
-						.add(new InboundHandlerTuplePacketListener(e.getPacket(), (GenericFutureListener[]) null));
+						.add(new InboundHandlerTuplePacketListener(packetIn, (GenericFutureListener[]) null));
 			} finally {
 				readWriteLock.writeLock().unlock();
 			}
@@ -203,7 +198,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 	public void sendPacketSilent(Packet packetIn) {
 		if (isChannelOpen()) {
 			flushOutboundQueue();
-			dispatchPacketSilent(packetIn, null);
+			dispatchPacketSilent(packetIn, (GenericFutureListener<? extends Future<? super Void>>[]) null);
 		} else {
 			readWriteLock.writeLock().lock();
 
@@ -280,11 +275,15 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 		}
 	}
 
-	public void dispatchPacket(Packet packetIn,
-			final GenericFutureListener<? extends Future<? super Void>>[] futureListeners) {
-		final ConnectionState connectionstate = ConnectionState.getFromPacket(packetIn);
+	public void dispatchPacket(Packet packetIn, final GenericFutureListener<? extends Future<? super Void>>[] futureListeners) {
+		PacketEvent e = new PacketEvent(PacketDirection.Outbound, packetIn);
+		Haru.instance.getEventBus().post(e);
+		
+		if (e.isCancelled()) return;
+		
+		final ConnectionState connectionstate = ConnectionState.getFromPacket(e.getPacket());
 		final ConnectionState connectionstate1 = (ConnectionState) channel.attr(attrKeyConnectionState).get();
-
+		
 		if (connectionstate1 != connectionstate) {
 			logger.debug("Disabled auto read");
 			channel.config().setAutoRead(false);
@@ -292,7 +291,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 		if (channel.eventLoop().inEventLoop()) {
 			if (connectionstate != connectionstate1)
 				setConnectionState(connectionstate);
-			ChannelFuture channelfuture = channel.writeAndFlush(packetIn);
+			ChannelFuture channelfuture = channel.writeAndFlush(e.getPacket());
 			if (futureListeners != null)
 				channelfuture.addListeners((GenericFutureListener[]) futureListeners);
 			channelfuture.addListener((GenericFutureListener) ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
@@ -301,7 +300,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 				public void run() {
 					if (connectionstate != connectionstate1)
 						setConnectionState(connectionstate);
-					ChannelFuture channelfuture1 = channel.writeAndFlush(packetIn);
+					ChannelFuture channelfuture1 = channel.writeAndFlush(e.getPacket());
 					if (futureListeners != null)
 						channelfuture1.addListeners(futureListeners);
 					channelfuture1.addListener((GenericFutureListener) ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);

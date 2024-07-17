@@ -28,7 +28,7 @@ import net.minecraft.util.MathHelper;
 public class Timer extends Module {
 	
 	private ModeValue mode = new ModeValue("Mode", "Constant", "Constant", "Random");
-	private SliderValue spid = new SliderValue("Speed", 1.5, 0.05, 25, 0.05);
+	private SliderValue spid = new SliderValue("Speed", 1.5, 0.01, 25, 0.01);
 	private SliderValue variation = new SliderValue("Randomness", 15, 0.05, 50, 0.05);
 	
 	private LinkedList<Packet> packets = new LinkedList<Packet>();
@@ -67,15 +67,6 @@ public class Timer extends Module {
 		return speed;	
 	}
 
-	private double getDistancePrediction() { 
-	    double predictX = mc.player.posX + (mc.player.posX - mc.player.lastTickPosX) * 2;
-	    double predictZ = mc.player.posZ + (mc.player.posZ - mc.player.lastTickPosZ) * 2;
-	    float deltaX = (float) (predictX - mc.player.posX);
-	    float deltaY = (float) (mc.player.posY - mc.player.posY);
-	    float deltaZ = (float) (predictZ - mc.player.posZ);
-	    return MathHelper.sqrt_float(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
-	}
-	
 	private float calculateRandomTimer() {
 	    float speed = spid.getInputToFloat();
 	    int variationHalf = variation.getInputToInt() / 2;

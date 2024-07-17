@@ -13,7 +13,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import cc.unknown.module.impl.exploit.TickBase;
 import de.florianmichael.viamcp.fixes.FixedSoundEngine;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHopper;
@@ -1594,13 +1593,13 @@ public abstract class World implements IBlockAccess {
 			if (forceUpdate && entityIn.addedToChunk) {
 				++entityIn.ticksExisted;
 
-				if (!TickBase.publicFreeze) {
+				//if (!TickBase.publicFreeze) {
 					if (entityIn.ridingEntity != null) {
 						entityIn.updateRidden();
 					} else {
 						entityIn.onUpdate();
 					}
-				}
+				//}
 			}
 
 			this.theProfiler.startSection("chunkCheck");

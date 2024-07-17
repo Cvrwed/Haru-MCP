@@ -38,7 +38,6 @@ public class ModuleManager implements Loona {
 				//new BlockHit(),
 				//new HitSelect(),
 				new JumpReset(),
-				new WTap(),
 				new Velocity(),
 				new Reach(),
 				
@@ -47,10 +46,8 @@ public class ModuleManager implements Loona {
 				new PingSpoof(),
 				new TimerRange(),
 				new FakeLag(),
-				new TickBase(),
 				new BackTrack(),
 				new LagRange(),
-				new Ping(),
 				
 				// move
 				new Speed(),

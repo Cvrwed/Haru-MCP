@@ -1,11 +1,10 @@
 package net.minecraft.client.renderer;
 
-import cc.unknown.module.impl.exploit.TickBase;
-import cc.unknown.module.impl.visuals.Animations;
 import org.lwjgl.opengl.GL11;
 
 import cc.unknown.Haru;
 import cc.unknown.event.impl.render.RenderItemEvent;
+import cc.unknown.module.impl.visuals.Animations;
 import cc.unknown.module.impl.visuals.Fullbright;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -26,7 +25,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemFishingRod;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.src.Config;
